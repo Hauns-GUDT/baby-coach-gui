@@ -2,7 +2,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "chatbot": "ChatBot",
-    "tracking": "Tracking"
+    "tracking": "Tracking",
+    "profile": "Profil"
   },
   "chatbot": {
     "title": "Baby Coach",
@@ -32,5 +33,21 @@
       "error": "Schlafdaten konnten nicht geladen werden.",
       "retry": "Erneut versuchen"
     }
+  },
+  "auth": {
+    "title": "Anmelden",
+    "loginLabel": "E-Mail oder Benutzername",
+    "passwordLabel": "Passwort",
+    "submit": "Anmelden",
+    "submitting": "Wird angemeldet...",
+    "error": {
+      "invalid": "Ungültige Anmeldedaten. Bitte erneut versuchen.",
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "loggedInAs": "Angemeldet als",
+    "logout": "Abmelden"
   }
 }

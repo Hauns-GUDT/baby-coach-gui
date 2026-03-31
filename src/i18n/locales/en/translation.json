@@ -2,7 +2,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "chatbot": "ChatBot",
-    "tracking": "Tracking"
+    "tracking": "Tracking",
+    "profile": "Profile"
   },
   "chatbot": {
     "title": "Baby Coach",
@@ -32,5 +33,21 @@
       "error": "Could not load sleep data.",
       "retry": "Retry"
     }
+  },
+  "auth": {
+    "title": "Sign In",
+    "loginLabel": "Email or username",
+    "passwordLabel": "Password",
+    "submit": "Sign In",
+    "submitting": "Signing in...",
+    "error": {
+      "invalid": "Invalid credentials. Please try again.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "loggedInAs": "Logged in as",
+    "logout": "Logout"
   }
 }
