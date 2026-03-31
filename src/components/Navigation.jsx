@@ -1,8 +1,11 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export default function Navigation() {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
+
+  if (location.pathname === '/login') return null;
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de');
@@ -24,6 +27,9 @@ export default function Navigation() {
         </NavLink>
         <NavLink to="/tracking" className={navLinkClass}>
           {t('nav.tracking')}
+        </NavLink>
+        <NavLink to="/profile" className={navLinkClass}>
+          {t('nav.profile')}
         </NavLink>
         <button
           onClick={toggleLanguage}
