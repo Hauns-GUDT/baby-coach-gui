@@ -9,13 +9,16 @@ export const axiosClient = axios.create({
 });
 
 // Attach access token to every request
-axiosClient.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+axiosClient.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().accessToken;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (err) => Promise.reject(err)
+);
 
 // On 401: attempt silent refresh, then retry once
 let isRefreshing = false;
@@ -48,7 +51,7 @@ axiosClient.interceptors.response.use(
       }).then((token) => {
         original.headers.Authorization = `Bearer ${token}`;
         return axiosClient(original);
-      });
+      }).catch((err) => Promise.reject(err));
     }
 
     original._retry = true;
@@ -59,8 +62,14 @@ axiosClient.interceptors.response.use(
       const newToken = data.accessToken;
 
       // Decode username from JWT payload
-      const payload = JSON.parse(atob(newToken.split('.')[1]));
-      useAuthStore.getState().setAuth(newToken, payload.username);
+      let username = null;
+      try {
+        const payload = JSON.parse(atob(newToken.split('.')[1]));
+        username = payload.username ?? null;
+      } catch {
+        // malformed JWT payload — proceed with null username
+      }
+      useAuthStore.getState().setAuth(newToken, username);
 
       processQueue(null, newToken);
       original.headers.Authorization = `Bearer ${newToken}`;
