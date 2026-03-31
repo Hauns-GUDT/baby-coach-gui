@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "chatbot": "ChatBot",
+    "tracking": "Tracking"
+  },
+  "chatbot": {
+    "title": "Baby Coach",
+    "subtitle": "Ask questions about feeding, sleep, diapers, routines, and receive guidance from your backend API.",
+    "apiUrl": "Backend API URL",
+    "prompt": "Your Prompt",
+    "submit": "Send Prompt",
+    "sending": "Sending...",
+    "answer": "Backend Answer",
+    "placeholder": {
+      "url": "http://localhost:8000/api/chat",
+      "prompt": "Example: My baby is 5 months old and wakes up every hour. What can I try?"
+    },
+    "error": {
+      "empty": "Please enter a prompt first.",
+      "generic": "Something went wrong while contacting the backend."
+    }
+  },
+  "tracking": {
+    "title": "Tracking",
+    "sleep": {
+      "title": "Sleep",
+      "todayTotal": "Today",
+      "thisWeek": "This week",
+      "clockTitle": "When today",
+      "loading": "Loading sleep data...",
+      "error": "Could not load sleep data.",
+      "retry": "Retry"
+    }
+  }
+}

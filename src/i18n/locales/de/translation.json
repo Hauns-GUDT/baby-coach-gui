@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "chatbot": "ChatBot",
+    "tracking": "Tracking"
+  },
+  "chatbot": {
+    "title": "Baby Coach",
+    "subtitle": "Stelle Fragen zu Ernährung, Schlaf, Windeln und Routinen und erhalte Antworten von deiner Backend-API.",
+    "apiUrl": "Backend API URL",
+    "prompt": "Deine Anfrage",
+    "submit": "Anfrage senden",
+    "sending": "Wird gesendet...",
+    "answer": "Antwort vom Backend",
+    "placeholder": {
+      "url": "http://localhost:8000/api/chat",
+      "prompt": "Beispiel: Mein Baby ist 5 Monate alt und wacht jede Stunde auf. Was kann ich tun?"
+    },
+    "error": {
+      "empty": "Bitte zuerst eine Anfrage eingeben.",
+      "generic": "Beim Kontaktieren des Backends ist ein Fehler aufgetreten."
+    }
+  },
+  "tracking": {
+    "title": "Tracking",
+    "sleep": {
+      "title": "Schlaf",
+      "todayTotal": "Heute",
+      "thisWeek": "Diese Woche",
+      "clockTitle": "Wann heute",
+      "loading": "Schlafdaten werden geladen...",
+      "error": "Schlafdaten konnten nicht geladen werden.",
+      "retry": "Erneut versuchen"
+    }
+  }
+}
