@@ -78,13 +78,13 @@ export default function Login() {
           </div>
 
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p role="alert" className="text-sm text-red-600">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold rounded-xl py-3 transition-colors"
+            className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 transition-colors"
           >
             {isSubmitting ? t('auth.submitting') : t('auth.submit')}
           </button>
