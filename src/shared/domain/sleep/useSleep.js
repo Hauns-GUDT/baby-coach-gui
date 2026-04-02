@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useSleepStore } from '../store/useAppStore';
-import { getSleepData } from '../api/sleepService';
+import { useSleepStore } from './useSleepStore';
+import { getSleepData } from './sleepService';
 
 export function useSleep() {
   const { sleepData, sleepLoading, sleepError, setSleepData, setSleepLoading, setSleepError } =

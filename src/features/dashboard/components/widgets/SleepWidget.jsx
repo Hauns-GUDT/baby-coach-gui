@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useSleep } from '../../hooks/useSleep';
+import { useSleep } from '../../../../shared/domain/sleep/useSleep';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../store/useAuthStore';
-import { useLogout } from '../hooks/useLogout';
+import { useAuthStore } from '../../auth/store/useAuthStore';
+import { useLogout } from '../../auth/hooks/useLogout';
 
 export default function Profile() {
   const { t } = useTranslation();

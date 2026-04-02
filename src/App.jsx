@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import ProtectedRoute from './components/ProtectedRoute';
-import ChatBot from './pages/ChatBot';
-import Dashboard from './pages/Dashboard';
-import Tracking from './pages/Tracking';
-import Login from './pages/Login';
-import Profile from './pages/Profile';
-import { useSilentRefresh } from './hooks/useSilentRefresh';
+import Navigation from './shared/components/Navigation';
+import ProtectedRoute from './shared/components/ProtectedRoute';
+import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
+import Login from './features/auth/pages/Login';
+import Dashboard from './features/dashboard/pages/Dashboard';
+import Tracking from './features/tracking/pages/Tracking';
+import ChatBot from './features/chatbot/pages/ChatBot';
+import Profile from './features/profile/pages/Profile';
 
 export default function App() {
   const { isInitializing } = useSilentRefresh();

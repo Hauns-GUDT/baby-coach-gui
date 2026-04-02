@@ -12,12 +12,3 @@ export const useChatStore = create((set) => ({
   setError: (error) => set({ error }),
   setIsLoading: (loading) => set({ isLoading: loading }),
 }));
-
-export const useSleepStore = create((set) => ({
-  sleepData: null,
-  sleepLoading: false,
-  sleepError: '',
-  setSleepData: (data) => set({ sleepData: data }),
-  setSleepLoading: (loading) => set({ sleepLoading: loading }),
-  setSleepError: (error) => set({ sleepError: error }),
-}));
