@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export const useChatStore = create((set) => ({
-  apiUrl: 'http://localhost:8000/api/chat',
+  apiUrl: '/api/chat',
   prompt: '',
   answer: '',
   error: '',
