@@ -1,9 +1,11 @@
+import { Moon } from 'lucide-react';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import EventWidget from './shared/EventWidget';
 
 const SLEEP_CONFIG = {
   i18nPrefix: 'tracking.sleep',
   showGapPeriods: true,
+  icon: Moon,
   svgPrimaryColor: '#818cf8',
   svgSecondaryColor: '#38bdf8',
   accentBg: 'bg-indigo-50',

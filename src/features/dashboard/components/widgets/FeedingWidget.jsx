@@ -1,9 +1,11 @@
+import { Milk } from 'lucide-react';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
 import EventWidget from './shared/EventWidget';
 
 const FEEDING_CONFIG = {
   i18nPrefix: 'tracking.feeding',
   showGapPeriods: false,
+  icon: Milk,
   svgPrimaryColor: '#f97316',
   svgSecondaryColor: null,
   accentBg: 'bg-orange-50',

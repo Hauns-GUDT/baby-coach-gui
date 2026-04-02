@@ -265,6 +265,7 @@ export default function EventWidget({
   const {
     i18nPrefix,
     showGapPeriods,
+    icon: Icon,
     svgPrimaryColor,
     svgSecondaryColor,
     accentBg,
@@ -306,7 +307,10 @@ export default function EventWidget({
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-5">
-      <h2 className="font-semibold text-zinc-900 text-lg">{t(`${i18nPrefix}.title`)}</h2>
+      <h2 className="font-semibold text-zinc-900 text-lg flex items-center gap-2">
+        {Icon && <Icon size={20} className={totalText} strokeWidth={2} />}
+        {t(`${i18nPrefix}.title`)}
+      </h2>
 
       {/* Active event banner */}
       {activeEvent && (
