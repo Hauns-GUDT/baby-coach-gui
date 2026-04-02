@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepEventStore } from '../store/useSleepEventStore';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../shared/api/eventService';
+import { parseApiError } from '../../../shared/utils/parseApiError';
 
 export function useSleepEvents() {
+  const { t } = useTranslation();
   const selectedBabyId = useBabyStore((s) => s.selectedBabyId);
   const {
     sleepEvents,
@@ -19,6 +22,17 @@ export function useSleepEvents() {
 
   const activeSleep = sleepEvents.find((e) => !e.endedAt) ?? null;
 
+  const translateError = (err) => {
+    const { fieldErrors, code } = parseApiError(err);
+    if (code) return t(`validation.${code}`, t('tracking.sleep.saveFailed'));
+    if (fieldErrors && Object.keys(fieldErrors).length > 0) {
+      // Collapse field errors into a single message for the banner
+      const firstCode = Object.values(fieldErrors)[0];
+      return t(`validation.${firstCode}`, t('tracking.sleep.saveFailed'));
+    }
+    return t('tracking.sleep.saveFailed');
+  };
+
   const fetchSleepEvents = async () => {
     if (!selectedBabyId) return;
     setIsLoading(true);
@@ -33,7 +47,7 @@ export function useSleepEvents() {
       // Sort newest first
       setSleepEvents([...events].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt)));
     } catch (e) {
-      setError(e.message);
+      setError(t('tracking.sleep.error'));
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +67,7 @@ export function useSleepEvents() {
       });
       addSleepEvent(event);
     } catch (e) {
-      setError(e.message);
+      setError(translateError(e));
     }
   };
 
@@ -66,10 +80,11 @@ export function useSleepEvents() {
       });
       updateSleepEvent(activeSleep.id, updated);
     } catch (e) {
-      setError(e.message);
+      setError(translateError(e));
     }
   };
 
+  // Throws a structured error so EditSleepDialog can handle field-level display
   const editSleepEvent = async (eventId, payload) => {
     if (!selectedBabyId) throw new Error('No baby selected');
     const updated = await updateEvent(selectedBabyId, eventId, payload);
@@ -82,7 +97,7 @@ export function useSleepEvents() {
     try {
       await deleteEvent(selectedBabyId, eventId);
     } catch (e) {
-      setError(e.message);
+      setError(translateError(e));
       fetchSleepEvents();
     }
   };

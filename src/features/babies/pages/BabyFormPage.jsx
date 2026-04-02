@@ -7,7 +7,7 @@ export default function BabyFormPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, submit } =
+  const { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, fieldErrors, submit } =
     useBabyForm(id);
 
   return (
@@ -29,6 +29,7 @@ export default function BabyFormPage() {
             setGender={setGender}
             isSubmitting={isSubmitting}
             error={error}
+            fieldErrors={fieldErrors}
             onSubmit={submit}
             onCancel={() => navigate('/profile/babies')}
           />

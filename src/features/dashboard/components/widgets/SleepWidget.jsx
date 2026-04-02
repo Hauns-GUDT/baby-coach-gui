@@ -5,6 +5,7 @@ import { useSleepEvents } from '../../hooks/useSleepEvents';
 import Button from '../../../../shared/components/Button';
 import IconButton from '../../../../shared/components/IconButton';
 import ConfirmDialog from '../../../../shared/components/ConfirmDialog';
+import { parseApiError } from '../../../../shared/utils/parseApiError';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -221,11 +222,13 @@ function EditSleepDialog({ event, onSave, onCancel }) {
   const [startedAt, setStartedAt] = useState(toDatetimeLocal(event.startedAt));
   const [endedAt, setEndedAt] = useState(event.endedAt ? toDatetimeLocal(event.endedAt) : '');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     setIsSaving(true);
     try {
       await onSave({
@@ -233,7 +236,18 @@ function EditSleepDialog({ event, onSave, onCancel }) {
         ...(endedAt ? { endedAt: new Date(endedAt).toISOString() } : {}),
       });
     } catch (err) {
-      setError(err.message || t('tracking.sleep.saveFailed'));
+      const { fieldErrors: fe, code } = parseApiError(err);
+      if (fe && Object.keys(fe).length > 0) {
+        const translated = {};
+        for (const [field, errorCode] of Object.entries(fe)) {
+          translated[field] = t(`validation.${errorCode}`, t('validation.fallback'));
+        }
+        setFieldErrors(translated);
+      } else if (code) {
+        setError(t(`validation.${code}`, t('tracking.sleep.saveFailed')));
+      } else {
+        setError(t('tracking.sleep.saveFailed'));
+      }
     } finally {
       setIsSaving(false);
     }
@@ -254,6 +268,9 @@ function EditSleepDialog({ event, onSave, onCancel }) {
               onChange={(e) => setStartedAt(e.target.value)}
               className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
+            {fieldErrors.startedAt && (
+              <p className="text-sm text-rose-600" role="alert">{fieldErrors.startedAt}</p>
+            )}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-zinc-700">{t('tracking.sleep.end')}</label>
@@ -263,6 +280,9 @@ function EditSleepDialog({ event, onSave, onCancel }) {
               onChange={(e) => setEndedAt(e.target.value)}
               className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
+            {fieldErrors.endedAt && (
+              <p className="text-sm text-rose-600" role="alert">{fieldErrors.endedAt}</p>
+            )}
           </div>
           {error && <p className="text-sm text-rose-600" role="alert">{error}</p>}
           <div className="flex gap-3 justify-end mt-1">

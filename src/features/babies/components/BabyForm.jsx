@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-export default function BabyForm({ name, setName, birthday, setBirthday, gender, setGender, isSubmitting, error, onSubmit, onCancel }) {
+export default function BabyForm({ name, setName, birthday, setBirthday, gender, setGender, isSubmitting, error, fieldErrors = {}, onSubmit, onCancel }) {
   const { t } = useTranslation();
 
   return (
@@ -17,6 +17,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           onChange={(e) => setName(e.target.value)}
           className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
+        {fieldErrors.name && (
+          <p role="alert" className="text-sm text-rose-600">{fieldErrors.name}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -31,6 +34,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           onChange={(e) => setBirthday(e.target.value)}
           className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
+        {fieldErrors.birthday && (
+          <p role="alert" className="text-sm text-rose-600">{fieldErrors.birthday}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -48,6 +54,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           <option value="male">{t('babies.male')}</option>
           <option value="female">{t('babies.female')}</option>
         </select>
+        {fieldErrors.gender && (
+          <p role="alert" className="text-sm text-rose-600">{fieldErrors.gender}</p>
+        )}
       </div>
 
       {error && (

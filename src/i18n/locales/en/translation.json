@@ -67,6 +67,17 @@
     "logout": "Logout",
     "manageBabies": "Manage Babies"
   },
+  "validation": {
+    "minLength": "This field is required.",
+    "isNotEmpty": "This field is required.",
+    "isString": "Must be text.",
+    "isDateString": "Must be a valid date.",
+    "isPastDate": "Date must not be in the future.",
+    "isEnum": "Please select a valid option.",
+    "endedAtBeforeStartedAt": "End time must be after start time.",
+    "eventOverlap": "This session overlaps with an existing one.",
+    "fallback": "Invalid value."
+  },
   "babies": {
     "title": "Babies",
     "addBaby": "Add Baby",
