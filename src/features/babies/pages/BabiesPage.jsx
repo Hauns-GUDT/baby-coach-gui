@@ -16,7 +16,7 @@ export default function BabiesPage() {
           <h1 className="text-2xl font-bold text-gray-900">{t('babies.title')}</h1>
           <button
             onClick={() => navigate('/profile/babies/new')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-4 py-2 transition-colors"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-4 py-2 transition-colors cursor-pointer"
           >
             + {t('babies.addBaby')}
           </button>

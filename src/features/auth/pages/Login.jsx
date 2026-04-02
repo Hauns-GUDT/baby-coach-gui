@@ -67,7 +67,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 transition-colors"
+            className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 transition-colors cursor-pointer"
           >
             {isSubmitting ? t('auth.submitting') : t('auth.submit')}
           </button>
