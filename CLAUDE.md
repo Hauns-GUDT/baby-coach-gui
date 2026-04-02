@@ -50,6 +50,62 @@ React app for baby coaching with mobile-first responsive design using Tailwind C
 - When formatting dates, times, or numbers with `Intl.*`, pass `i18n.language` as the locale instead of `undefined` so output respects the active language
 - Exceptions: purely technical labels that are the same in all languages (e.g. "AM" / "PM", "Start", "Stop")
 
+### Validation Error Translation
+
+The backend returns structured error codes instead of English strings. Use `parseApiError` from `src/shared/utils/parseApiError.js` to extract them, then `t()` to display them.
+
+**`parseApiError(axiosError)`** returns one of:
+- `{ fieldErrors: { [field]: code } }` — DTO validation errors, one code per field
+- `{ code: string }` — business logic error (single code, e.g. `eventOverlap`)
+- `{}` — unrecognised format; fall back to a generic message
+
+**Standard hook pattern:**
+```js
+import { parseApiError } from '../../../shared/utils/parseApiError';
+
+try {
+  await someApiCall();
+} catch (err) {
+  const { fieldErrors, code } = parseApiError(err);
+  if (fieldErrors && Object.keys(fieldErrors).length > 0) {
+    const translated = {};
+    for (const [field, errorCode] of Object.entries(fieldErrors)) {
+      translated[field] = t(`validation.${errorCode}`, t('validation.fallback'));
+    }
+    setFieldErrors(translated);
+  } else if (code) {
+    setError(t(`validation.${code}`, t('someFeature.error.saveFailed')));
+  } else {
+    setError(t('someFeature.error.saveFailed'));
+  }
+}
+```
+
+**Displaying field errors in a form:**
+```jsx
+<input id="name" ... />
+{fieldErrors?.name && (
+  <p role="alert" className="text-sm text-rose-600">{fieldErrors.name}</p>
+)}
+```
+
+**Adding new error codes:**
+- Add the `code` key under `validation` in both locale files.
+- Never hardcode English error strings in hooks or components — always go through `t()`.
+
+**Known validation codes:**
+
+| Code | Meaning |
+|---|---|
+| `minLength` | Field too short / required |
+| `isNotEmpty` | Field required |
+| `isString` | Must be text |
+| `isDateString` | Must be a valid date |
+| `isPastDate` | Date must not be in the future |
+| `isEnum` | Must be one of the allowed values |
+| `endedAtBeforeStartedAt` | End time must be after start time |
+| `eventOverlap` | Session overlaps an existing one |
+
 ## Design System
 
 ### Icons
