@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../auth/store/useAuthStore';
 import { useLogout } from '../../auth/hooks/useLogout';
+import Button from '../../../shared/components/Button';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -19,19 +20,13 @@ export default function Profile() {
           <span className="font-semibold text-gray-900">{username}</span>
         </p>
 
-        <button
-          onClick={() => navigate('/profile/babies')}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl py-3 transition-colors"
-        >
+        <Button onClick={() => navigate('/profile/babies')}>
           {t('profile.manageBabies')}
-        </button>
+        </Button>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl py-3 transition-colors"
-        >
+        <Button variant="secondary" onClick={handleLogout}>
           {t('profile.logout')}
-        </button>
+        </Button>
       </section>
     </main>
   );

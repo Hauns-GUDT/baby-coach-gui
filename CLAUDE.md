@@ -43,6 +43,47 @@ React app for baby coaching with mobile-first responsive design using Tailwind C
 - Avoid CSS-in-JS solutions
 - Keep file organization clean and organized
 
+## Design System
+
+### Icons
+- Use **lucide-react** exclusively for all icons — it is already installed
+- Import icons by name directly: `import { Pencil, Trash2, Plus } from 'lucide-react'`
+- Browse available icons at lucide.dev
+
+### Buttons
+Two shared components live in `src/shared/components/`:
+
+**`Button`** — for labeled actions
+```jsx
+import Button from '../../../shared/components/Button';
+
+<Button>Primary action</Button>                  // indigo, default
+<Button variant="secondary">Cancel</Button>      // gray
+```
+- `primary` (default): indigo background, white text — for the main action on a screen
+- `secondary`: gray background, dark text — for cancel, back, logout, and destructive-but-soft actions
+
+**`IconButton`** — for icon-only actions with a tooltip
+```jsx
+import IconButton from '../../../shared/components/IconButton';
+import { Pencil, Trash2 } from 'lucide-react';
+
+<IconButton icon={Pencil} label="Edit" onClick={...} />
+<IconButton icon={Trash2} label="Delete" onClick={...} className="hover:text-red-500" />
+```
+- Always provide `label` — it becomes the native `title` tooltip and `aria-label`
+- Use `className` to override hover color (e.g. red for destructive actions)
+
+### When to use which
+| Situation | Component |
+|---|---|
+| Primary page action (Save, Add, Sign In) | `Button` (primary) |
+| Back, Cancel, Logout | `Button` (secondary) |
+| Row-level edit / delete | `IconButton` |
+| Inline icon-only action | `IconButton` |
+
+Do NOT write raw `<button>` elements with hardcoded Tailwind color classes for these cases — use the shared components.
+
 ## Git Workflow
 
 For every change (feature, fix, refactor):
