@@ -5,7 +5,7 @@ import { axiosClient } from '../api/axiosClient';
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function Login() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
 
@@ -41,8 +41,18 @@ export default function Login() {
     }
   };
 
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 grid place-items-center p-6">
+      <button
+        onClick={toggleLanguage}
+        className="absolute top-4 right-6 text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+      >
+        {i18n.language.startsWith('de') ? 'EN' : 'DE'}
+      </button>
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('auth.title')}</h1>
 
