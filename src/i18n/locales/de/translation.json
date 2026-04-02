@@ -48,6 +48,31 @@
   "profile": {
     "title": "Profil",
     "loggedInAs": "Angemeldet als",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "manageBabies": "Babys verwalten"
+  },
+  "babies": {
+    "title": "Babys",
+    "addBaby": "Baby hinzufügen",
+    "editBaby": "Baby bearbeiten",
+    "name": "Name",
+    "birthday": "Geburtstag",
+    "gender": "Geschlecht",
+    "selectGender": "Geschlecht wählen",
+    "male": "Männlich",
+    "female": "Weiblich",
+    "save": "Speichern",
+    "saving": "Wird gespeichert...",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "empty": "Noch keine Babys hinzugefügt.",
+    "loading": "Wird geladen...",
+    "backToProfile": "Zurück zum Profil",
+    "error": {
+      "loadFailed": "Babys konnten nicht geladen werden.",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "notFound": "Baby nicht gefunden."
+    }
   }
 }

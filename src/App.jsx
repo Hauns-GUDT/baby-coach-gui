@@ -7,6 +7,8 @@ import Dashboard from './features/dashboard/pages/Dashboard';
 import Tracking from './features/tracking/pages/Tracking';
 import ChatBot from './features/chatbot/pages/ChatBot';
 import Profile from './features/profile/pages/Profile';
+import BabiesPage from './features/babies/pages/BabiesPage';
+import BabyFormPage from './features/babies/pages/BabyFormPage';
 
 export default function App() {
   const { isInitializing } = useSilentRefresh();
@@ -54,6 +56,30 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/babies"
+            element={
+              <ProtectedRoute>
+                <BabiesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/babies/new"
+            element={
+              <ProtectedRoute>
+                <BabyFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/babies/:id/edit"
+            element={
+              <ProtectedRoute>
+                <BabyFormPage />
               </ProtectedRoute>
             }
           />

@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../auth/store/useAuthStore';
 import { useLogout } from '../../auth/hooks/useLogout';
 
 export default function Profile() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const username = useAuthStore((state) => state.username);
   const { handleLogout } = useLogout();
 
@@ -16,6 +18,13 @@ export default function Profile() {
           {t('profile.loggedInAs')}{' '}
           <span className="font-semibold text-gray-900">{username}</span>
         </p>
+
+        <button
+          onClick={() => navigate('/profile/babies')}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl py-3 transition-colors"
+        >
+          {t('profile.manageBabies')}
+        </button>
 
         <button
           onClick={handleLogout}
