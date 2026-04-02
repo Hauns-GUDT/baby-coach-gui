@@ -15,15 +15,15 @@ export default function App() {
 
   if (isInitializing) {
     return (
-      <div className="min-h-screen bg-gray-50 grid place-items-center">
-        <span className="text-gray-400 text-sm">Loading...</span>
+      <div className="min-h-screen bg-zinc-50 grid place-items-center">
+        <span className="text-zinc-400 text-sm">Loading...</span>
       </div>
     );
   }
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-zinc-50">
         <Navigation />
         <Routes>
           <Route path="/login" element={<Login />} />

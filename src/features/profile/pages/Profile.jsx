@@ -13,11 +13,11 @@ export default function Profile() {
   return (
     <main className="min-h-[calc(100vh-65px)] grid place-items-center p-6">
       <section className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-6">
-        <h1 className="text-2xl font-bold text-gray-900">{t('profile.title')}</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">{t('profile.title')}</h1>
 
-        <p className="text-gray-600">
+        <p className="text-zinc-600">
           {t('profile.loggedInAs')}{' '}
-          <span className="font-semibold text-gray-900">{username}</span>
+          <span className="font-semibold text-zinc-900">{username}</span>
         </p>
 
         <Button onClick={() => navigate('/profile/babies')}>

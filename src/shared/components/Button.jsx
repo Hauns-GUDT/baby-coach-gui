@@ -1,7 +1,7 @@
 const variants = {
   primary: 'bg-indigo-600 hover:bg-indigo-700 text-white',
-  secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
-  danger: 'bg-red-600 hover:bg-red-700 text-white',
+  secondary: 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700',
+  danger: 'bg-rose-600 hover:bg-rose-700 text-white',
 };
 
 export default function Button({ variant = 'primary', className = '', children, ...props }) {

@@ -19,19 +19,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 grid place-items-center p-6">
+    <div className="min-h-screen bg-zinc-50 grid place-items-center p-6">
       <button
         onClick={toggleLanguage}
-        className="absolute top-4 right-6 text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+        className="absolute top-4 right-6 text-sm bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
       >
         {i18n.language.startsWith('de') ? 'EN' : 'DE'}
       </button>
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('auth.title')}</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 mb-6">{t('auth.title')}</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="font-semibold text-gray-700 text-sm" htmlFor="login">
+            <label className="font-semibold text-zinc-700 text-sm" htmlFor="login">
               {t('auth.loginLabel')}
             </label>
             <input
@@ -41,12 +41,12 @@ export default function Login() {
               required
               value={login}
               onChange={(e) => setLogin(e.target.value)}
-              className="border border-gray-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="font-semibold text-gray-700 text-sm" htmlFor="password">
+            <label className="font-semibold text-zinc-700 text-sm" htmlFor="password">
               {t('auth.passwordLabel')}
             </label>
             <input
@@ -56,12 +56,12 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
 
           {error && (
-            <p role="alert" className="text-sm text-red-600">{error}</p>
+            <p role="alert" className="text-sm text-rose-600">{error}</p>
           )}
 
           <button

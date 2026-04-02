@@ -7,13 +7,13 @@ export default function ChatInput() {
 
   return (
     <form onSubmit={submit} className="grid gap-3">
-      <label className="font-semibold text-gray-700" htmlFor="prompt">
+      <label className="font-semibold text-zinc-700" htmlFor="prompt">
         {t('chatbot.prompt')}
       </label>
       <textarea
         id="prompt"
         rows={5}
-        className="w-full border border-gray-300 rounded-xl px-3 py-2 text-base resize-y min-h-30 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        className="w-full border border-zinc-300 rounded-xl px-3 py-2 text-base resize-y min-h-30 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         placeholder={t('chatbot.placeholder.prompt')}
@@ -28,13 +28,13 @@ export default function ChatInput() {
       </button>
 
       {error && (
-        <div className="rounded-xl p-3 bg-red-100 text-red-700" role="alert">
+        <div className="rounded-xl p-3 bg-rose-50 text-rose-700" role="alert">
           {error}
         </div>
       )}
 
       {answer && (
-        <article className="rounded-xl p-3 bg-cyan-50 text-cyan-800">
+        <article className="rounded-xl p-3 bg-indigo-50 text-indigo-900">
           <h2 className="font-semibold mb-2">{t('chatbot.answer')}</h2>
           <pre className="whitespace-pre-wrap m-0">{answer}</pre>
         </article>

@@ -31,7 +31,23 @@
       "clockTitle": "Wann heute",
       "loading": "Schlafdaten werden geladen...",
       "error": "Schlafdaten konnten nicht geladen werden.",
-      "retry": "Erneut versuchen"
+      "retry": "Erneut versuchen",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "lessThanOneMin": "< 1 Min.",
+      "sleeping": "Schläft",
+      "since": "Seit",
+      "startSleep": "Start Sleep",
+      "recentSessions": "Letzte Einheiten",
+      "editSession": "Schlafeinheit bearbeiten",
+      "end": "Ende",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert...",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "deleteSession": "Einheit löschen",
+      "deleteSessionMessage": "Möchtest du diese Schlafeinheit wirklich löschen?",
+      "delete": "Löschen"
     }
   },
   "auth": {

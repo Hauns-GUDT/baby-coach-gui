@@ -43,6 +43,13 @@ React app for baby coaching with mobile-first responsive design using Tailwind C
 - Avoid CSS-in-JS solutions
 - Keep file organization clean and organized
 
+### Internationalisation (i18n)
+- **All user-facing text must be translated** — no hardcoded English strings in JSX or component logic
+- Use `react-i18next`: `const { t, i18n } = useTranslation();`
+- Add every new string to both `src/i18n/locales/en/translation.json` and `src/i18n/locales/de/translation.json`
+- When formatting dates, times, or numbers with `Intl.*`, pass `i18n.language` as the locale instead of `undefined` so output respects the active language
+- Exceptions: purely technical labels that are the same in all languages (e.g. "AM" / "PM", "Start", "Stop")
+
 ## Design System
 
 ### Icons

@@ -26,14 +26,14 @@ export default function Navigation() {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`;
+    `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-zinc-600 hover:text-zinc-900'}`;
 
   const selectedBaby = babies.find((b) => b.id === selectedBabyId);
 
   const babySelector = babies.length > 0 && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
-      className="text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
+      className="text-sm font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
     >
       {selectedBaby?.name ?? '—'}
     </button>
@@ -47,7 +47,7 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 relative">
+    <nav className="bg-white border-b border-zinc-200 px-6 relative">
       {/* Top bar */}
       <div className="h-16 flex items-center justify-between">
         <span className="text-lg font-bold text-indigo-600">Baby Coach</span>
@@ -62,7 +62,7 @@ export default function Navigation() {
           {babySelector}
           <button
             onClick={toggleLanguage}
-            className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+            className="text-sm bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
           >
             {i18n.language.startsWith('de') ? 'EN' : 'DE'}
           </button>
@@ -73,14 +73,14 @@ export default function Navigation() {
           {babySelector}
           <button
             onClick={toggleLanguage}
-            className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+            className="text-sm bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
           >
             {i18n.language.startsWith('de') ? 'EN' : 'DE'}
           </button>
           <button
             onClick={() => setIsOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+            className="p-2 rounded-lg text-zinc-600 hover:bg-zinc-100 transition-colors cursor-pointer"
           >
             {isOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -100,7 +100,7 @@ export default function Navigation() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsBabyDialogOpen(false)} />
           <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-3">
-            <h2 className="text-lg font-bold text-gray-900">Select Baby</h2>
+            <h2 className="text-lg font-bold text-zinc-900">Select Baby</h2>
             <div className="flex flex-col gap-1">
               {babies.map((b) => (
                 <button
@@ -109,7 +109,7 @@ export default function Navigation() {
                   className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
                     b.id === selectedBabyId
                       ? 'bg-indigo-50 text-indigo-600'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      : 'text-zinc-700 hover:bg-zinc-50'
                   }`}
                 >
                   {b.name}
@@ -122,7 +122,7 @@ export default function Navigation() {
 
       {/* Mobile dropdown */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-100 py-3 flex flex-col gap-1">
+        <div className="md:hidden border-t border-zinc-100 py-3 flex flex-col gap-1">
           {links.map(({ to, label, end }) => (
             <NavLink
               key={to}
@@ -130,7 +130,7 @@ export default function Navigation() {
               end={end}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
-                `px-3 py-2 rounded-lg font-medium transition-colors ${isActive ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:bg-gray-50'}`
+                `px-3 py-2 rounded-lg font-medium transition-colors ${isActive ? 'text-indigo-600 bg-indigo-50' : 'text-zinc-600 hover:bg-zinc-50'}`
               }
             >
               {label}

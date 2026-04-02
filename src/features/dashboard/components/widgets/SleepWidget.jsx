@@ -17,9 +17,9 @@ function formatHours(h) {
   return `${mins}m`;
 }
 
-function formatElapsed(ms) {
+function formatElapsed(ms, t) {
   const totalMins = Math.round(ms / 60_000);
-  if (totalMins < 1) return '< 1 min';
+  if (totalMins < 1) return t('tracking.sleep.lessThanOneMin');
   return formatHours(ms / 3_600_000);
 }
 
@@ -27,14 +27,14 @@ function formatTime(isoString) {
   return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function formatSessionLabel(isoString) {
+function formatSessionLabel(isoString, t) {
   const d = new Date(isoString);
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
 
-  if (d.toDateString() === today.toDateString()) return 'Today';
-  if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+  if (d.toDateString() === today.toDateString()) return t('tracking.sleep.today');
+  if (d.toDateString() === yesterday.toDateString()) return t('tracking.sleep.yesterday');
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
@@ -67,6 +67,24 @@ function computeTodayPeriods(events, now) {
     });
 }
 
+function computeTodayAwakePeriods(sleepPeriods, now) {
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  const nowH = (now.getTime() - todayStart.getTime()) / 3_600_000;
+
+  const sorted = [...sleepPeriods].sort((a, b) => a.fromH - b.fromH);
+  const awake = [];
+  let cursor = 0;
+
+  for (const { fromH, toH } of sorted) {
+    if (cursor < fromH) awake.push({ fromH: cursor, toH: fromH });
+    cursor = Math.max(cursor, toH);
+  }
+  if (cursor < nowH) awake.push({ fromH: cursor, toH: nowH });
+
+  return awake;
+}
+
 function computeWeeklyHistory(events) {
   return Array.from({ length: 7 }, (_, i) => {
     const dayStart = new Date();
@@ -87,88 +105,109 @@ function computeWeeklyHistory(events) {
   });
 }
 
-// ─── Clock chart (SVG 24-hour ring) ─────────────────────────────────────────
+// ─── Clock chart (two 12-hour rings: AM and PM) ──────────────────────────────
 
-function SleepClockChart({ periods }) {
-  const CX = 100, CY = 100, R = 66, SW = 20, LABEL_R = 90;
+function ClockFace({ sleepPeriods, awakePeriods, label }) {
+  const CX = 60, CY = 60, R = 42, SW = 11, LABEL_R = 53;
 
-  const pointAt = (hours) => {
-    const angle = (hours / 24) * 2 * Math.PI - Math.PI / 2;
+  const pointAt = (h) => {
+    const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
     return { x: CX + R * Math.cos(angle), y: CY + R * Math.sin(angle) };
   };
 
   const makeArc = (fromH, toH) => {
-    const span = ((toH - fromH) % 24 + 24) % 24;
+    const span = toH - fromH;
     if (span < 1 / 60) return null;
-    const { x: sx, y: sy } = pointAt(fromH % 24);
-    const { x: ex, y: ey } = pointAt(toH % 24);
-    return `M ${sx.toFixed(2)} ${sy.toFixed(2)} A ${R} ${R} 0 ${span > 12 ? 1 : 0} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`;
+    const { x: sx, y: sy } = pointAt(fromH);
+    const { x: ex, y: ey } = pointAt(toH);
+    return `M ${sx.toFixed(2)} ${sy.toFixed(2)} A ${R} ${R} 0 ${span > 6 ? 1 : 0} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`;
   };
 
+  const renderArcs = (periods, color) =>
+    periods.map((p, i) => {
+      if (p.toH - p.fromH >= 11.99)
+        return <circle key={i} cx={CX} cy={CY} r={R} fill="none" stroke={color} strokeWidth={SW} />;
+      const d = makeArc(p.fromH, p.toH);
+      return d ? <path key={i} d={d} fill="none" stroke={color} strokeWidth={SW} strokeLinecap="round" /> : null;
+    });
+
   return (
-    <svg viewBox="0 0 200 200" className="w-44 h-44 shrink-0">
-      <circle cx={CX} cy={CY} r={R} fill="none" stroke="#e5e7eb" strokeWidth={SW} />
-      {periods.map((p, i) => {
-        const d = makeArc(p.fromH, p.toH);
-        return d ? (
-          <path key={i} d={d} fill="none" stroke="#6366f1" strokeWidth={SW} strokeLinecap="round" />
-        ) : null;
-      })}
-      {[{ h: 0, text: '0' }, { h: 6, text: '6' }, { h: 12, text: '12' }, { h: 18, text: '18' }].map(({ h, text }) => {
-        const angle = (h / 24) * 2 * Math.PI - Math.PI / 2;
-        return (
-          <text
-            key={h}
-            x={(CX + LABEL_R * Math.cos(angle)).toFixed(1)}
-            y={(CY + LABEL_R * Math.sin(angle)).toFixed(1)}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill="#9ca3af"
-            fontSize="10"
-          >
-            {text}
-          </text>
-        );
-      })}
-      {Array.from({ length: 8 }, (_, i) => i * 3).map((h) => {
-        const angle = (h / 24) * 2 * Math.PI - Math.PI / 2;
-        return (
-          <line
-            key={h}
-            x1={(CX + (R - SW / 2) * Math.cos(angle)).toFixed(2)}
-            y1={(CY + (R - SW / 2) * Math.sin(angle)).toFixed(2)}
-            x2={(CX + (R + SW / 2) * Math.cos(angle)).toFixed(2)}
-            y2={(CY + (R + SW / 2) * Math.sin(angle)).toFixed(2)}
-            stroke="#f3f4f6"
-            strokeWidth="1.5"
-          />
-        );
-      })}
-    </svg>
+    <div className="flex flex-col items-center gap-1">
+      <svg viewBox="0 0 120 120" className="w-24 h-24">
+        <circle cx={CX} cy={CY} r={R} fill="none" stroke="#e4e4e7" strokeWidth={SW} />
+        {renderArcs(awakePeriods, '#38bdf8')}
+        {renderArcs(sleepPeriods, '#818cf8')}
+        {[{ h: 0, text: '12' }, { h: 3, text: '3' }, { h: 6, text: '6' }, { h: 9, text: '9' }].map(({ h, text }) => {
+          const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
+          return (
+            <text
+              key={h}
+              x={(CX + LABEL_R * Math.cos(angle)).toFixed(1)}
+              y={(CY + LABEL_R * Math.sin(angle)).toFixed(1)}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="#a1a1aa"
+              fontSize="9"
+            >
+              {text}
+            </text>
+          );
+        })}
+      </svg>
+      <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
+    </div>
+  );
+}
+
+function splitPeriods(periods, offset = 0) {
+  return {
+    am: periods.flatMap((p) => {
+      const from = Math.max(offset, p.fromH);
+      const to = Math.min(offset + 12, p.toH);
+      return from < to ? [{ fromH: from - offset, toH: to - offset }] : [];
+    }),
+    pm: periods.flatMap((p) => {
+      const from = Math.max(offset + 12, p.fromH);
+      const to = Math.min(offset + 24, p.toH);
+      return from < to ? [{ fromH: from - offset - 12, toH: to - offset - 12 }] : [];
+    }),
+  };
+}
+
+function SleepClockChart({ sleepPeriods, awakePeriods }) {
+  const sleep = splitPeriods(sleepPeriods);
+  const awake = splitPeriods(awakePeriods);
+
+  return (
+    <div className="flex gap-3 shrink-0 mx-auto">
+      <ClockFace sleepPeriods={sleep.am} awakePeriods={awake.am} label="AM" />
+      <ClockFace sleepPeriods={sleep.pm} awakePeriods={awake.pm} label="PM" />
+    </div>
   );
 }
 
 // ─── Weekly bar chart ────────────────────────────────────────────────────────
 
 function WeeklyBars({ history }) {
+  const { i18n } = useTranslation();
   const maxH = Math.max(...history, 1);
   const BAR_MAX_PX = 72;
   const dayLabels = Array.from({ length: history.length }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (history.length - 1 - i));
-    return new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(d);
+    return new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(d);
   });
 
   return (
     <div className="flex items-end justify-between gap-1">
       {history.map((h, i) => (
         <div key={i} className="flex flex-col items-center gap-1 flex-1 min-w-0">
-          <span className="text-[10px] text-gray-400 leading-none">{h.toFixed(1)}</span>
+          <span className="text-[10px] text-zinc-400 leading-none">{h.toFixed(1)}</span>
           <div
             className={`w-full rounded-sm ${i === history.length - 1 ? 'bg-indigo-500' : 'bg-indigo-200'}`}
             style={{ height: `${Math.max((h / maxH) * BAR_MAX_PX, 3)}px` }}
           />
-          <span className="text-[10px] text-gray-400 leading-none truncate">{dayLabels[i]}</span>
+          <span className="text-[10px] text-zinc-400 leading-none truncate">{dayLabels[i]}</span>
         </div>
       ))}
     </div>
@@ -178,6 +217,7 @@ function WeeklyBars({ history }) {
 // ─── Edit dialog ─────────────────────────────────────────────────────────────
 
 function EditSleepDialog({ event, onSave, onCancel }) {
+  const { t } = useTranslation();
   const [startedAt, setStartedAt] = useState(toDatetimeLocal(event.startedAt));
   const [endedAt, setEndedAt] = useState(event.endedAt ? toDatetimeLocal(event.endedAt) : '');
   const [error, setError] = useState('');
@@ -193,7 +233,7 @@ function EditSleepDialog({ event, onSave, onCancel }) {
         ...(endedAt ? { endedAt: new Date(endedAt).toISOString() } : {}),
       });
     } catch (err) {
-      setError(err.message || 'Failed to save. Please try again.');
+      setError(err.message || t('tracking.sleep.saveFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -203,34 +243,34 @@ function EditSleepDialog({ event, onSave, onCancel }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-gray-900">Edit Sleep Session</h2>
+        <h2 className="text-lg font-bold text-zinc-900">{t('tracking.sleep.editSession')}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-gray-700">Start</label>
+            <label className="text-sm font-semibold text-zinc-700">Start</label>
             <input
               type="datetime-local"
               required
               value={startedAt}
               onChange={(e) => setStartedAt(e.target.value)}
-              className="border border-gray-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-gray-700">End</label>
+            <label className="text-sm font-semibold text-zinc-700">{t('tracking.sleep.end')}</label>
             <input
               type="datetime-local"
               value={endedAt}
               onChange={(e) => setEndedAt(e.target.value)}
-              className="border border-gray-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
-          {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+          {error && <p className="text-sm text-rose-600" role="alert">{error}</p>}
           <div className="flex gap-3 justify-end mt-1">
             <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
-              Cancel
+              {t('tracking.sleep.cancel')}
             </Button>
             <Button variant="primary" className="py-2 text-sm" type="submit" disabled={isSaving}>
-              {isSaving ? 'Saving…' : 'Save'}
+              {isSaving ? t('tracking.sleep.saving') : t('tracking.sleep.save')}
             </Button>
           </div>
         </form>
@@ -256,12 +296,13 @@ export default function SleepWidget() {
   }, []);
 
   const clockPeriods = computeTodayPeriods(sleepEvents, now);
+  const clockAwakePeriods = computeTodayAwakePeriods(clockPeriods, now);
   const todayTotal = clockPeriods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
   const weeklyHistory = computeWeeklyHistory(sleepEvents);
   const recentSessions = sleepEvents.filter((e) => e.endedAt).slice(0, 7);
 
   const activeElapsed = activeSleep
-    ? formatElapsed(now - new Date(activeSleep.startedAt))
+    ? formatElapsed(now - new Date(activeSleep.startedAt), t)
     : null;
 
   const handleEdit = async (payload) => {
@@ -276,7 +317,7 @@ export default function SleepWidget() {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-5">
-      <h2 className="font-semibold text-gray-900 text-lg">{t('tracking.sleep.title')}</h2>
+      <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.sleep.title')}</h2>
 
       {/* Active sleep banner */}
       {activeSleep && (
@@ -284,9 +325,9 @@ export default function SleepWidget() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
             <div>
-              <p className="text-sm font-medium text-indigo-700">Sleeping</p>
+              <p className="text-sm font-medium text-indigo-700">{t('tracking.sleep.sleeping')}</p>
               <p className="text-xs text-indigo-500">
-                Since {formatTime(activeSleep.startedAt)} · {activeElapsed}
+                {t('tracking.sleep.since')} {formatTime(activeSleep.startedAt)} · {activeElapsed}
               </p>
             </div>
           </div>
@@ -297,7 +338,7 @@ export default function SleepWidget() {
       )}
 
       {/* Loading / error */}
-      {isLoading && <p className="text-sm text-gray-400">{t('tracking.sleep.loading')}</p>}
+      {isLoading && <p className="text-sm text-zinc-400">{t('tracking.sleep.loading')}</p>}
       {error && !isLoading && (
         <div className="flex items-center gap-3">
           <p className="text-sm text-red-500">{error}</p>
@@ -307,21 +348,21 @@ export default function SleepWidget() {
         </div>
       )}
 
-      {/* Clock + today total + start button */}
-      <div className="flex items-center gap-5">
-        <SleepClockChart periods={clockPeriods} />
-        <div className="flex flex-col gap-3">
+      {/* Clocks + today total + start button */}
+      <div className="flex flex-col gap-3">
+        <SleepClockChart sleepPeriods={clockPeriods} awakePeriods={clockAwakePeriods} />
+        <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
+            <p className="text-xs text-zinc-400 uppercase tracking-wide mb-1">
               {t('tracking.sleep.todayTotal')}
             </p>
-            <p className="text-4xl font-bold text-indigo-600 leading-none">
+            <p className="text-3xl font-bold text-indigo-600 leading-none">
               {formatHours(todayTotal)}
             </p>
           </div>
           {!activeSleep && (
             <Button variant="primary" className="py-2 px-4 text-sm" onClick={startSleep}>
-              Start Sleep
+              {t('tracking.sleep.startSleep')}
             </Button>
           )}
         </div>
@@ -330,7 +371,7 @@ export default function SleepWidget() {
       {/* Weekly bar chart */}
       {weeklyHistory.some((h) => h > 0) && (
         <div>
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-3">
+          <p className="text-xs text-zinc-400 uppercase tracking-wide mb-3 border-t-2 border-dashed border-gray-100 pt-4">
             {t('tracking.sleep.thisWeek')}
           </p>
           <WeeklyBars history={weeklyHistory} />
@@ -340,23 +381,23 @@ export default function SleepWidget() {
       {/* Recent sessions */}
       {recentSessions.length > 0 && (
         <div>
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Recent sessions</p>
+          <p className="text-xs text-zinc-400 uppercase tracking-wide mb-2">{t('tracking.sleep.recentSessions')}</p>
           <div className="flex flex-col gap-1">
             {recentSessions.map((e) => {
               const duration = (new Date(e.endedAt) - new Date(e.startedAt)) / 3_600_000;
               return (
-                <div key={e.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                <div key={e.id} className="flex items-center justify-between py-2 border-b border-zinc-50 last:border-0">
                   <div>
-                    <p className="text-sm text-gray-700">
-                      {formatSessionLabel(e.startedAt)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
+                    <p className="text-sm text-zinc-700">
+                      {formatSessionLabel(e.startedAt, t)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
                     </p>
-                    <p className="text-xs text-gray-400">{formatHours(duration)}</p>
+                    <p className="text-xs text-zinc-400">{formatHours(duration)}</p>
                   </div>
                   <div className="flex gap-1">
-                    <IconButton icon={Pencil} label="Edit" onClick={() => setEditingEvent(e)} />
+                    <IconButton icon={Pencil} label={t('tracking.sleep.editSession')} onClick={() => setEditingEvent(e)} />
                     <IconButton
                       icon={Trash2}
-                      label="Delete"
+                      label={t('tracking.sleep.delete')}
                       className="hover:text-red-500"
                       onClick={() => setPendingDeleteId(e.id)}
                     />
@@ -380,10 +421,10 @@ export default function SleepWidget() {
       {/* Delete confirm */}
       <ConfirmDialog
         isOpen={pendingDeleteId !== null}
-        title="Delete Session"
-        message="Are you sure you want to delete this sleep session?"
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        title={t('tracking.sleep.deleteSession')}
+        message={t('tracking.sleep.deleteSessionMessage')}
+        confirmLabel={t('tracking.sleep.delete')}
+        cancelLabel={t('tracking.sleep.cancel')}
         onConfirm={handleDelete}
         onCancel={() => setPendingDeleteId(null)}
       />

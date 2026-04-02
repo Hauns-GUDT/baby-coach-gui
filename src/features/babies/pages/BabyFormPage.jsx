@@ -13,12 +13,12 @@ export default function BabyFormPage() {
   return (
     <main className="min-h-[calc(100vh-65px)] p-6">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-zinc-900">
           {id ? t('babies.editBaby') : t('babies.addBaby')}
         </h1>
 
         {isLoading ? (
-          <p className="text-sm text-gray-400">{t('babies.loading')}</p>
+          <p className="text-sm text-zinc-400">{t('babies.loading')}</p>
         ) : (
           <BabyForm
             name={name}
