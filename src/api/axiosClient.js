@@ -36,11 +36,12 @@ axiosClient.interceptors.response.use(
   async (error) => {
     const original = error.config;
 
-    // Don't retry refresh calls or already-retried requests
+    // Don't retry auth endpoints or already-retried requests
     if (
       error.response?.status !== 401 ||
       original._retry ||
-      original.url === '/auth/refresh'
+      original.url === '/auth/refresh' ||
+      original.url === '/auth/login'
     ) {
       return Promise.reject(error);
     }
