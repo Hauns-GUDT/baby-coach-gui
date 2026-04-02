@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../features/auth/store/useAuthStore';
+import { useBabyStore } from '../../features/babies/store/useBabyStore';
+import { getBabies } from '../../features/babies/api/babyService';
 
 export default function Navigation() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isBabyDialogOpen, setIsBabyDialogOpen] = useState(false);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const { babies, selectedBabyId, setBabies, setSelectedBaby } = useBabyStore();
+
+  useEffect(() => {
+    if (isAuthenticated && babies.length === 0) {
+      getBabies().then(setBabies).catch(() => {});
+    }
+  }, [isAuthenticated]);
 
   if (location.pathname === '/login') return null;
 
@@ -15,6 +27,17 @@ export default function Navigation() {
 
   const navLinkClass = ({ isActive }) =>
     `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`;
+
+  const selectedBaby = babies.find((b) => b.id === selectedBabyId);
+
+  const babySelector = babies.length > 0 && (
+    <button
+      onClick={() => setIsBabyDialogOpen(true)}
+      className="text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
+    >
+      {selectedBaby?.name ?? '—'}
+    </button>
+  );
 
   const links = [
     { to: '/', label: t('nav.dashboard'), end: true },
@@ -36,6 +59,7 @@ export default function Navigation() {
               {label}
             </NavLink>
           ))}
+          {babySelector}
           <button
             onClick={toggleLanguage}
             className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
@@ -44,8 +68,9 @@ export default function Navigation() {
           </button>
         </div>
 
-        {/* Mobile: language toggle + burger */}
+        {/* Mobile: baby selector + language toggle + burger */}
         <div className="flex items-center gap-3 md:hidden">
+          {babySelector}
           <button
             onClick={toggleLanguage}
             className="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
@@ -55,7 +80,7 @@ export default function Navigation() {
           <button
             onClick={() => setIsOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
           >
             {isOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -69,6 +94,31 @@ export default function Navigation() {
           </button>
         </div>
       </div>
+
+      {/* Baby selection dialog */}
+      {isBabyDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setIsBabyDialogOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-3">
+            <h2 className="text-lg font-bold text-gray-900">Select Baby</h2>
+            <div className="flex flex-col gap-1">
+              {babies.map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => { setSelectedBaby(b.id); setIsBabyDialogOpen(false); }}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+                    b.id === selectedBabyId
+                      ? 'bg-indigo-50 text-indigo-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {b.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile dropdown */}
       {isOpen && (

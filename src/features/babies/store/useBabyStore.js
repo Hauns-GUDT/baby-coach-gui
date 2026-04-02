@@ -2,9 +2,15 @@ import { create } from 'zustand';
 
 export const useBabyStore = create((set) => ({
   babies: [],
+  selectedBabyId: null,
   isLoading: false,
   error: '',
-  setBabies: (babies) => set({ babies }),
+  setBabies: (babies) =>
+    set((s) => ({
+      babies,
+      selectedBabyId: s.selectedBabyId ?? (babies.length > 0 ? babies[0].id : null),
+    })),
+  setSelectedBaby: (id) => set({ selectedBabyId: id }),
   addBaby: (baby) => set((s) => ({ babies: [...s.babies, baby] })),
   updateBaby: (id, data) =>
     set((s) => ({ babies: s.babies.map((b) => (b.id === id ? { ...b, ...data } : b)) })),

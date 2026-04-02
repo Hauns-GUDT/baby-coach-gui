@@ -58,14 +58,14 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors cursor-pointer"
         >
           {isSubmitting ? t('babies.saving') : t('babies.save')}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2"
+          className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2 cursor-pointer"
         >
           {t('babies.cancel')}
         </button>
