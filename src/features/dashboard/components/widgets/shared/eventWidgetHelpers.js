@@ -1,0 +1,93 @@
+export function formatHours(h) {
+  const totalMins = Math.round(h * 60);
+  const hrs = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  if (hrs > 0 && mins > 0) return `${hrs}h ${mins}m`;
+  if (hrs > 0) return `${hrs}h`;
+  return `${mins}m`;
+}
+
+export function formatElapsed(ms, t, i18nPrefix) {
+  const totalMins = Math.round(ms / 60_000);
+  if (totalMins < 1) return t(`${i18nPrefix}.lessThanOneMin`);
+  return formatHours(ms / 3_600_000);
+}
+
+export function formatTime(isoString) {
+  return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export function formatSessionLabel(isoString, t, i18nPrefix) {
+  const d = new Date(isoString);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return t(`${i18nPrefix}.today`);
+  if (d.toDateString() === yesterday.toDateString()) return t(`${i18nPrefix}.yesterday`);
+  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
+
+export function toDatetimeLocal(isoString) {
+  const d = new Date(isoString);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+export function computeTodayPeriods(events, now) {
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date(todayStart);
+  todayEnd.setDate(todayEnd.getDate() + 1);
+
+  return events
+    .filter((e) => {
+      const from = new Date(e.startedAt);
+      const to = e.endedAt ? new Date(e.endedAt) : now;
+      return to > todayStart && from < todayEnd;
+    })
+    .map((e) => {
+      const fromDate = new Date(e.startedAt);
+      const toDate = e.endedAt ? new Date(e.endedAt) : now;
+      const fromH = fromDate < todayStart ? 0 : fromDate.getHours() + fromDate.getMinutes() / 60;
+      const toH = toDate >= todayEnd ? 24 : toDate.getHours() + toDate.getMinutes() / 60;
+      return { fromH, toH };
+    });
+}
+
+export function computeGapPeriods(primaryPeriods, now) {
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  const nowH = (now.getTime() - todayStart.getTime()) / 3_600_000;
+
+  const sorted = [...primaryPeriods].sort((a, b) => a.fromH - b.fromH);
+  const gaps = [];
+  let cursor = 0;
+
+  for (const { fromH, toH } of sorted) {
+    if (cursor < fromH) gaps.push({ fromH: cursor, toH: fromH });
+    cursor = Math.max(cursor, toH);
+  }
+  if (cursor < nowH) gaps.push({ fromH: cursor, toH: nowH });
+
+  return gaps;
+}
+
+export function computeWeeklyHistory(events) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const dayStart = new Date();
+    dayStart.setDate(dayStart.getDate() - (6 - i));
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+
+    return events
+      .filter((e) => e.endedAt)
+      .reduce((total, e) => {
+        const from = new Date(e.startedAt).getTime();
+        const to = new Date(e.endedAt).getTime();
+        const clampedFrom = Math.max(from, dayStart.getTime());
+        const clampedTo = Math.min(to, dayEnd.getTime());
+        return clampedTo > clampedFrom ? total + (clampedTo - clampedFrom) / 3_600_000 : total;
+      }, 0);
+  });
+}
