@@ -69,6 +69,12 @@
     "empty": "No babies added yet.",
     "loading": "Loading...",
     "backToProfile": "Back to Profile",
+    "deleteConfirm": {
+      "title": "Delete Baby",
+      "message": "Are you sure you want to delete {{name}}? This cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
     "error": {
       "loadFailed": "Could not load babies.",
       "saveFailed": "Could not save. Please try again.",

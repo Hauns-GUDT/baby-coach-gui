@@ -59,9 +59,11 @@ import Button from '../../../shared/components/Button';
 
 <Button>Primary action</Button>                  // indigo, default
 <Button variant="secondary">Cancel</Button>      // gray
+<Button variant="danger">Delete</Button>         // red, for destructive confirms
 ```
 - `primary` (default): indigo background, white text — for the main action on a screen
 - `secondary`: gray background, dark text — for cancel, back, logout, and destructive-but-soft actions
+- `danger`: red background, white text — for confirming irreversible destructive actions (e.g. inside a ConfirmDialog)
 
 **`IconButton`** — for icon-only actions with a tooltip
 ```jsx
@@ -74,13 +76,34 @@ import { Pencil, Trash2 } from 'lucide-react';
 - Always provide `label` — it becomes the native `title` tooltip and `aria-label`
 - Use `className` to override hover color (e.g. red for destructive actions)
 
+**`ConfirmDialog`** — modal confirmation for destructive actions
+```jsx
+import ConfirmDialog from '../../../shared/components/ConfirmDialog';
+
+<ConfirmDialog
+  isOpen={pendingDeleteId !== null}
+  title="Delete Baby"
+  message="Are you sure? This cannot be undone."
+  confirmLabel="Delete"
+  cancelLabel="Cancel"
+  onConfirm={handleConfirm}
+  onCancel={() => setPendingDeleteId(null)}
+/>
+```
+- Use for any irreversible action (delete, deactivate, etc.)
+- The confirm button uses `Button variant="danger"` internally
+- Clicking the backdrop calls `onCancel`
+- Track pending state locally in the component (e.g. `pendingDeleteId`)
+
 ### When to use which
 | Situation | Component |
 |---|---|
 | Primary page action (Save, Add, Sign In) | `Button` (primary) |
 | Back, Cancel, Logout | `Button` (secondary) |
+| Irreversible action confirm | `Button` (danger) inside `ConfirmDialog` |
 | Row-level edit / delete | `IconButton` |
 | Inline icon-only action | `IconButton` |
+| Destructive action that needs confirmation | `ConfirmDialog` |
 
 Do NOT write raw `<button>` elements with hardcoded Tailwind color classes for these cases — use the shared components.
 

@@ -69,6 +69,12 @@
     "empty": "Noch keine Babys hinzugefügt.",
     "loading": "Wird geladen...",
     "backToProfile": "Zurück zum Profil",
+    "deleteConfirm": {
+      "title": "Baby löschen",
+      "message": "Möchtest du {{name}} wirklich löschen? Dies kann nicht rückgängig gemacht werden.",
+      "confirm": "Löschen",
+      "cancel": "Abbrechen"
+    },
     "error": {
       "loadFailed": "Babys konnten nicht geladen werden.",
       "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
