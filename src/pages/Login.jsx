@@ -1,44 +1,17 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { axiosClient } from '../api/axiosClient';
-import { useAuthStore } from '../store/useAuthStore';
+import { useLogin } from '../hooks/useLogin';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { submit, error, isSubmitting } = useLogin();
 
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    setIsSubmitting(true);
-
-    try {
-      const { data } = await axiosClient.post('/auth/login', { login, password });
-      let username = null;
-      try {
-        const payload = JSON.parse(atob(data.accessToken.split('.')[1]));
-        username = payload.username ?? null;
-      } catch {
-        // malformed JWT payload — proceed with null username
-      }
-      setAuth(data.accessToken, username);
-      navigate('/', { replace: true });
-    } catch (err) {
-      if (err.response?.status === 401) {
-        setError(t('auth.error.invalid'));
-      } else {
-        setError(t('auth.error.generic'));
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+    submit({ login, password });
   };
 
   const toggleLanguage = () => {

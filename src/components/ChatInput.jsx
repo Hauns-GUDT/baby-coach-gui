@@ -1,43 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useChatStore } from '../store/useAppStore';
+import { useChat } from '../hooks/useChat';
 
 export default function ChatInput() {
   const { t } = useTranslation();
-  const { apiUrl, prompt, answer, error, isLoading, setPrompt, setAnswer, setError, setIsLoading } =
-    useChatStore();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!prompt.trim()) {
-      setError(t('chatbot.error.empty'));
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-    setAnswer('');
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      });
-
-      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
-
-      const data = await response.json();
-      setAnswer(data.answer ?? data.message ?? JSON.stringify(data, null, 2));
-    } catch (requestError) {
-      setError(requestError.message || t('chatbot.error.generic'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { prompt, answer, error, isLoading, setPrompt, submit } = useChat();
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-3">
+    <form onSubmit={submit} className="grid gap-3">
       <label className="font-semibold text-gray-700" htmlFor="prompt">
         {t('chatbot.prompt')}
       </label>

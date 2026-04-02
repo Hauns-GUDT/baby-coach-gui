@@ -1,23 +1,11 @@
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { axiosClient } from '../api/axiosClient';
 import { useAuthStore } from '../store/useAuthStore';
+import { useLogout } from '../hooks/useLogout';
 
 export default function Profile() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const username = useAuthStore((state) => state.username);
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-
-  const handleLogout = async () => {
-    try {
-      await axiosClient.post('/auth/logout');
-    } catch {
-      // Proceed with logout regardless of API error
-    }
-    clearAuth();
-    navigate('/login', { replace: true });
-  };
+  const { handleLogout } = useLogout();
 
   return (
     <main className="min-h-[calc(100vh-65px)] grid place-items-center p-6">

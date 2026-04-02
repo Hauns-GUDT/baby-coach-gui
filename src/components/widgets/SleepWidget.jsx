@@ -1,8 +1,5 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSleepStore } from '../../store/useAppStore';
-
-const SLEEP_API_URL = 'http://localhost:8000/api/sleep';
+import { useSleep } from '../../hooks/useSleep';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -174,26 +171,7 @@ function WeeklyBars({ history }) {
 
 export default function SleepWidget() {
   const { t } = useTranslation();
-  const { sleepData, sleepLoading, sleepError, setSleepData, setSleepLoading, setSleepError } =
-    useSleepStore();
-
-  const fetchSleep = async () => {
-    setSleepLoading(true);
-    setSleepError('');
-    try {
-      const res = await fetch(SLEEP_API_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setSleepData(await res.json());
-    } catch (e) {
-      setSleepError(e.message);
-    } finally {
-      setSleepLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSleep();
-  }, []);
+  const { sleepData, sleepLoading, sleepError, refetch } = useSleep();
 
   const clockPeriods = sleepData ? parseTodayPeriods(sleepData.today ?? []) : [];
   const todayTotal = clockPeriods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
@@ -212,7 +190,7 @@ export default function SleepWidget() {
         <div className="flex items-center gap-3">
           <p className="text-sm text-red-500">{t('tracking.sleep.error')}</p>
           <button
-            onClick={fetchSleep}
+            onClick={refetch}
             className="text-xs text-indigo-600 hover:underline cursor-pointer"
           >
             {t('tracking.sleep.retry')}
