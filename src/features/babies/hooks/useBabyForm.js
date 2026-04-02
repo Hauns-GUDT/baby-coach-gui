@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../store/useBabyStore';
 import { getBaby, createBaby, updateBaby as updateBabyApi } from '../api/babyService';
+import { parseApiError } from '../../../shared/utils/parseApiError';
 
 export function useBabyForm(babyId) {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export function useBabyForm(babyId) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     if (!babyId) return;
@@ -42,6 +44,7 @@ export function useBabyForm(babyId) {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
+    setFieldErrors({});
 
     const payload = { name, birthday, gender };
 
@@ -54,12 +57,23 @@ export function useBabyForm(babyId) {
         addBaby(created);
       }
       navigate('/profile/babies');
-    } catch {
-      setError(t('babies.error.saveFailed'));
+    } catch (err) {
+      const { fieldErrors: fe, code } = parseApiError(err);
+      if (fe && Object.keys(fe).length > 0) {
+        const translated = {};
+        for (const [field, errorCode] of Object.entries(fe)) {
+          translated[field] = t(`validation.${errorCode}`, t('validation.fallback'));
+        }
+        setFieldErrors(translated);
+      } else if (code) {
+        setError(t(`validation.${code}`, t('babies.error.saveFailed')));
+      } else {
+        setError(t('babies.error.saveFailed'));
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, submit };
+  return { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, fieldErrors, submit };
 }
