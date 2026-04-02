@@ -42,3 +42,12 @@ React app for baby coaching with mobile-first responsive design using Tailwind C
 - Import Tailwind styles globally in main entry
 - Avoid CSS-in-JS solutions
 - Keep file organization clean and organized
+
+## Authentication
+
+- Auth state (accessToken, username, isAuthenticated) lives in `src/store/useAuthStore.js` — in-memory only, never persisted to localStorage
+- All API calls must use `src/api/axiosClient.js` (not raw fetch or a new axios instance)
+- The axiosClient attaches `Authorization: Bearer <token>` automatically and silently refreshes on 401
+- The refresh token is an httpOnly cookie managed entirely by the backend — never read or written in frontend code
+- All routes except `/login` are wrapped in `<ProtectedRoute>`
+- On app load, `App.jsx` attempts a silent refresh before rendering routes
