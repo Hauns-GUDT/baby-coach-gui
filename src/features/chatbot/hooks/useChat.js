@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useChatStore } from '../store/useAppStore';
+import { useChatStore } from '../store/useChatStore';
 import { sendMessage } from '../api/chatService';
 
 export function useChat() {

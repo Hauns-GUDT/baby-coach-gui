@@ -20,7 +20,6 @@ export function useLogin() {
       setAuth(accessToken, username);
       navigate('/', { replace: true });
     } catch (err) {
-      console.log(err, 'aaaa');
       setError(err.response?.status === 401 ? t('auth.error.invalid') : t('auth.error.generic'));
     } finally {
       setIsSubmitting(false);
