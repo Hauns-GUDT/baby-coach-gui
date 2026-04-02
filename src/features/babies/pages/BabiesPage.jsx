@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useBabies } from '../hooks/useBabies';
 import BabyList from '../components/BabyList';
+import Button from '../../../shared/components/Button';
 
 export default function BabiesPage() {
   const { t } = useTranslation();
@@ -26,12 +27,9 @@ export default function BabiesPage() {
 
         {!isLoading && <BabyList babies={babies} onDelete={deleteBaby} />}
 
-        <button
-          onClick={() => navigate('/profile')}
-          className="text-sm text-gray-500 hover:text-gray-800 self-start"
-        >
+        <Button variant="secondary" className="self-start text-sm py-2" onClick={() => navigate('/profile')}>
           ← {t('babies.backToProfile')}
-        </button>
+        </Button>
       </div>
     </main>
   );

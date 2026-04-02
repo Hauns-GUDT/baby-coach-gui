@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Pencil, Trash2 } from 'lucide-react';
+import IconButton from '../../../shared/components/IconButton';
 
 export default function BabyList({ babies, onDelete }) {
   const { t } = useTranslation();
@@ -22,19 +24,18 @@ export default function BabyList({ babies, onDelete }) {
               {new Date(baby.birthday).toLocaleDateString()} · {t(`babies.${baby.gender}`)}
             </p>
           </div>
-          <div className="flex gap-2">
-            <button
+          <div className="flex gap-1">
+            <IconButton
+              icon={Pencil}
+              label={t('babies.edit')}
               onClick={() => navigate(`/profile/babies/${baby.id}/edit`)}
-              className="text-sm text-indigo-600 hover:underline cursor-pointer"
-            >
-              {t('babies.edit')}
-            </button>
-            <button
+            />
+            <IconButton
+              icon={Trash2}
+              label={t('babies.delete')}
               onClick={() => onDelete(baby.id)}
-              className="text-sm text-red-500 hover:underline cursor-pointer"
-            >
-              {t('babies.delete')}
-            </button>
+              className="hover:text-red-500"
+            />
           </div>
         </li>
       ))}
