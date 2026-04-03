@@ -3,6 +3,7 @@ import Navigation from './shared/components/Navigation';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import Login from './features/auth/pages/Login';
+import Register from './features/auth/pages/Register';
 import Dashboard from './features/dashboard/pages/Dashboard';
 import History from './features/history/pages/History';
 import Profile from './features/profile/pages/Profile';
@@ -27,6 +28,7 @@ export default function App() {
         <Navigation />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/"
             element={

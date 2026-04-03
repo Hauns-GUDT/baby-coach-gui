@@ -103,8 +103,24 @@
     "passwordLabel": "Password",
     "submit": "Sign In",
     "submitting": "Signing in...",
+    "registerPrompt": "Don't have an account?",
+    "registerLink": "Create one",
+    "registeredSuccess": "Account created! Please sign in.",
     "error": {
       "invalid": "Invalid credentials. Please try again.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "registration": {
+    "title": "Create Account",
+    "emailLabel": "Email",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "submit": "Create Account",
+    "submitting": "Creating account...",
+    "signInPrompt": "Already have an account?",
+    "signInLink": "Sign in",
+    "error": {
       "generic": "Something went wrong. Please try again."
     }
   },

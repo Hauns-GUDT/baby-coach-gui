@@ -103,8 +103,24 @@
     "passwordLabel": "Passwort",
     "submit": "Anmelden",
     "submitting": "Wird angemeldet...",
+    "registerPrompt": "Noch kein Konto?",
+    "registerLink": "Jetzt registrieren",
+    "registeredSuccess": "Konto erstellt! Bitte jetzt anmelden.",
     "error": {
       "invalid": "Ungültige Anmeldedaten. Bitte erneut versuchen.",
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+    }
+  },
+  "registration": {
+    "title": "Konto erstellen",
+    "emailLabel": "E-Mail",
+    "usernameLabel": "Benutzername",
+    "passwordLabel": "Passwort",
+    "submit": "Konto erstellen",
+    "submitting": "Wird erstellt...",
+    "signInPrompt": "Bereits ein Konto?",
+    "signInLink": "Anmelden",
+    "error": {
       "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
     }
   },
