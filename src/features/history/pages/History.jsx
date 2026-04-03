@@ -4,11 +4,12 @@ import { Moon, Milk } from 'lucide-react';
 import { useSleepEvents } from '../../dashboard/hooks/useSleepEvents';
 import { useFeedingEvents } from '../../dashboard/hooks/useFeedingEvents';
 import EventCalendar from '../components/calendar/EventCalendar';
-import DayClockChart from '../components/calendar/DayClockChart';
+import DayTimeline from '../../../shared/components/DayTimeline';
+import { computePeriodsForDate } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
 const EVENT_SETS = [
-  { key: 'sleep',   color: '#818cf8' },
-  { key: 'feeding', color: '#f97316' },
+  { key: 'sleep',   color: '#818cf8', icon: Moon,  i18nKey: 'history.sleep.title' },
+  { key: 'feeding', color: '#f97316', icon: Milk,  i18nKey: 'history.feeding.title' },
 ];
 
 export default function History() {
@@ -27,26 +28,23 @@ export default function History() {
     ? new Intl.DateTimeFormat(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }).format(selection.date)
     : null;
 
+  const timelineRows = selection
+    ? EVENT_SETS.map(({ color, icon, i18nKey }, idx) => ({
+        label: t(i18nKey),
+        color,
+        icon,
+        periods: selection.periodsBySets[idx],
+      }))
+    : [];
+
   return (
     <main className="p-4 flex flex-col gap-4 max-w-2xl mx-auto">
       <EventCalendar eventSets={eventSets} onDaySelect={setSelection} />
 
       {selection && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <DayClockChart
-            periods={selection.periodsBySets[0]}
-            primaryColor={EVENT_SETS[0].color}
-            title={t('history.sleep.title')}
-            dateLabel={dateLabel}
-            icon={Moon}
-          />
-          <DayClockChart
-            periods={selection.periodsBySets[1]}
-            primaryColor={EVENT_SETS[1].color}
-            title={t('history.feeding.title')}
-            dateLabel={dateLabel}
-            icon={Milk}
-          />
+        <div className="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3">
+          {dateLabel && <p className="text-xs text-zinc-400">{dateLabel}</p>}
+          <DayTimeline rows={timelineRows} />
         </div>
       )}
     </main>
