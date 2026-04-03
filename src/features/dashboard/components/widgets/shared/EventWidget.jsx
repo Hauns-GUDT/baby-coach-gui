@@ -16,6 +16,7 @@ import ConfirmDialog from '../../../../../shared/components/ConfirmDialog';
 import { parseApiError } from '../../../../../shared/utils/parseApiError';
 import {
   buildDoughnutSegments,
+  hoursToTimeStr,
   clockSplitPeriods,
   formatHours,
   formatElapsed,
@@ -31,16 +32,34 @@ ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
 
 // ─── Clock chart ─────────────────────────────────────────────────────────────
 
-const CLOCK_OPTIONS = {
-  cutout: '60%',
-  rotation: -90,
-  animation: false,
-  plugins: { legend: { display: false }, tooltip: { enabled: false } },
-  events: [],
-};
+function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label, offset, primaryLabel, secondaryLabel }) {
+  const { data, colors, meta } = buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods, secondaryColor);
 
-function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label }) {
-  const { data, colors } = buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods, secondaryColor);
+  const options = {
+    cutout: '60%',
+    rotation: -90,
+    animation: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        filter: (item) => {
+          const kind = meta[item.dataIndex]?.kind;
+          return kind === 'primary' || (kind === 'secondary' && secondaryLabel != null);
+        },
+        callbacks: {
+          title: () => null,
+          label: (item) => {
+            const seg = meta[item.dataIndex];
+            const typeLabel = seg.kind === 'primary' ? primaryLabel : secondaryLabel;
+            const start = hoursToTimeStr(seg.fromH + offset);
+            const duration = formatHours(seg.toH - seg.fromH);
+            return `${typeLabel} · ${start} · ${duration}`;
+          },
+        },
+      },
+    },
+  };
+
   const chartData = {
     datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 0 }],
   };
@@ -48,18 +67,18 @@ function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryCo
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative w-24 h-24">
-        <Doughnut data={chartData} options={CLOCK_OPTIONS} />
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">12</span>
-        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">3</span>
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">6</span>
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">9</span>
+        <Doughnut data={chartData} options={options} />
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-900 leading-none">12</span>
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-900 leading-none">3</span>
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-900 leading-none">6</span>
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-900 leading-none">9</span>
       </div>
       <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
     </div>
   );
 }
 
-function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor }) {
+function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor, primaryLabel, secondaryLabel }) {
   const primary = clockSplitPeriods(primaryPeriods);
   const secondary = clockSplitPeriods(secondaryPeriods);
 
@@ -71,6 +90,9 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
         primaryColor={svgPrimaryColor}
         secondaryColor={svgSecondaryColor}
         label="AM"
+        offset={0}
+        primaryLabel={primaryLabel}
+        secondaryLabel={secondaryLabel}
       />
       <ClockFace
         primaryPeriods={primary.pm}
@@ -78,6 +100,9 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
         primaryColor={svgPrimaryColor}
         secondaryColor={svgSecondaryColor}
         label="PM"
+        offset={12}
+        primaryLabel={primaryLabel}
+        secondaryLabel={secondaryLabel}
       />
     </div>
   );
@@ -357,6 +382,8 @@ export default function EventWidget({
           secondaryPeriods={secondaryPeriods}
           svgPrimaryColor={svgPrimaryColor}
           svgSecondaryColor={svgSecondaryColor}
+          primaryLabel={t(`${i18nPrefix}.title`)}
+          secondaryLabel={showGapPeriods ? t('history.sleep.awake') : null}
         />
         <div className="flex items-center justify-between">
           <div>

@@ -35,6 +35,7 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "lessThanOneMin": "< 1 min",
+      "awake": "Awake",
       "active": "Sleeping",
       "since": "Since",
       "start": "Start Sleep",

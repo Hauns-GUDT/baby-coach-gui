@@ -9,12 +9,13 @@ export function buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPer
   const maxH = 12;
 
   const allSegs = [
-    ...primaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: primaryColor })),
-    ...(secondaryColor ? secondaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: secondaryColor })) : []),
+    ...primaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: primaryColor, kind: 'primary' })),
+    ...(secondaryColor ? secondaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: secondaryColor, kind: 'secondary' })) : []),
   ].sort((a, b) => a.from - b.from);
 
   const data = [];
   const colors = [];
+  const meta = [];
   let cursor = 0;
 
   for (const seg of allSegs) {
@@ -25,9 +26,11 @@ export function buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPer
     if (from > cursor) {
       data.push(from - cursor);
       colors.push('#e4e4e7');
+      meta.push({ kind: 'inactive', fromH: cursor, toH: from });
     }
     data.push(to - from);
     colors.push(seg.color);
+    meta.push({ kind: seg.kind, fromH: from, toH: to });
     cursor = to;
     if (cursor >= maxH) break;
   }
@@ -35,14 +38,23 @@ export function buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPer
   if (cursor < maxH) {
     data.push(maxH - cursor);
     colors.push('#e4e4e7');
+    meta.push({ kind: 'inactive', fromH: cursor, toH: maxH });
   }
 
   if (data.length === 0) {
     data.push(maxH);
     colors.push('#e4e4e7');
+    meta.push({ kind: 'inactive', fromH: 0, toH: maxH });
   }
 
-  return { data, colors };
+  return { data, colors, meta };
+}
+
+export function hoursToTimeStr(h) {
+  const totalMins = Math.round(h * 60);
+  const hh = Math.floor(totalMins / 60) % 24;
+  const mm = totalMins % 60;
+  return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
 // ─── Clock period splitting ───────────────────────────────────────────────────
