@@ -33,7 +33,9 @@ export function formatElapsed(ms, t, i18nPrefix) {
 }
 
 export function formatTime(isoString) {
-  return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 export function formatSessionLabel(isoString, t, i18nPrefix) {
@@ -69,7 +71,9 @@ export function computeTodayPeriods(events, now) {
       const toDate = e.endedAt ? new Date(e.endedAt) : now;
       const fromH = fromDate < todayStart ? 0 : fromDate.getHours() + fromDate.getMinutes() / 60;
       const toH = toDate >= todayEnd ? 24 : toDate.getHours() + toDate.getMinutes() / 60;
-      return { fromH, toH };
+      const durationH = toH - fromH;
+      const tooltip = `${formatTime(e.startedAt)} – ${e.endedAt ? formatTime(e.endedAt) : '…'} · ${formatHours(durationH)}`;
+      return { fromH, toH, tooltip };
     });
 }
 
@@ -112,7 +116,9 @@ export function computePeriodsForDate(events, date) {
       const toDate = e.endedAt ? new Date(e.endedAt) : dayEnd;
       const fromH = fromDate < dayStart ? 0 : fromDate.getHours() + fromDate.getMinutes() / 60;
       const toH = toDate >= dayEnd ? 24 : toDate.getHours() + toDate.getMinutes() / 60;
-      return { fromH, toH };
+      const durationH = toH - fromH;
+      const tooltip = `${formatTime(e.startedAt)} – ${e.endedAt ? formatTime(e.endedAt) : '…'} · ${formatHours(durationH)}`;
+      return { fromH, toH, tooltip };
     });
 }
 

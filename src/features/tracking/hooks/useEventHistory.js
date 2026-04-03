@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { getEvents, updateEvent, deleteEvent } from '../../../shared/api/eventService';
+import { useEventVersion } from '../../events/store/useEventVersion';
 
 const PAGE_SIZE = 10;
 
@@ -13,6 +14,8 @@ const PAGE_SIZE = 10;
  */
 export function useEventHistory() {
   const selectedBabyId = useBabyStore((s) => s.selectedBabyId);
+  const eventVersion = useEventVersion((s) => s.version);
+  const bumpEventVersion = useEventVersion((s) => s.bumpEventVersion);
   const [page, setPage] = useState(1);
   const [events, setEvents] = useState([]);
   const [total, setTotal] = useState(0);
@@ -43,7 +46,7 @@ export function useEventHistory() {
 
   useEffect(() => {
     fetchPage(page);
-  }, [fetchPage, page]);
+  }, [fetchPage, page, eventVersion]);
 
   const goToPage = (n) => {
     const clamped = Math.max(1, Math.min(n, totalPages));
@@ -53,7 +56,7 @@ export function useEventHistory() {
   // Throws on error so the caller (EditDialog) can show field-level errors
   const editEvent = async (eventId, payload) => {
     await updateEvent(selectedBabyId, eventId, payload);
-    await fetchPage(page);
+    bumpEventVersion();
   };
 
   const removeEvent = async (eventId) => {
@@ -64,7 +67,7 @@ export function useEventHistory() {
     if (nextPage !== page) {
       setPage(nextPage);
     } else {
-      await fetchPage(page);
+      bumpEventVersion();
     }
   };
 

@@ -120,6 +120,7 @@ export default function DayWidget() {
         {data.map(({ config, events, periods, active, onStart, statusLabel }) => {
           const { icon: Icon, color, totalText, i18nPrefix } = config;
           const total = periods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
+          const count = periods.length;
           const timeSince = !active ? getTimeSinceLastEnded(events, now) : null;
 
           return (
@@ -140,7 +141,10 @@ export default function DayWidget() {
                   </button>
                 )}
               </div>
-              <span className={`text-2xl font-bold leading-tight ${totalText}`}>{formatHours(total)}</span>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-2xl font-bold leading-tight ${totalText}`}>{formatHours(total)}</span>
+                <span className="text-xs font-medium text-zinc-400">×{count}</span>
+              </div>
               {timeSince !== null && (
                 <span className="text-xs text-zinc-400">{statusLabel} · {formatHours(timeSince)}</span>
               )}
