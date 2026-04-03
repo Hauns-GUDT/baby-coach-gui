@@ -1,4 +1,8 @@
 {
+  "dashboard": {
+    "awake": "Awake",
+    "lastMeal": "Last meal"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "chatbot": "ChatBot",

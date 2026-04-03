@@ -1,109 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pencil, Trash2 } from 'lucide-react';
-import { Doughnut, Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
-  ArcElement,
-  Tooltip,
   CategoryScale,
   LinearScale,
   BarElement,
+  Tooltip,
 } from 'chart.js';
 import Button from '../../../../../shared/components/Button';
 import IconButton from '../../../../../shared/components/IconButton';
 import ConfirmDialog from '../../../../../shared/components/ConfirmDialog';
+import DayTimeline from '../../../../../shared/components/DayTimeline';
 import { parseApiError } from '../../../../../shared/utils/parseApiError';
 import {
-  buildDoughnutSegments,
-  clockTicksPlugin,
-  hoursToTimeStr,
-  clockSplitPeriods,
   formatHours,
   formatElapsed,
   formatTime,
   formatSessionLabel,
   toDatetimeLocal,
   computeTodayPeriods,
-  computeGapPeriods,
   computeWeeklyHistory,
 } from './eventWidgetHelpers';
 
-ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
-
-// ─── Clock chart ─────────────────────────────────────────────────────────────
-
-function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label, offset, primaryLabel, secondaryLabel }) {
-  const { data, colors, meta } = buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods, secondaryColor);
-
-  const options = {
-    cutout: '60%',
-    rotation: -90,
-    animation: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        filter: (item) => {
-          const kind = meta[item.dataIndex]?.kind;
-          return kind === 'primary' || (kind === 'secondary' && secondaryLabel != null);
-        },
-        callbacks: {
-          title: () => null,
-          label: (item) => {
-            const seg = meta[item.dataIndex];
-            const typeLabel = seg.kind === 'primary' ? primaryLabel : secondaryLabel;
-            const start = hoursToTimeStr(seg.fromH + offset);
-            const duration = formatHours(seg.toH - seg.fromH);
-            return `${typeLabel} · ${start} · ${duration}`;
-          },
-        },
-      },
-    },
-  };
-
-  const chartData = {
-    datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 0 }],
-  };
-
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="w-24 h-24">
-        <Doughnut data={chartData} options={options} plugins={[clockTicksPlugin]} />
-      </div>
-      <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
-    </div>
-  );
-}
-
-function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor, primaryLabel, secondaryLabel }) {
-  const primary = clockSplitPeriods(primaryPeriods);
-  const secondary = clockSplitPeriods(secondaryPeriods);
-
-  return (
-    <div className="flex gap-3 shrink-0 mx-auto">
-      <ClockFace
-        primaryPeriods={primary.am}
-        secondaryPeriods={secondary.am}
-        primaryColor={svgPrimaryColor}
-        secondaryColor={svgSecondaryColor}
-        label="AM"
-        offset={0}
-        primaryLabel={primaryLabel}
-        secondaryLabel={secondaryLabel}
-      />
-      <ClockFace
-        primaryPeriods={primary.pm}
-        secondaryPeriods={secondary.pm}
-        primaryColor={svgPrimaryColor}
-        secondaryColor={svgSecondaryColor}
-        label="PM"
-        offset={12}
-        primaryLabel={primaryLabel}
-        secondaryLabel={secondaryLabel}
-      />
-    </div>
-  );
-}
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
 // ─── Weekly bar chart ─────────────────────────────────────────────────────────
 
@@ -258,31 +179,6 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix, inputRingClass }
 
 // ─── Generic event widget ─────────────────────────────────────────────────────
 
-/**
- * @param {object} props
- * @param {Array}   props.events
- * @param {object|null} props.activeEvent
- * @param {boolean} props.isLoading
- * @param {string}  props.error
- * @param {Function} props.onStart
- * @param {Function} props.onStop
- * @param {Function} props.onEdit    async (id, payload) => void — throws on error
- * @param {Function} props.onDelete  async (id) => void
- * @param {Function} props.onRefetch
- * @param {object}  props.config
- * @param {string}  props.config.i18nPrefix      e.g. 'history.sleep'
- * @param {boolean} props.config.showGapPeriods  show gaps between events as secondary arcs
- * @param {string}  props.config.svgPrimaryColor  e.g. '#818cf8'
- * @param {string|null} props.config.svgSecondaryColor e.g. '#38bdf8' or null
- * @param {string}  props.config.accentBg         Tailwind class
- * @param {string}  props.config.accentDot        Tailwind class
- * @param {string}  props.config.accentText       Tailwind class
- * @param {string}  props.config.accentSubText    Tailwind class
- * @param {string}  props.config.totalText        Tailwind class
- * @param {string}  props.config.barActive        Tailwind class
- * @param {string}  props.config.barInactive      Tailwind class
- * @param {string}  props.config.inputRingClass   Tailwind class e.g. 'focus:ring-indigo-400'
- */
 export default function EventWidget({
   events,
   activeEvent,
@@ -297,10 +193,8 @@ export default function EventWidget({
 }) {
   const {
     i18nPrefix,
-    showGapPeriods,
     icon: Icon,
     svgPrimaryColor,
-    svgSecondaryColor,
     accentBg,
     accentDot,
     accentText,
@@ -319,9 +213,8 @@ export default function EventWidget({
     return () => clearInterval(id);
   }, []);
 
-  const clockPeriods = computeTodayPeriods(events, now);
-  const secondaryPeriods = showGapPeriods ? computeGapPeriods(clockPeriods, now) : [];
-  const todayTotal = clockPeriods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
+  const todayPeriods = computeTodayPeriods(events, now);
+  const todayTotal = todayPeriods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
   const weeklyHistory = computeWeeklyHistory(events);
   const recentSessions = events.filter((e) => e.endedAt).slice(0, 7);
   const activeElapsed = activeEvent ? formatElapsed(now - new Date(activeEvent.startedAt), t, i18nPrefix) : null;
@@ -372,15 +265,15 @@ export default function EventWidget({
         </div>
       )}
 
-      {/* Clocks + today total + start button */}
+      {/* Timeline + today total + start button */}
       <div className="flex flex-col gap-3">
-        <EventClockChart
-          primaryPeriods={clockPeriods}
-          secondaryPeriods={secondaryPeriods}
-          svgPrimaryColor={svgPrimaryColor}
-          svgSecondaryColor={svgSecondaryColor}
-          primaryLabel={t(`${i18nPrefix}.title`)}
-          secondaryLabel={showGapPeriods ? t('history.sleep.awake') : null}
+        <DayTimeline
+          rows={[{
+            label: t(`${i18nPrefix}.title`),
+            color: svgPrimaryColor,
+            icon: Icon,
+            periods: todayPeriods,
+          }]}
         />
         <div className="flex items-center justify-between">
           <div>
@@ -418,11 +311,14 @@ export default function EventWidget({
               const duration = (new Date(e.endedAt) - new Date(e.startedAt)) / 3_600_000;
               return (
                 <div key={e.id} className="flex items-center justify-between py-2 border-b border-zinc-50 last:border-0">
-                  <div>
-                    <p className="text-sm text-zinc-700">
-                      {formatSessionLabel(e.startedAt, t, i18nPrefix)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
-                    </p>
-                    <p className="text-xs text-zinc-400">{formatHours(duration)}</p>
+                  <div className="flex items-center gap-2">
+                    {Icon && <Icon size={14} style={{ color: svgPrimaryColor }} strokeWidth={2} />}
+                    <div>
+                      <p className="text-sm text-zinc-700">
+                        {formatSessionLabel(e.startedAt, t, i18nPrefix)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
+                      </p>
+                      <p className="text-xs text-zinc-400">{formatHours(duration)}</p>
+                    </div>
                   </div>
                   <div className="flex gap-1">
                     <IconButton icon={Pencil} label={t(`${i18nPrefix}.editSession`)} onClick={() => setEditingEvent(e)} />

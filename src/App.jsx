@@ -35,14 +35,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* {<Route
             path="/chatbot"
             element={
               <ProtectedRoute>
-                <ChatBot />
+                 <ChatBot />
               </ProtectedRoute>
             }
-          />
+          />} */}
           <Route
             path="/history"
             element={

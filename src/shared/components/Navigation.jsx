@@ -41,7 +41,7 @@ export default function Navigation() {
 
   const links = [
     { to: '/', label: t('nav.dashboard'), end: true },
-    { to: '/chatbot', label: t('nav.chatbot') },
+    // { to: '/chatbot', label: t('nav.chatbot') },
     { to: '/history', label: t('nav.history') },
     { to: '/profile', label: t('nav.profile') },
   ];
