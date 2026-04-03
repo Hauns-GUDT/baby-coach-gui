@@ -237,7 +237,7 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix, inputRingClass }
  * @param {Function} props.onDelete  async (id) => void
  * @param {Function} props.onRefetch
  * @param {object}  props.config
- * @param {string}  props.config.i18nPrefix      e.g. 'tracking.sleep'
+ * @param {string}  props.config.i18nPrefix      e.g. 'history.sleep'
  * @param {boolean} props.config.showGapPeriods  show gaps between events as secondary arcs
  * @param {string}  props.config.svgPrimaryColor  e.g. '#818cf8'
  * @param {string|null} props.config.svgSecondaryColor e.g. '#38bdf8' or null

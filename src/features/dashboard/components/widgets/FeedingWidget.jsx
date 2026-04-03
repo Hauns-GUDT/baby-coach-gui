@@ -3,7 +3,7 @@ import { useFeedingEvents } from '../../hooks/useFeedingEvents';
 import EventWidget from './shared/EventWidget';
 
 const FEEDING_CONFIG = {
-  i18nPrefix: 'tracking.feeding',
+  i18nPrefix: 'history.feeding',
   showGapPeriods: false,
   icon: Milk,
   svgPrimaryColor: '#f97316',

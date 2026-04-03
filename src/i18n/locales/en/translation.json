@@ -2,7 +2,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "chatbot": "ChatBot",
-    "tracking": "Tracking",
+    "history": "History",
     "profile": "Profile"
   },
   "chatbot": {
@@ -22,8 +22,8 @@
       "generic": "Something went wrong while contacting the backend."
     }
   },
-  "tracking": {
-    "title": "Tracking",
+  "history": {
+    "title": "History",
     "sleep": {
       "title": "Sleep",
       "todayTotal": "Today",

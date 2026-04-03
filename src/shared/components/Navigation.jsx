@@ -42,7 +42,7 @@ export default function Navigation() {
   const links = [
     { to: '/', label: t('nav.dashboard'), end: true },
     { to: '/chatbot', label: t('nav.chatbot') },
-    { to: '/tracking', label: t('nav.tracking') },
+    { to: '/history', label: t('nav.history') },
     { to: '/profile', label: t('nav.profile') },
   ];
 
@@ -50,7 +50,7 @@ export default function Navigation() {
     <nav className="bg-white border-b border-zinc-200 px-6 relative">
       {/* Top bar */}
       <div className="h-16 flex items-center justify-between">
-        <span className="text-lg font-bold text-indigo-600">Baby Coach</span>
+        <NavLink className="text-lg font-bold text-indigo-600" to="/">Baby Coach</NavLink>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6">

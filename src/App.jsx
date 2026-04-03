@@ -4,7 +4,7 @@ import ProtectedRoute from './shared/components/ProtectedRoute';
 import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import Login from './features/auth/pages/Login';
 import Dashboard from './features/dashboard/pages/Dashboard';
-import Tracking from './features/tracking/pages/Tracking';
+import History from './features/history/pages/History';
 import ChatBot from './features/chatbot/pages/ChatBot';
 import Profile from './features/profile/pages/Profile';
 import BabiesPage from './features/babies/pages/BabiesPage';
@@ -44,10 +44,10 @@ export default function App() {
             }
           />
           <Route
-            path="/tracking"
+            path="/history"
             element={
               <ProtectedRoute>
-                <Tracking />
+                <History />
               </ProtectedRoute>
             }
           />

@@ -24,12 +24,12 @@ export function useFeedingEvents() {
 
   const translateError = (err) => {
     const { fieldErrors, code } = parseApiError(err);
-    if (code) return t(`validation.${code}`, t('tracking.feeding.saveFailed'));
+    if (code) return t(`validation.${code}`, t('history.feeding.saveFailed'));
     if (fieldErrors && Object.keys(fieldErrors).length > 0) {
       const firstCode = Object.values(fieldErrors)[0];
-      return t(`validation.${firstCode}`, t('tracking.feeding.saveFailed'));
+      return t(`validation.${firstCode}`, t('history.feeding.saveFailed'));
     }
-    return t('tracking.feeding.saveFailed');
+    return t('history.feeding.saveFailed');
   };
 
   const fetchFeedingEvents = async () => {
@@ -45,7 +45,7 @@ export function useFeedingEvents() {
       });
       setFeedingEvents([...events].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt)));
     } catch (e) {
-      setError(t('tracking.feeding.error'));
+      setError(t('history.feeding.error'));
     } finally {
       setIsLoading(false);
     }

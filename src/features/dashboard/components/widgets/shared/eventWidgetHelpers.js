@@ -72,6 +72,31 @@ export function computeGapPeriods(primaryPeriods, now) {
   return gaps;
 }
 
+/**
+ * Compute event periods for an arbitrary calendar date (0–24h range).
+ * Active events (no endedAt) are capped at midnight of that day.
+ */
+export function computePeriodsForDate(events, date) {
+  const dayStart = new Date(date);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(dayStart);
+  dayEnd.setDate(dayEnd.getDate() + 1);
+
+  return events
+    .filter((e) => {
+      const from = new Date(e.startedAt);
+      const to = e.endedAt ? new Date(e.endedAt) : dayEnd;
+      return to > dayStart && from < dayEnd;
+    })
+    .map((e) => {
+      const fromDate = new Date(e.startedAt);
+      const toDate = e.endedAt ? new Date(e.endedAt) : dayEnd;
+      const fromH = fromDate < dayStart ? 0 : fromDate.getHours() + fromDate.getMinutes() / 60;
+      const toH = toDate >= dayEnd ? 24 : toDate.getHours() + toDate.getMinutes() / 60;
+      return { fromH, toH };
+    });
+}
+
 export function computeWeeklyHistory(events) {
   return Array.from({ length: 7 }, (_, i) => {
     const dayStart = new Date();

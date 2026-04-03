@@ -24,13 +24,13 @@ export function useSleepEvents() {
 
   const translateError = (err) => {
     const { fieldErrors, code } = parseApiError(err);
-    if (code) return t(`validation.${code}`, t('tracking.sleep.saveFailed'));
+    if (code) return t(`validation.${code}`, t('history.sleep.saveFailed'));
     if (fieldErrors && Object.keys(fieldErrors).length > 0) {
       // Collapse field errors into a single message for the banner
       const firstCode = Object.values(fieldErrors)[0];
-      return t(`validation.${firstCode}`, t('tracking.sleep.saveFailed'));
+      return t(`validation.${firstCode}`, t('history.sleep.saveFailed'));
     }
-    return t('tracking.sleep.saveFailed');
+    return t('history.sleep.saveFailed');
   };
 
   const fetchSleepEvents = async () => {
@@ -47,7 +47,7 @@ export function useSleepEvents() {
       // Sort newest first
       setSleepEvents([...events].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt)));
     } catch (e) {
-      setError(t('tracking.sleep.error'));
+      setError(t('history.sleep.error'));
     } finally {
       setIsLoading(false);
     }

@@ -3,7 +3,7 @@ import { useSleepEvents } from '../../hooks/useSleepEvents';
 import EventWidget from './shared/EventWidget';
 
 const SLEEP_CONFIG = {
-  i18nPrefix: 'tracking.sleep',
+  i18nPrefix: 'history.sleep',
   showGapPeriods: true,
   icon: Moon,
   svgPrimaryColor: '#818cf8',
