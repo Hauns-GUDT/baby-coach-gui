@@ -1,3 +1,44 @@
+// ─── Shared clock chart math ──────────────────────────────────────────────────
+
+export const CLOCK = { CX: 60, CY: 60, R: 42, SW: 11, LABEL_R: 53 };
+
+export const CLOCK_HOUR_LABELS = [
+  { h: 0, text: '12' },
+  { h: 3, text: '3' },
+  { h: 6, text: '6' },
+  { h: 9, text: '9' },
+];
+
+export function clockPointAt(h) {
+  const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
+  return { x: CLOCK.CX + CLOCK.R * Math.cos(angle), y: CLOCK.CY + CLOCK.R * Math.sin(angle) };
+}
+
+export function clockMakeArc(fromH, toH) {
+  const span = toH - fromH;
+  if (span < 1 / 60) return null;
+  const { x: sx, y: sy } = clockPointAt(fromH);
+  const { x: ex, y: ey } = clockPointAt(toH);
+  return `M ${sx.toFixed(2)} ${sy.toFixed(2)} A ${CLOCK.R} ${CLOCK.R} 0 ${span > 6 ? 1 : 0} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`;
+}
+
+export function clockSplitPeriods(periods, offset = 0) {
+  return {
+    am: periods.flatMap((p) => {
+      const from = Math.max(offset, p.fromH);
+      const to = Math.min(offset + 12, p.toH);
+      return from < to ? [{ fromH: from - offset, toH: to - offset }] : [];
+    }),
+    pm: periods.flatMap((p) => {
+      const from = Math.max(offset + 12, p.fromH);
+      const to = Math.min(offset + 24, p.toH);
+      return from < to ? [{ fromH: from - offset - 12, toH: to - offset - 12 }] : [];
+    }),
+  };
+}
+
+// ─── Formatting helpers ───────────────────────────────────────────────────────
+
 export function formatHours(h) {
   const totalMins = Math.round(h * 60);
   const hrs = Math.floor(totalMins / 60);

@@ -6,6 +6,10 @@ import IconButton from '../../../../../shared/components/IconButton';
 import ConfirmDialog from '../../../../../shared/components/ConfirmDialog';
 import { parseApiError } from '../../../../../shared/utils/parseApiError';
 import {
+  CLOCK,
+  CLOCK_HOUR_LABELS,
+  clockMakeArc,
+  clockSplitPeriods,
   formatHours,
   formatElapsed,
   formatTime,
@@ -19,26 +23,13 @@ import {
 // ─── Clock chart ─────────────────────────────────────────────────────────────
 
 function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label }) {
-  const CX = 60, CY = 60, R = 42, SW = 11, LABEL_R = 53;
-
-  const pointAt = (h) => {
-    const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
-    return { x: CX + R * Math.cos(angle), y: CY + R * Math.sin(angle) };
-  };
-
-  const makeArc = (fromH, toH) => {
-    const span = toH - fromH;
-    if (span < 1 / 60) return null;
-    const { x: sx, y: sy } = pointAt(fromH);
-    const { x: ex, y: ey } = pointAt(toH);
-    return `M ${sx.toFixed(2)} ${sy.toFixed(2)} A ${R} ${R} 0 ${span > 6 ? 1 : 0} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`;
-  };
+  const { CX, CY, R, SW, LABEL_R } = CLOCK;
 
   const renderArcs = (periods, color) =>
     periods.map((p, i) => {
       if (p.toH - p.fromH >= 11.99)
         return <circle key={i} cx={CX} cy={CY} r={R} fill="none" stroke={color} strokeWidth={SW} />;
-      const d = makeArc(p.fromH, p.toH);
+      const d = clockMakeArc(p.fromH, p.toH);
       return d ? <path key={i} d={d} fill="none" stroke={color} strokeWidth={SW} strokeLinecap="round" /> : null;
     });
 
@@ -48,7 +39,7 @@ function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryCo
         <circle cx={CX} cy={CY} r={R} fill="none" stroke="#e4e4e7" strokeWidth={SW} />
         {secondaryColor && renderArcs(secondaryPeriods, secondaryColor)}
         {renderArcs(primaryPeriods, primaryColor)}
-        {[{ h: 0, text: '12' }, { h: 3, text: '3' }, { h: 6, text: '6' }, { h: 9, text: '9' }].map(({ h, text }) => {
+        {CLOCK_HOUR_LABELS.map(({ h, text }) => {
           const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
           return (
             <text
@@ -70,24 +61,9 @@ function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryCo
   );
 }
 
-function splitPeriods(periods, offset = 0) {
-  return {
-    am: periods.flatMap((p) => {
-      const from = Math.max(offset, p.fromH);
-      const to = Math.min(offset + 12, p.toH);
-      return from < to ? [{ fromH: from - offset, toH: to - offset }] : [];
-    }),
-    pm: periods.flatMap((p) => {
-      const from = Math.max(offset + 12, p.fromH);
-      const to = Math.min(offset + 24, p.toH);
-      return from < to ? [{ fromH: from - offset - 12, toH: to - offset - 12 }] : [];
-    }),
-  };
-}
-
 function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor }) {
-  const primary = splitPeriods(primaryPeriods);
-  const secondary = splitPeriods(secondaryPeriods);
+  const primary = clockSplitPeriods(primaryPeriods);
+  const secondary = clockSplitPeriods(secondaryPeriods);
 
   return (
     <div className="flex gap-3 shrink-0 mx-auto">

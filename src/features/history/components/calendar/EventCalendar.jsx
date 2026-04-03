@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { computePeriodsForDate } from '../../../dashboard/components/widgets/shared/eventWidgetHelpers';
@@ -22,11 +22,6 @@ function isFutureDay(date, today) {
   return d > t;
 }
 
-/**
- * @param {object}   props
- * @param {Array}    props.eventSets     [{ events, color }, ...] — one entry per event type
- * @param {Function} [props.onDaySelect] called with { date, periodsBySets }
- */
 export default function EventCalendar({ eventSets = [], onDaySelect }) {
   const { i18n } = useTranslation();
   const today = new Date();
@@ -35,16 +30,19 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const days = buildMonthGrid(viewYear, viewMonth);
+  const days = useMemo(() => buildMonthGrid(viewYear, viewMonth), [viewYear, viewMonth]);
 
   const monthLabel = new Intl.DateTimeFormat(i18n.language, { month: 'long', year: 'numeric' }).format(
     new Date(viewYear, viewMonth, 1)
   );
 
-  const weekdayLabels = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(2024, 0, 1 + i);
-    return new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(d);
-  });
+  const weekdayLabels = useMemo(() =>
+    Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(2024, 0, 1 + i);
+      return new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(d);
+    }),
+    [i18n.language]
+  );
 
   const prevMonth = () => {
     if (viewMonth === 0) { setViewYear((y) => y - 1); setViewMonth(11); }
@@ -56,9 +54,7 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
     else setViewMonth((m) => m + 1);
   };
 
-  const handleDayClick = (date) => {
-    if (isFutureDay(date, today)) return;
-    const periodsBySets = eventSets.map(({ events }) => computePeriodsForDate(events, date));
+  const handleDayClick = (date, periodsBySets) => {
     setSelectedDate(date);
     onDaySelect?.({ date, periodsBySets });
   };
@@ -91,14 +87,16 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
           const selected = selectedDate && isSameDay(date, selectedDate);
           const todayCell = isSameDay(date, today);
 
-          const dotsToShow = future
-            ? []
-            : eventSets.filter(({ events }) => computePeriodsForDate(events, date).length > 0);
+          // Compute once — reused for both dots and the onDaySelect payload
+          const periodsBySets = future ? null : eventSets.map(({ events }) => computePeriodsForDate(events, date));
+          const dotsToShow = periodsBySets
+            ? eventSets.filter((_, idx) => periodsBySets[idx].length > 0)
+            : [];
 
           return (
             <button
               key={date.toISOString()}
-              onClick={() => handleDayClick(date)}
+              onClick={() => handleDayClick(date, periodsBySets)}
               disabled={future}
               className={`flex flex-col items-center justify-center rounded-xl py-2 gap-1 transition-all
                 ${future ? 'opacity-25 cursor-not-allowed'
