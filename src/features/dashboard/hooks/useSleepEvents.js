@@ -44,7 +44,7 @@ export function useSleepEvents() {
       const from = new Date();
       from.setDate(from.getDate() - 14);
       const response = await getEvents(selectedBabyId, {
-        type: 'sleep',
+        types: ['sleep'],
         from: from.toISOString(),
       });
       const events = Array.isArray(response) ? response : (response.data ?? []);

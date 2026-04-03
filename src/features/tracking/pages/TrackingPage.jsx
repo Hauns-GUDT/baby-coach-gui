@@ -5,7 +5,7 @@ import SessionsWidget from '../components/SessionsWidget';
 
 export default function TrackingPage() {
   const { t } = useTranslation();
-  const { events, page, totalPages, isLoading, goToPage, editEvent, removeEvent } = useEventHistory();
+  const { events, page, totalPages, isLoading, goToPage, editEvent, removeEvent, selectedTypes, toggleType } = useEventHistory();
 
   return (
     <main className="p-4 flex flex-col gap-4 max-w-2xl mx-auto">
@@ -19,6 +19,8 @@ export default function TrackingPage() {
         isLoading={isLoading}
         onEdit={editEvent}
         onDelete={removeEvent}
+        selectedTypes={selectedTypes}
+        onTypeToggle={toggleType}
       />
     </main>
   );

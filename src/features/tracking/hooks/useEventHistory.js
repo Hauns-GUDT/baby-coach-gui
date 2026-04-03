@@ -6,17 +6,20 @@ import { useEventVersion } from '../../events/store/useEventVersion';
 const PAGE_SIZE = 10;
 
 /**
- * Fetches paginated event history (all types) for the selected baby.
+ * Fetches paginated event history for the selected baby.
+ * Supports multi-type filtering via selectedTypes (empty = all types).
  *
  * Returns:
  *  events, total, page, totalPages, isLoading, error,
- *  goToPage(n), editEvent(id, payload), deleteEvent(id)
+ *  selectedTypes, toggleType(type),
+ *  goToPage(n), editEvent(id, payload), removeEvent(id)
  */
 export function useEventHistory() {
   const selectedBabyId = useBabyStore((s) => s.selectedBabyId);
   const eventVersion = useEventVersion((s) => s.version);
   const bumpEventVersion = useEventVersion((s) => s.bumpEventVersion);
   const [page, setPage] = useState(1);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [events, setEvents] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +27,16 @@ export function useEventHistory() {
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const fetchPage = useCallback(async (targetPage) => {
+  const fetchPage = useCallback(async (targetPage, types) => {
     if (!selectedBabyId) return;
     setIsLoading(true);
     setError('');
     try {
-      const result = await getEvents(selectedBabyId, { page: targetPage, limit: PAGE_SIZE });
+      const result = await getEvents(selectedBabyId, {
+        page: targetPage,
+        limit: PAGE_SIZE,
+        types: types.length ? types : undefined,
+      });
       setEvents(result.data);
       setTotal(result.total);
     } catch {
@@ -39,18 +46,24 @@ export function useEventHistory() {
     }
   }, [selectedBabyId]);
 
-  // Reset to page 1 when baby changes
+  // Reset to page 1 when baby or type filter changes
   useEffect(() => {
     setPage(1);
-  }, [selectedBabyId]);
+  }, [selectedBabyId, selectedTypes]);
 
   useEffect(() => {
-    fetchPage(page);
-  }, [fetchPage, page, eventVersion]);
+    fetchPage(page, selectedTypes);
+  }, [fetchPage, page, selectedTypes, eventVersion]);
 
   const goToPage = (n) => {
     const clamped = Math.max(1, Math.min(n, totalPages));
     setPage(clamped);
+  };
+
+  const toggleType = (type) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
 
   // Throws on error so the caller (EditDialog) can show field-level errors
@@ -78,9 +91,11 @@ export function useEventHistory() {
     totalPages,
     isLoading,
     error,
+    selectedTypes,
+    toggleType,
     goToPage,
     editEvent,
     removeEvent,
-    refetch: () => fetchPage(page),
+    refetch: () => fetchPage(page, selectedTypes),
   };
 }

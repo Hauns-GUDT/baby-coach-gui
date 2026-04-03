@@ -1,7 +1,14 @@
 import { axiosClient } from './axiosClient';
 
-export async function getEvents(babyId, params = {}) {
-  const { data } = await axiosClient.get(`/babies/${babyId}/events`, { params });
+export async function getEvents(babyId, { types, ...rest } = {}) {
+  const searchParams = new URLSearchParams();
+  for (const [k, v] of Object.entries(rest)) {
+    if (v !== undefined && v !== null) searchParams.set(k, String(v));
+  }
+  if (types?.length) {
+    types.forEach((t) => searchParams.append('types', t));
+  }
+  const { data } = await axiosClient.get(`/babies/${babyId}/events`, { params: searchParams });
   return data;
 }
 

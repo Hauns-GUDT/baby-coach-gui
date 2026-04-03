@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Pencil, Trash2 } from 'lucide-react';
+import { Moon, Milk, Baby, Pencil, Trash2 } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -8,10 +8,39 @@ import Pagination from '../../../shared/components/Pagination';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
-const TYPE_META = {
+export const TYPE_META = {
   sleep:   { icon: Moon,  color: '#818cf8', i18nPrefix: 'history.sleep' },
   feeding: { icon: Milk,  color: '#f97316', i18nPrefix: 'history.feeding' },
+  diaper:  { icon: Baby,  color: '#34d399', i18nPrefix: 'history.diaper' },
 };
+
+const ALL_TYPES = Object.keys(TYPE_META);
+
+function TypeFilterBar({ selectedTypes, onToggle }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {ALL_TYPES.map((type) => {
+        const { icon: Icon, color } = TYPE_META[type];
+        const active = selectedTypes.includes(type);
+        return (
+          <button
+            key={type}
+            onClick={() => onToggle(type)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              active
+                ? 'bg-indigo-600 border-indigo-600 text-white'
+                : 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-400'
+            }`}
+          >
+            <Icon size={13} style={{ color: active ? 'white' : color }} strokeWidth={2} />
+            {t(`${TYPE_META[type].i18nPrefix}.title`)}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function EditDialog({ session, onSave, onCancel }) {
   const { t } = useTranslation();
@@ -79,7 +108,7 @@ function EditDialog({ session, onSave, onCancel }) {
   );
 }
 
-export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete }) {
+export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, selectedTypes, onTypeToggle }) {
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
@@ -102,6 +131,8 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
       <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.recentSessions')}</h2>
 
+      <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
+
       {isLoading ? (
         <p className="text-sm text-zinc-400">{t('common.loading', 'Loading…')}</p>
       ) : sessions.length === 0 ? (
@@ -109,7 +140,7 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
       ) : (
         <div className="flex flex-col divide-y divide-zinc-50">
           {sessions.map((session) => {
-            const { icon: Icon, color, i18nPrefix: prefix } = TYPE_META[session.type];
+            const { icon: Icon, color, i18nPrefix: prefix } = TYPE_META[session.type] ?? TYPE_META.sleep;
             const duration = (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000;
             return (
               <div key={session.id} className="flex items-center justify-between py-2.5">

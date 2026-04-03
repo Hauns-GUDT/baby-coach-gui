@@ -60,6 +60,18 @@
       "deleteSessionMessage": "Möchtest du diese Schlafeinheit wirklich löschen?",
       "delete": "Löschen"
     },
+    "diaper": {
+      "title": "Windel",
+      "editSession": "Windeleintrag bearbeiten",
+      "end": "Ende",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert...",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "deleteSession": "Eintrag löschen",
+      "deleteSessionMessage": "Möchtest du diesen Windeleintrag wirklich löschen?",
+      "delete": "Löschen"
+    },
     "feeding": {
       "title": "Fütterung",
       "todayTotal": "Heute",

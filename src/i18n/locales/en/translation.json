@@ -60,6 +60,18 @@
       "deleteSessionMessage": "Are you sure you want to delete this sleep session?",
       "delete": "Delete"
     },
+    "diaper": {
+      "title": "Diaper",
+      "editSession": "Edit Diaper Session",
+      "end": "End",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "saveFailed": "Failed to save. Please try again.",
+      "deleteSession": "Delete Session",
+      "deleteSessionMessage": "Are you sure you want to delete this diaper session?",
+      "delete": "Delete"
+    },
     "feeding": {
       "title": "Feeding",
       "todayTotal": "Today",
