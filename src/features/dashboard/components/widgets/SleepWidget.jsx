@@ -13,8 +13,6 @@ const SLEEP_CONFIG = {
   accentText: 'text-indigo-700',
   accentSubText: 'text-indigo-500',
   totalText: 'text-indigo-600',
-  barActive: 'bg-indigo-500',
-  barInactive: 'bg-indigo-200',
   inputRingClass: 'focus:ring-indigo-400',
 };
 

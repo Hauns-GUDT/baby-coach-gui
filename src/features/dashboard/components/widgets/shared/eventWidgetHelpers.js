@@ -1,26 +1,51 @@
-// ─── Shared clock chart math ──────────────────────────────────────────────────
+// ─── Chart.js doughnut helpers ────────────────────────────────────────────────
 
-export const CLOCK = { CX: 60, CY: 60, R: 42, SW: 11, LABEL_R: 53 };
+/**
+ * Build Chart.js doughnut segments for a 12-hour clock face.
+ * Primary and secondary periods are expected to be in [0, 12] hour range
+ * (i.e. already split via clockSplitPeriods).
+ */
+export function buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods = [], secondaryColor = null) {
+  const maxH = 12;
 
-export const CLOCK_HOUR_LABELS = [
-  { h: 0, text: '12' },
-  { h: 3, text: '3' },
-  { h: 6, text: '6' },
-  { h: 9, text: '9' },
-];
+  const allSegs = [
+    ...primaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: primaryColor })),
+    ...(secondaryColor ? secondaryPeriods.map((p) => ({ from: p.fromH, to: p.toH, color: secondaryColor })) : []),
+  ].sort((a, b) => a.from - b.from);
 
-export function clockPointAt(h) {
-  const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
-  return { x: CLOCK.CX + CLOCK.R * Math.cos(angle), y: CLOCK.CY + CLOCK.R * Math.sin(angle) };
+  const data = [];
+  const colors = [];
+  let cursor = 0;
+
+  for (const seg of allSegs) {
+    const from = Math.max(seg.from, cursor);
+    const to = Math.min(seg.to, maxH);
+    if (to <= from) continue;
+
+    if (from > cursor) {
+      data.push(from - cursor);
+      colors.push('#e4e4e7');
+    }
+    data.push(to - from);
+    colors.push(seg.color);
+    cursor = to;
+    if (cursor >= maxH) break;
+  }
+
+  if (cursor < maxH) {
+    data.push(maxH - cursor);
+    colors.push('#e4e4e7');
+  }
+
+  if (data.length === 0) {
+    data.push(maxH);
+    colors.push('#e4e4e7');
+  }
+
+  return { data, colors };
 }
 
-export function clockMakeArc(fromH, toH) {
-  const span = toH - fromH;
-  if (span < 1 / 60) return null;
-  const { x: sx, y: sy } = clockPointAt(fromH);
-  const { x: ex, y: ey } = clockPointAt(toH);
-  return `M ${sx.toFixed(2)} ${sy.toFixed(2)} A ${CLOCK.R} ${CLOCK.R} 0 ${span > 6 ? 1 : 0} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`;
-}
+// ─── Clock period splitting ───────────────────────────────────────────────────
 
 export function clockSplitPeriods(periods, offset = 0) {
   return {
