@@ -37,9 +37,8 @@ export default function DayTimeline({ rows }) {
       {/* Event rows */}
       {rows.map(({ label, color, icon: Icon, periods }) => (
         <div key={label} className="flex items-center gap-2">
-          <div className="w-16 flex items-center justify-end gap-1 shrink-0">
-            {Icon && <Icon size={11} style={{ color }} strokeWidth={2} />}
-            <span className="text-xs text-zinc-500 font-medium truncate">{label}</span>
+          <div className="w-3 flex items-center gap-1 shrink-0">
+            {Icon && <Icon size={11} style={{ color }} strokeWidth={2} title={label} />}
           </div>
           <div className="relative flex-1 h-5 bg-zinc-200 rounded-full overflow-hidden">
             {periods.map((p, i) => (
