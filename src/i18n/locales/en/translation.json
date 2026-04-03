@@ -3,8 +3,14 @@
     "awake": "Awake",
     "lastMeal": "Last meal"
   },
+  "tracking": {
+    "recentSessions": "Recent Sessions",
+    "noSessions": "No sessions yet.",
+    "thisWeek": "This Week"
+  },
   "nav": {
     "dashboard": "Dashboard",
+    "tracking": "Tracking",
     "chatbot": "ChatBot",
     "history": "History",
     "profile": "Profile"
