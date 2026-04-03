@@ -22,3 +22,7 @@ export async function refresh() {
   const { data } = await axiosClient.post('/auth/refresh');
   return { accessToken: data.accessToken, username: parseJwtUsername(data.accessToken) };
 }
+
+export async function register(data) {
+  await axiosClient.post('/auth/register', data);
+}

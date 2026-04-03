@@ -1,20 +1,19 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useLogin } from '../hooks/useLogin';
+import { useRegister } from '../hooks/useRegister';
 
-export default function Login() {
+export default function Register() {
   const { t, i18n } = useTranslation();
-  const { submit, error, isSubmitting } = useLogin();
-  const location = useLocation();
-  const registered = location.state?.registered === true;
+  const { submit, error, fieldErrors, isSubmitting } = useRegister();
 
-  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    submit({ login, password });
+    submit({ email, username, password });
   };
 
   const toggleLanguage = () => {
@@ -30,43 +29,61 @@ export default function Login() {
         {i18n.language.startsWith('de') ? 'EN' : 'DE'}
       </button>
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-zinc-900 mb-6">{t('auth.title')}</h1>
-
-        {registered && (
-          <p role="status" className="mb-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
-            {t('auth.registeredSuccess')}
-          </p>
-        )}
+        <h1 className="text-2xl font-bold text-zinc-900 mb-6">{t('registration.title')}</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="font-semibold text-zinc-700 text-sm" htmlFor="login">
-              {t('auth.loginLabel')}
+            <label className="font-semibold text-zinc-700 text-sm" htmlFor="email">
+              {t('registration.emailLabel')} <span className="text-rose-500">*</span>
             </label>
             <input
-              id="login"
+              id="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+            {fieldErrors?.email && (
+              <p role="alert" className="text-sm text-rose-600">{fieldErrors.email}</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="font-semibold text-zinc-700 text-sm" htmlFor="username">
+              {t('registration.usernameLabel')} <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="username"
               type="text"
               autoComplete="username"
               required
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
+            {fieldErrors?.username && (
+              <p role="alert" className="text-sm text-rose-600">{fieldErrors.username}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">
             <label className="font-semibold text-zinc-700 text-sm" htmlFor="password">
-              {t('auth.passwordLabel')}
+              {t('registration.passwordLabel')} <span className="text-rose-500">*</span>
             </label>
             <input
               id="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
+            {fieldErrors?.password && (
+              <p role="alert" className="text-sm text-rose-600">{fieldErrors.password}</p>
+            )}
           </div>
 
           {error && (
@@ -78,14 +95,14 @@ export default function Login() {
             disabled={isSubmitting}
             className="mt-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 transition-colors cursor-pointer"
           >
-            {isSubmitting ? t('auth.submitting') : t('auth.submit')}
+            {isSubmitting ? t('registration.submitting') : t('registration.submit')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-500">
-          {t('auth.registerPrompt')}{' '}
-          <Link to="/register" className="text-indigo-600 font-semibold hover:underline">
-            {t('auth.registerLink')}
+          {t('registration.signInPrompt')}{' '}
+          <Link to="/login" className="text-indigo-600 font-semibold hover:underline">
+            {t('registration.signInLink')}
           </Link>
         </p>
       </div>

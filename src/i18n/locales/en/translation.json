@@ -103,8 +103,29 @@
     "passwordLabel": "Password",
     "submit": "Sign In",
     "submitting": "Signing in...",
+    "registerPrompt": "Don't have an account?",
+    "registerLink": "Create one",
+    "registeredSuccess": "Account created! Please sign in.",
     "error": {
       "invalid": "Invalid credentials. Please try again.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "noBaby": {
+    "title": "No baby added yet",
+    "description": "Add your first baby to get started with tracking.",
+    "cta": "Add Baby"
+  },
+  "registration": {
+    "title": "Create Account",
+    "emailLabel": "Email",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "submit": "Create Account",
+    "submitting": "Creating account...",
+    "signInPrompt": "Already have an account?",
+    "signInLink": "Sign in",
+    "error": {
       "generic": "Something went wrong. Please try again."
     }
   },
@@ -115,7 +136,7 @@
     "manageBabies": "Manage Babies"
   },
   "validation": {
-    "minLength": "This field is required.",
+    "minLength": "Value is too short.",
     "isNotEmpty": "This field is required.",
     "isString": "Must be text.",
     "isDateString": "Must be a valid date.",
