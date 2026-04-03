@@ -82,12 +82,12 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-500">
+        {/* <p className="mt-6 text-center text-sm text-zinc-500">
           {t('auth.registerPrompt')}{' '}
           <Link to="/register" className="text-indigo-600 font-semibold hover:underline">
             {t('auth.registerLink')}
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );

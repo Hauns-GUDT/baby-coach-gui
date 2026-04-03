@@ -54,7 +54,9 @@ export default function Navigation() {
     <nav className="bg-white border-b border-zinc-200 px-6 relative">
       {/* Top bar */}
       <div className="h-16 flex items-center justify-between">
-        <NavLink className="text-lg font-bold text-indigo-600" to="/">Baby Coach</NavLink>
+        <NavLink to="/">
+          <img src="/logo.png" alt="Baby Coach" className="h-10 w-10" />
+        </NavLink>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6">
