@@ -17,7 +17,6 @@ function ClockFace({ periods, color, label, offset, primaryLabel }) {
     cutout: '60%',
     rotation: -90,
     animation: false,
-    layout: { padding: 8 },
     plugins: {
       legend: { display: false },
       tooltip: {

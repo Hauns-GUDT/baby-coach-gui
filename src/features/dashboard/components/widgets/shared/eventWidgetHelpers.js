@@ -62,7 +62,7 @@ export const clockTicksPlugin = {
     const { x: cx, y: cy, outerRadius } = arcElements[0];
 
     ctx.save();
-    ctx.strokeStyle = '#71717a';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineCap = 'round';
 
     for (let h = 0; h < 12; h++) {
@@ -73,7 +73,7 @@ export const clockTicksPlugin = {
 
       ctx.beginPath();
       ctx.moveTo(cx + outerRadius * Math.cos(angle), cy + outerRadius * Math.sin(angle));
-      ctx.lineTo(cx + (outerRadius + tickLen) * Math.cos(angle), cy + (outerRadius + tickLen) * Math.sin(angle));
+      ctx.lineTo(cx + (outerRadius - tickLen) * Math.cos(angle), cy + (outerRadius - tickLen) * Math.sin(angle));
       ctx.stroke();
     }
 
