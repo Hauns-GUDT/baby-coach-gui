@@ -8,7 +8,7 @@ import { parseApiError } from '../../../shared/utils/parseApiError';
 export function useBabyForm(babyId) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { babies, addBaby, updateBaby } = useBabyStore();
+  const { babies, addBaby, updateBaby, setHasFetched } = useBabyStore();
 
   const [name, setName] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -55,6 +55,7 @@ export function useBabyForm(babyId) {
       } else {
         const created = await createBaby(payload);
         addBaby(created);
+        setHasFetched(false);
       }
       navigate('/profile/babies');
     } catch (err) {
