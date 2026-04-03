@@ -131,7 +131,7 @@
     "manageBabies": "Manage Babies"
   },
   "validation": {
-    "minLength": "This field is required.",
+    "minLength": "Value is too short.",
     "isNotEmpty": "This field is required.",
     "isString": "Must be text.",
     "isDateString": "Must be a valid date.",

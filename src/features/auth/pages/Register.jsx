@@ -34,7 +34,7 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="font-semibold text-zinc-700 text-sm" htmlFor="email">
-              {t('registration.emailLabel')}
+              {t('registration.emailLabel')} <span className="text-rose-500">*</span>
             </label>
             <input
               id="email"
@@ -52,7 +52,7 @@ export default function Register() {
 
           <div className="flex flex-col gap-1">
             <label className="font-semibold text-zinc-700 text-sm" htmlFor="username">
-              {t('registration.usernameLabel')}
+              {t('registration.usernameLabel')} <span className="text-rose-500">*</span>
             </label>
             <input
               id="username"
@@ -70,7 +70,7 @@ export default function Register() {
 
           <div className="flex flex-col gap-1">
             <label className="font-semibold text-zinc-700 text-sm" htmlFor="password">
-              {t('registration.passwordLabel')}
+              {t('registration.passwordLabel')} <span className="text-rose-500">*</span>
             </label>
             <input
               id="password"

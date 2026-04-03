@@ -131,7 +131,7 @@
     "manageBabies": "Babys verwalten"
   },
   "validation": {
-    "minLength": "Dieses Feld ist erforderlich.",
+    "minLength": "Wert ist zu kurz.",
     "isNotEmpty": "Dieses Feld ist erforderlich.",
     "isString": "Muss ein Text sein.",
     "isDateString": "Muss ein gültiges Datum sein.",
