@@ -1,44 +1,35 @@
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import {
-  CLOCK,
-  CLOCK_HOUR_LABELS,
-  clockPointAt,
-  clockMakeArc,
+  buildDoughnutSegments,
   clockSplitPeriods,
 } from '../../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
-const { CX, CY, R, SW, LABEL_R } = CLOCK;
+ChartJS.register(ArcElement, Tooltip);
+
+const CLOCK_OPTIONS = {
+  cutout: '60%',
+  rotation: -90,
+  animation: false,
+  plugins: { legend: { display: false }, tooltip: { enabled: false } },
+  events: [],
+};
 
 function ClockFace({ periods, color, label }) {
-  const renderArcs = () =>
-    periods.map((p, i) => {
-      if (p.toH - p.fromH >= 11.99)
-        return <circle key={i} cx={CX} cy={CY} r={R} fill="none" stroke={color} strokeWidth={SW} />;
-      const d = clockMakeArc(p.fromH, p.toH);
-      return d ? <path key={i} d={d} fill="none" stroke={color} strokeWidth={SW} strokeLinecap="round" /> : null;
-    });
+  const { data, colors } = buildDoughnutSegments(periods, color);
+  const chartData = {
+    datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 0 }],
+  };
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <svg viewBox="0 0 120 120" className="w-24 h-24">
-        <circle cx={CX} cy={CY} r={R} fill="none" stroke="#e4e4e7" strokeWidth={SW} />
-        {renderArcs()}
-        {CLOCK_HOUR_LABELS.map(({ h, text }) => {
-          const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
-          return (
-            <text
-              key={h}
-              x={(CX + LABEL_R * Math.cos(angle)).toFixed(1)}
-              y={(CY + LABEL_R * Math.sin(angle)).toFixed(1)}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fill="#a1a1aa"
-              fontSize="9"
-            >
-              {text}
-            </text>
-          );
-        })}
-      </svg>
+      <div className="relative w-24 h-24">
+        <Doughnut data={chartData} options={CLOCK_OPTIONS} />
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">12</span>
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">3</span>
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">6</span>
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">9</span>
+      </div>
       <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
     </div>
   );

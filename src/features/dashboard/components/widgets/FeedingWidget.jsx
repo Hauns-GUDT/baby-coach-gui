@@ -13,8 +13,6 @@ const FEEDING_CONFIG = {
   accentText: 'text-orange-700',
   accentSubText: 'text-orange-500',
   totalText: 'text-orange-500',
-  barActive: 'bg-orange-500',
-  barInactive: 'bg-orange-200',
   inputRingClass: 'focus:ring-orange-400',
 };
 
