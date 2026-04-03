@@ -50,6 +50,37 @@ export function buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPer
   return { data, colors, meta };
 }
 
+// ─── Clock tick-marks plugin ──────────────────────────────────────────────────
+
+export const clockTicksPlugin = {
+  id: 'clockTicks',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const arcElements = chart.getDatasetMeta(0)?.data;
+    if (!arcElements?.length) return;
+
+    const { x: cx, y: cy, outerRadius } = arcElements[0];
+
+    ctx.save();
+    ctx.strokeStyle = '#71717a';
+    ctx.lineCap = 'round';
+
+    for (let h = 0; h < 12; h++) {
+      const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
+      const isMajor = h % 3 === 0;
+      ctx.lineWidth = isMajor ? 1.5 : 1;
+      const tickLen = isMajor ? 6 : 3;
+
+      ctx.beginPath();
+      ctx.moveTo(cx + outerRadius * Math.cos(angle), cy + outerRadius * Math.sin(angle));
+      ctx.lineTo(cx + (outerRadius + tickLen) * Math.cos(angle), cy + (outerRadius + tickLen) * Math.sin(angle));
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  },
+};
+
 export function hoursToTimeStr(h) {
   const totalMins = Math.round(h * 60);
   const hh = Math.floor(totalMins / 60) % 24;

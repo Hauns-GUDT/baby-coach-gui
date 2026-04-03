@@ -2,6 +2,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import {
   buildDoughnutSegments,
+  clockTicksPlugin,
   hoursToTimeStr,
   clockSplitPeriods,
   formatHours,
@@ -16,6 +17,7 @@ function ClockFace({ periods, color, label, offset, primaryLabel }) {
     cutout: '60%',
     rotation: -90,
     animation: false,
+    layout: { padding: 8 },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -39,12 +41,8 @@ function ClockFace({ periods, color, label, offset, primaryLabel }) {
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="relative w-24 h-24">
-        <Doughnut data={chartData} options={options} />
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-900 leading-none">12</span>
-        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-900 leading-none">3</span>
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-900 leading-none">6</span>
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-900 leading-none">9</span>
+      <div className="w-24 h-24">
+        <Doughnut data={chartData} options={options} plugins={[clockTicksPlugin]} />
       </div>
       <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
     </div>
