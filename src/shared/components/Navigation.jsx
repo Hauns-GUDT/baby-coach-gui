@@ -40,7 +40,8 @@ export default function Navigation() {
   );
 
   const links = [
-    { to: '/', label: t('nav.dashboard'), end: true },
+    { to: '/', label: t('nav.tracking'), end: true },
+    { to: '/dashboard', label: t('nav.dashboard') },
     // { to: '/chatbot', label: t('nav.chatbot') },
     { to: '/history', label: t('nav.history') },
     { to: '/profile', label: t('nav.profile') },
