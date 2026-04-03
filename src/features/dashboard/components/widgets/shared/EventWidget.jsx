@@ -85,8 +85,28 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
 
 // ─── Weekly bar chart ─────────────────────────────────────────────────────────
 
+const valueLabelsPlugin = {
+  id: 'valueLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    chart.getDatasetMeta(0).data.forEach((bar, i) => {
+      const value = data.datasets[0].data[i];
+      if (value > 0) {
+        ctx.save();
+        ctx.fillStyle = '#a1a1aa';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(formatHours(value), bar.x, bar.y - 2);
+        ctx.restore();
+      }
+    });
+  },
+};
+
 function WeeklyBars({ history, primaryColor }) {
   const { i18n } = useTranslation();
+  const maxVal = Math.max(...history, 1);
 
   const dayLabels = Array.from({ length: history.length }, (_, i) => {
     const d = new Date();
@@ -104,10 +124,12 @@ function WeeklyBars({ history, primaryColor }) {
   };
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     animation: false,
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: (ctx) => formatHours(ctx.parsed.y) } },
+      tooltip: { enabled: false },
     },
     scales: {
       x: {
@@ -115,13 +137,13 @@ function WeeklyBars({ history, primaryColor }) {
         ticks: { font: { size: 10 }, color: '#a1a1aa' },
         border: { display: false },
       },
-      y: { display: false, beginAtZero: true },
+      y: { display: false, beginAtZero: true, max: maxVal * 1.5 },
     },
   };
 
   return (
-    <div className="h-20">
-      <Bar data={chartData} options={options} />
+    <div className="h-28 w-full">
+      <Bar data={chartData} options={options} plugins={[valueLabelsPlugin]} />
     </div>
   );
 }
