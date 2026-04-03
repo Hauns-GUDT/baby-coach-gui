@@ -16,6 +16,8 @@ import ConfirmDialog from '../../../../../shared/components/ConfirmDialog';
 import { parseApiError } from '../../../../../shared/utils/parseApiError';
 import {
   buildDoughnutSegments,
+  clockTicksPlugin,
+  hoursToTimeStr,
   clockSplitPeriods,
   formatHours,
   formatElapsed,
@@ -31,35 +33,49 @@ ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
 
 // ─── Clock chart ─────────────────────────────────────────────────────────────
 
-const CLOCK_OPTIONS = {
-  cutout: '60%',
-  rotation: -90,
-  animation: false,
-  plugins: { legend: { display: false }, tooltip: { enabled: false } },
-  events: [],
-};
+function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label, offset, primaryLabel, secondaryLabel }) {
+  const { data, colors, meta } = buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods, secondaryColor);
 
-function ClockFace({ primaryPeriods, secondaryPeriods, primaryColor, secondaryColor, label }) {
-  const { data, colors } = buildDoughnutSegments(primaryPeriods, primaryColor, secondaryPeriods, secondaryColor);
+  const options = {
+    cutout: '60%',
+    rotation: -90,
+    animation: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        filter: (item) => {
+          const kind = meta[item.dataIndex]?.kind;
+          return kind === 'primary' || (kind === 'secondary' && secondaryLabel != null);
+        },
+        callbacks: {
+          title: () => null,
+          label: (item) => {
+            const seg = meta[item.dataIndex];
+            const typeLabel = seg.kind === 'primary' ? primaryLabel : secondaryLabel;
+            const start = hoursToTimeStr(seg.fromH + offset);
+            const duration = formatHours(seg.toH - seg.fromH);
+            return `${typeLabel} · ${start} · ${duration}`;
+          },
+        },
+      },
+    },
+  };
+
   const chartData = {
     datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 0 }],
   };
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="relative w-24 h-24">
-        <Doughnut data={chartData} options={CLOCK_OPTIONS} />
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">12</span>
-        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">3</span>
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[9px] text-zinc-400 leading-none">6</span>
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 leading-none">9</span>
+      <div className="w-24 h-24">
+        <Doughnut data={chartData} options={options} plugins={[clockTicksPlugin]} />
       </div>
       <span className="text-xs font-semibold text-zinc-400 tracking-wide">{label}</span>
     </div>
   );
 }
 
-function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor }) {
+function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, svgSecondaryColor, primaryLabel, secondaryLabel }) {
   const primary = clockSplitPeriods(primaryPeriods);
   const secondary = clockSplitPeriods(secondaryPeriods);
 
@@ -71,6 +87,9 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
         primaryColor={svgPrimaryColor}
         secondaryColor={svgSecondaryColor}
         label="AM"
+        offset={0}
+        primaryLabel={primaryLabel}
+        secondaryLabel={secondaryLabel}
       />
       <ClockFace
         primaryPeriods={primary.pm}
@@ -78,6 +97,9 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
         primaryColor={svgPrimaryColor}
         secondaryColor={svgSecondaryColor}
         label="PM"
+        offset={12}
+        primaryLabel={primaryLabel}
+        secondaryLabel={secondaryLabel}
       />
     </div>
   );
@@ -85,8 +107,28 @@ function EventClockChart({ primaryPeriods, secondaryPeriods, svgPrimaryColor, sv
 
 // ─── Weekly bar chart ─────────────────────────────────────────────────────────
 
+const valueLabelsPlugin = {
+  id: 'valueLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    chart.getDatasetMeta(0).data.forEach((bar, i) => {
+      const value = data.datasets[0].data[i];
+      if (value > 0) {
+        ctx.save();
+        ctx.fillStyle = '#a1a1aa';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(formatHours(value), bar.x, bar.y - 2);
+        ctx.restore();
+      }
+    });
+  },
+};
+
 function WeeklyBars({ history, primaryColor }) {
   const { i18n } = useTranslation();
+  const maxVal = Math.max(...history, 1);
 
   const dayLabels = Array.from({ length: history.length }, (_, i) => {
     const d = new Date();
@@ -104,10 +146,12 @@ function WeeklyBars({ history, primaryColor }) {
   };
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     animation: false,
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: (ctx) => formatHours(ctx.parsed.y) } },
+      tooltip: { enabled: false },
     },
     scales: {
       x: {
@@ -115,13 +159,13 @@ function WeeklyBars({ history, primaryColor }) {
         ticks: { font: { size: 10 }, color: '#a1a1aa' },
         border: { display: false },
       },
-      y: { display: false, beginAtZero: true },
+      y: { display: false, beginAtZero: true, max: maxVal * 1.5 },
     },
   };
 
   return (
-    <div className="h-20">
-      <Bar data={chartData} options={options} />
+    <div className="h-28 w-full">
+      <Bar data={chartData} options={options} plugins={[valueLabelsPlugin]} />
     </div>
   );
 }
@@ -335,6 +379,8 @@ export default function EventWidget({
           secondaryPeriods={secondaryPeriods}
           svgPrimaryColor={svgPrimaryColor}
           svgSecondaryColor={svgSecondaryColor}
+          primaryLabel={t(`${i18nPrefix}.title`)}
+          secondaryLabel={showGapPeriods ? t('history.sleep.awake') : null}
         />
         <div className="flex items-center justify-between">
           <div>
