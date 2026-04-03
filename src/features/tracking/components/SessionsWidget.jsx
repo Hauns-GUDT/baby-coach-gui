@@ -4,6 +4,7 @@ import { Moon, Milk, Pencil, Trash2 } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
+import Pagination from '../../../shared/components/Pagination';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
@@ -78,27 +79,20 @@ function EditDialog({ session, onSave, onCancel }) {
   );
 }
 
-export default function SessionsWidget({ sleepEvents, feedingEvents, onEditSleep, onDeleteSleep, onEditFeeding, onDeleteFeeding }) {
+export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete }) {
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
-  const [pendingDelete, setPendingDelete]   = useState(null); // { id, type }
+  const [pendingDelete, setPendingDelete]   = useState(null);
 
-  const sessions = [
-    ...sleepEvents.filter((e) => e.endedAt).map((e) => ({ ...e, type: 'sleep' })),
-    ...feedingEvents.filter((e) => e.endedAt).map((e) => ({ ...e, type: 'feeding' })),
-  ]
-    .sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt))
-    .slice(0, 14);
+  const sessions = events.filter((e) => e.endedAt);
 
   const handleSave = async (id, payload) => {
-    if (editingSession.type === 'sleep') await onEditSleep(id, payload);
-    else await onEditFeeding(id, payload);
+    await onEdit(id, payload);
     setEditingSession(null);
   };
 
   const handleDelete = async () => {
-    if (pendingDelete.type === 'sleep') await onDeleteSleep(pendingDelete.id);
-    else await onDeleteFeeding(pendingDelete.id);
+    await onDelete(pendingDelete.id);
     setPendingDelete(null);
   };
 
@@ -108,7 +102,9 @@ export default function SessionsWidget({ sleepEvents, feedingEvents, onEditSleep
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
       <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.recentSessions')}</h2>
 
-      {sessions.length === 0 ? (
+      {isLoading ? (
+        <p className="text-sm text-zinc-400">{t('common.loading', 'Loading…')}</p>
+      ) : sessions.length === 0 ? (
         <p className="text-sm text-zinc-400">{t('tracking.noSessions')}</p>
       ) : (
         <div className="flex flex-col divide-y divide-zinc-50">
@@ -116,7 +112,7 @@ export default function SessionsWidget({ sleepEvents, feedingEvents, onEditSleep
             const { icon: Icon, color, i18nPrefix: prefix } = TYPE_META[session.type];
             const duration = (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000;
             return (
-              <div key={`${session.type}-${session.id}`} className="flex items-center justify-between py-2.5">
+              <div key={session.id} className="flex items-center justify-between py-2.5">
                 <div className="flex items-center gap-3">
                   <Icon size={15} style={{ color }} strokeWidth={2} className="shrink-0" />
                   <div>
@@ -137,6 +133,8 @@ export default function SessionsWidget({ sleepEvents, feedingEvents, onEditSleep
           })}
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} isLoading={isLoading} />
 
       {editingSession && (
         <EditDialog session={editingSession} onSave={handleSave} onCancel={() => setEditingSession(null)} />
