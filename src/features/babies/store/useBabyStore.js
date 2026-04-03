@@ -7,6 +7,7 @@ export const useBabyStore = create(
       babies: [],
       selectedBabyId: null,
       isLoading: false,
+      hasFetched: false,
       error: '',
       setBabies: (babies) =>
         set((s) => ({
@@ -19,7 +20,9 @@ export const useBabyStore = create(
         set((s) => ({ babies: s.babies.map((b) => (b.id === id ? { ...b, ...data } : b)) })),
       removeBaby: (id) => set((s) => ({ babies: s.babies.filter((b) => b.id !== id) })),
       setIsLoading: (isLoading) => set({ isLoading }),
+      setHasFetched: (hasFetched) => set({ hasFetched }),
       setError: (error) => set({ error }),
+      clearBabies: () => set({ babies: [], selectedBabyId: null, hasFetched: false }),
     }),
     {
       name: 'baby-selection',

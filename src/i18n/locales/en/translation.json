@@ -111,6 +111,11 @@
       "generic": "Something went wrong. Please try again."
     }
   },
+  "noBaby": {
+    "title": "No baby added yet",
+    "description": "Add your first baby to get started with tracking.",
+    "cta": "Add Baby"
+  },
   "registration": {
     "title": "Create Account",
     "emailLabel": "Email",

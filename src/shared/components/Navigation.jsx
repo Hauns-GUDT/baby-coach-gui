@@ -11,15 +11,18 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBabyDialogOpen, setIsBabyDialogOpen] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const { babies, selectedBabyId, setBabies, setSelectedBaby } = useBabyStore();
+  const { babies, selectedBabyId, hasFetched, setBabies, setSelectedBaby, setHasFetched } = useBabyStore();
 
   useEffect(() => {
-    if (isAuthenticated && babies.length === 0) {
-      getBabies().then(setBabies).catch(() => {});
+    if (isAuthenticated && !hasFetched) {
+      getBabies()
+        .then((data) => { setBabies(data); setHasFetched(true); })
+        .catch(() => { setHasFetched(true); });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, hasFetched]);
 
-  if (location.pathname === '/login') return null;
+  if (['/login', '/register'].includes(location.pathname)) return null;
+  if (hasFetched && babies.length === 0) return null;
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de');

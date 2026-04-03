@@ -111,6 +111,11 @@
       "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
     }
   },
+  "noBaby": {
+    "title": "Noch kein Baby hinzugefügt",
+    "description": "Füge dein erstes Baby hinzu, um mit dem Tracking zu beginnen.",
+    "cta": "Baby hinzufügen"
+  },
   "registration": {
     "title": "Konto erstellen",
     "emailLabel": "E-Mail",
