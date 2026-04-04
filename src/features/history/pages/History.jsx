@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Milk } from 'lucide-react';
-import { useSleepEvents } from '../../dashboard/hooks/useSleepEvents';
-import { useFeedingEvents } from '../../dashboard/hooks/useFeedingEvents';
 import EventCalendar from '../components/calendar/EventCalendar';
 import DayTimeline from '../../../shared/components/DayTimeline';
-import { computePeriodsForDate } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
+import { useHistoryDayEvents } from '../hooks/useHistoryDayEvents';
 
 const EVENT_SETS = [
   { key: 'sleep',   color: '#818cf8', icon: Moon,  i18nKey: 'history.sleep.title' },
@@ -14,37 +12,31 @@ const EVENT_SETS = [
 
 export default function History() {
   const { t, i18n } = useTranslation();
-  const [selection, setSelection] = useState(null); // { date, periodsBySets }
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const { sleepEvents } = useSleepEvents();
-  const { feedingEvents } = useFeedingEvents();
+  const { sleepPeriods, feedingPeriods, isLoading, error } = useHistoryDayEvents(selectedDate);
 
-  const eventSets = [
-    { events: sleepEvents,   color: EVENT_SETS[0].color },
-    { events: feedingEvents, color: EVENT_SETS[1].color },
-  ];
-
-  const dateLabel = selection
-    ? new Intl.DateTimeFormat(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }).format(selection.date)
+  const dateLabel = selectedDate
+    ? new Intl.DateTimeFormat(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)
     : null;
 
-  const timelineRows = selection
-    ? EVENT_SETS.map(({ color, icon, i18nKey }, idx) => ({
-        label: t(i18nKey),
-        color,
-        icon,
-        periods: selection.periodsBySets[idx],
-      }))
+  const timelineRows = selectedDate
+    ? [
+        { label: t(EVENT_SETS[0].i18nKey), color: EVENT_SETS[0].color, icon: EVENT_SETS[0].icon, periods: sleepPeriods },
+        { label: t(EVENT_SETS[1].i18nKey), color: EVENT_SETS[1].color, icon: EVENT_SETS[1].icon, periods: feedingPeriods },
+      ]
     : [];
 
   return (
     <main className="p-4 flex flex-col gap-4 max-w-2xl mx-auto">
-      <EventCalendar eventSets={eventSets} onDaySelect={setSelection} />
+      <EventCalendar onDaySelect={setSelectedDate} />
 
-      {selection && (
+      {selectedDate && (
         <div className="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3">
           {dateLabel && <p className="text-xs text-zinc-400">{dateLabel}</p>}
-          <DayTimeline rows={timelineRows} />
+          {isLoading && <p className="text-sm text-zinc-400">{t('history.loadingDay')}</p>}
+          {error && <p className="text-sm text-rose-500">{t('history.loadDayFailed')}</p>}
+          {!isLoading && !error && <DayTimeline rows={timelineRows} />}
         </div>
       )}
     </main>

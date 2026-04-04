@@ -12,6 +12,27 @@ export async function getEvents(babyId, { types, ...rest } = {}) {
   return data;
 }
 
+/**
+ * Fetches all events across all pages for non-paginated use cases.
+ * Keeps requesting pages until the full result set is retrieved.
+ */
+export async function getAllEvents(babyId, params = {}) {
+  const PAGE_SIZE = 100;
+  let page = 1;
+  const collected = [];
+
+  while (true) {
+    const res = await getEvents(babyId, { ...params, page, limit: PAGE_SIZE });
+    const items = Array.isArray(res) ? res : (res.data ?? []);
+    collected.push(...items);
+    const total = res.total ?? collected.length;
+    if (items.length < PAGE_SIZE || collected.length >= total) break;
+    page++;
+  }
+
+  return collected;
+}
+
 export async function startEvent(babyId, type, notes) {
   const { data } = await axiosClient.post(`/babies/${babyId}/events/start`, { type, ...(notes !== undefined && { notes }) });
   return data;

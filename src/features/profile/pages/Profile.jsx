@@ -5,8 +5,11 @@ import { useLogout } from '../../auth/hooks/useLogout';
 import Button from '../../../shared/components/Button';
 
 export default function Profile() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de');
+  };
   const username = useAuthStore((state) => state.username);
   const { handleLogout } = useLogout();
 
@@ -23,6 +26,16 @@ export default function Profile() {
         <Button onClick={() => navigate('/profile/babies')}>
           {t('profile.manageBabies')}
         </Button>
+
+        <div className="flex items-center justify-between py-1">
+          <span className="text-sm font-medium text-zinc-700">{t('profile.language')}</span>
+          <button
+            onClick={toggleLanguage}
+            className="text-sm bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+          >
+            {i18n.language.startsWith('de') ? 'EN' : 'DE'}
+          </button>
+        </div>
 
         <Button variant="secondary" onClick={handleLogout}>
           {t('profile.logout')}
