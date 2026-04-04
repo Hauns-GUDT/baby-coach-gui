@@ -134,7 +134,7 @@ export default function DayWidget() {
                   <button
                     onClick={onStart}
                     aria-label={t(`${i18nPrefix}.start`)}
-                    className="w-6 h-6 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
                     style={{ backgroundColor: color + '22' }}
                   >
                     <Play size={10} style={{ color }} strokeWidth={2.5} fill={color} />

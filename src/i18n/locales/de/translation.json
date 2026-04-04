@@ -6,11 +6,14 @@
   "tracking": {
     "recentSessions": "Letzte Einträge",
     "noSessions": "Noch keine Einträge.",
-    "thisWeek": "Diese Woche"
+    "thisWeek": "Diese Woche",
+    "addEvent": "Eintrag hinzufügen",
+    "selectEventType": "Was ist passiert?",
+    "cancel": "Abbrechen"
   },
   "nav": {
     "dashboard": "Dashboard",
-    "tracking": "Tracking",
+    "tracking": "Aufzeichnen",
     "chatbot": "ChatBot",
     "history": "Verlauf",
     "profile": "Profil"
@@ -36,6 +39,7 @@
     "title": "Verlauf",
     "sleep": {
       "title": "Schlaf",
+      "newSession": "Neue Schlafeinheit",
       "todayTotal": "Heute",
       "thisWeek": "Diese Woche",
       "clockTitle": "Wann heute",
@@ -62,6 +66,7 @@
     },
     "diaper": {
       "title": "Windel",
+      "newSession": "Neuer Windeleintrag",
       "editSession": "Windeleintrag bearbeiten",
       "end": "Ende",
       "cancel": "Abbrechen",
@@ -74,6 +79,7 @@
     },
     "feeding": {
       "title": "Fütterung",
+      "newSession": "Neue Fütterungseinheit",
       "todayTotal": "Heute",
       "thisWeek": "Diese Woche",
       "loading": "Fütterungsdaten werden geladen...",
@@ -144,6 +150,7 @@
     "isEnum": "Bitte eine gültige Option auswählen.",
     "endedAtBeforeStartedAt": "Endzeit muss nach der Startzeit liegen.",
     "eventOverlap": "Diese Einheit überschneidet sich mit einer vorhandenen.",
+    "eventAlreadyStopped": "Diese Einheit wurde bereits beendet.",
     "fallback": "Ungültiger Wert."
   },
   "babies": {

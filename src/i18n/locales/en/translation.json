@@ -6,7 +6,10 @@
   "tracking": {
     "recentSessions": "Recent Sessions",
     "noSessions": "No sessions yet.",
-    "thisWeek": "This Week"
+    "thisWeek": "This Week",
+    "addEvent": "Add Event",
+    "selectEventType": "What happened?",
+    "cancel": "Cancel"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -36,6 +39,7 @@
     "title": "History",
     "sleep": {
       "title": "Sleep",
+      "newSession": "New Sleep Session",
       "todayTotal": "Today",
       "thisWeek": "This week",
       "clockTitle": "When today",
@@ -144,6 +148,7 @@
     "isEnum": "Please select a valid option.",
     "endedAtBeforeStartedAt": "End time must be after start time.",
     "eventOverlap": "This session overlaps with an existing one.",
+    "eventAlreadyStopped": "This session is already stopped.",
     "fallback": "Invalid value."
   },
   "babies": {

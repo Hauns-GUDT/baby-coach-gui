@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Baby, Pencil, Trash2 } from 'lucide-react';
+import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -42,23 +42,36 @@ function TypeFilterBar({ selectedTypes, onToggle }) {
   );
 }
 
-function EditDialog({ session, onSave, onCancel }) {
+// Shared form dialog for both editing existing sessions and creating new ones.
+// Edit mode: pass `session` (the existing event object). Calls onSave(id, payload).
+// Create mode: pass only `type`. Calls onCreate({ type, startedAt, endedAt? }).
+function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
-  const { i18nPrefix } = TYPE_META[session.type];
-  const [startedAt, setStartedAt] = useState(toDatetimeLocal(session.startedAt));
-  const [endedAt, setEndedAt]     = useState(session.endedAt ? toDatetimeLocal(session.endedAt) : '');
-  const [error, setError]         = useState('');
+  const { i18nPrefix } = TYPE_META[type];
+  const isEdit = !!session;
+  const [startedAt, setStartedAt] = useState(
+    session ? toDatetimeLocal(session.startedAt) : toDatetimeLocal(new Date().toISOString())
+  );
+  const [endedAt, setEndedAt] = useState(
+    session?.endedAt ? toDatetimeLocal(session.endedAt) : ''
+  );
+  const [error, setError]             = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
-  const [isSaving, setIsSaving]   = useState(false);
+  const [isSaving, setIsSaving]       = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); setFieldErrors({}); setIsSaving(true);
     try {
-      await onSave(session.id, {
+      const payload = {
         startedAt: new Date(startedAt).toISOString(),
         ...(endedAt ? { endedAt: new Date(endedAt).toISOString() } : {}),
-      });
+      };
+      if (isEdit) {
+        await onSave(session.id, payload);
+      } else {
+        await onCreate({ type, ...payload });
+      }
     } catch (err) {
       const { fieldErrors: fe, code } = parseApiError(err);
       if (fe && Object.keys(fe).length > 0) {
@@ -79,7 +92,16 @@ function EditDialog({ session, onSave, onCancel }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-zinc-900">{t(`${i18nPrefix}.editSession`)}</h2>
+        <div className="flex items-center gap-2">
+          {onBack && (
+            <button onClick={onBack} className="text-zinc-400 hover:text-zinc-600 -ml-1 p-1 rounded-lg transition-colors">
+              <ChevronLeft size={20} />
+            </button>
+          )}
+          <h2 className="text-lg font-bold text-zinc-900">
+            {isEdit ? t(`${i18nPrefix}.editSession`) : t(`${i18nPrefix}.newSession`)}
+          </h2>
+        </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-zinc-700">Start</label>
@@ -103,6 +125,51 @@ function EditDialog({ session, onSave, onCancel }) {
             </Button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+}
+
+// Two-step dialog: first pick an event type, then fill in the form.
+export function AddEventDialog({ onCreate, onCancel }) {
+  const { t } = useTranslation();
+  const [pickedType, setPickedType] = useState(null);
+
+  if (pickedType) {
+    return (
+      <EventFormDialog
+        type={pickedType}
+        session={null}
+        onCreate={onCreate}
+        onCancel={onCancel}
+        onBack={() => setPickedType(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
+      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-5">
+        <h2 className="text-lg font-bold text-zinc-900">{t('tracking.selectEventType')}</h2>
+        <div className="flex flex-col gap-3">
+          {ALL_TYPES.map((type) => {
+            const { icon: Icon, color, i18nPrefix } = TYPE_META[type];
+            return (
+              <button
+                key={type}
+                onClick={() => setPickedType(type)}
+                className="flex items-center gap-4 w-full rounded-2xl border-2 border-zinc-100 p-5 text-left hover:border-zinc-300 active:scale-[0.98] transition-all"
+              >
+                <div className="rounded-xl p-3" style={{ backgroundColor: `${color}22` }}>
+                  <Icon size={28} style={{ color }} strokeWidth={1.75} />
+                </div>
+                <span className="text-lg font-semibold text-zinc-800">{t(`${i18nPrefix}.title`)}</span>
+              </button>
+            );
+          })}
+        </div>
+        <Button variant="secondary" onClick={onCancel}>{t('tracking.cancel')}</Button>
       </div>
     </div>
   );
@@ -168,7 +235,12 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
       <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} isLoading={isLoading} />
 
       {editingSession && (
-        <EditDialog session={editingSession} onSave={handleSave} onCancel={() => setEditingSession(null)} />
+        <EventFormDialog
+          type={editingSession.type}
+          session={editingSession}
+          onSave={handleSave}
+          onCancel={() => setEditingSession(null)}
+        />
       )}
 
       <ConfirmDialog

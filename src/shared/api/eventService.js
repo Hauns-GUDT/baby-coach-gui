@@ -12,6 +12,11 @@ export async function getEvents(babyId, { types, ...rest } = {}) {
   return data;
 }
 
+export async function startEvent(babyId, type, notes) {
+  const { data } = await axiosClient.post(`/babies/${babyId}/events/start`, { type, ...(notes !== undefined && { notes }) });
+  return data;
+}
+
 export async function createEvent(babyId, payload) {
   const { data } = await axiosClient.post(`/babies/${babyId}/events`, payload);
   return data;
@@ -19,6 +24,11 @@ export async function createEvent(babyId, payload) {
 
 export async function updateEvent(babyId, eventId, payload) {
   const { data } = await axiosClient.patch(`/babies/${babyId}/events/${eventId}`, payload);
+  return data;
+}
+
+export async function stopEvent(babyId, eventId) {
+  const { data } = await axiosClient.post(`/babies/${babyId}/events/${eventId}/stop`);
   return data;
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useBabyStore } from '../../babies/store/useBabyStore';
-import { getEvents, updateEvent, deleteEvent } from '../../../shared/api/eventService';
+import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../shared/api/eventService';
 import { useEventVersion } from '../../events/store/useEventVersion';
 
 const PAGE_SIZE = 10;
@@ -66,7 +66,12 @@ export function useEventHistory() {
     );
   };
 
-  // Throws on error so the caller (EditDialog) can show field-level errors
+  // Throws on error so the caller (EventFormDialog) can show field-level errors
+  const addEvent = async (payload) => {
+    await createEvent(selectedBabyId, payload);
+    bumpEventVersion();
+  };
+
   const editEvent = async (eventId, payload) => {
     await updateEvent(selectedBabyId, eventId, payload);
     bumpEventVersion();
@@ -94,6 +99,7 @@ export function useEventHistory() {
     selectedTypes,
     toggleType,
     goToPage,
+    addEvent,
     editEvent,
     removeEvent,
     refetch: () => fetchPage(page, selectedTypes),
