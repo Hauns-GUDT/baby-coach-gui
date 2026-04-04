@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../features/auth/store/useAuthStore';
 import { useBabyStore } from '../../features/babies/store/useBabyStore';
@@ -27,6 +28,18 @@ export default function Navigation() {
   const navLinkClass = ({ isActive }) =>
     `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-zinc-600 hover:text-zinc-900'}`;
 
+  const getPageTitle = () => {
+    const p = location.pathname;
+    if (p === '/') return t('nav.tracking');
+    if (p === '/dashboard') return t('nav.dashboard');
+    if (p === '/history') return t('nav.history');
+    if (p === '/profile/babies/new') return t('babies.addBaby');
+    if (p.startsWith('/profile/babies/')) return t('babies.editBaby');
+    if (p === '/profile/babies') return t('babies.title');
+    if (p.startsWith('/profile')) return t('profile.title');
+    return '';
+  };
+
   const selectedBaby = babies.find((b) => b.id === selectedBabyId);
 
   const babySelector = babies.length > 0 && (
@@ -47,13 +60,28 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="bg-white border-b border-zinc-200 relative">
-      <div className="max-w-5xl mx-auto px-6">
+    <nav className="bg-white border-b border-zinc-200 relative z-40">
+      {/* Click-outside overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
+      )}
+
+      <div className="relative z-40 max-w-5xl mx-auto px-6">
         {/* Top bar */}
         <div className="h-16 flex items-center justify-between">
-          <NavLink to="/">
-            <img src="/logo.png" alt="Baby Coach" className="h-10 w-10" />
-          </NavLink>
+          <div className="flex items-center gap-3">
+            <NavLink to="/" onClick={() => setIsOpen(false)}>
+              <img src="/logo.png" alt="Baby Coach" className="h-10 w-10" />
+            </NavLink>
+            <button
+              onClick={() => setIsOpen((o) => !o)}
+              className="md:hidden flex items-center gap-1 text-lg font-bold text-zinc-900 cursor-pointer select-none"
+            >
+              {getPageTitle()}
+              {isOpen ? <ChevronUp size={18} className="text-zinc-400" /> : <ChevronDown size={18} className="text-zinc-400" />}
+            </button>
+            <span className="hidden md:block text-lg font-bold text-zinc-900">{getPageTitle()}</span>
+          </div>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-6">
@@ -65,24 +93,9 @@ export default function Navigation() {
             {babySelector}
           </div>
 
-          {/* Mobile: baby selector + burger */}
+          {/* Mobile: baby selector */}
           <div className="flex items-center gap-3 md:hidden">
             {babySelector}
-            <button
-              onClick={() => setIsOpen((o) => !o)}
-              aria-label="Toggle menu"
-              className="p-2 rounded-lg text-zinc-600 hover:bg-zinc-100 transition-colors cursor-pointer"
-            >
-              {isOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
           </div>
         </div>
 

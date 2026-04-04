@@ -13,7 +13,6 @@ export default function BabiesPage() {
     <main className="min-h-[calc(100vh-65px)] p-6">
       <div className="w-full max-w-sm mx-auto flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-zinc-900">{t('babies.title')}</h1>
           <button
             onClick={() => navigate('/profile/babies/new')}
             className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-4 py-2 transition-colors cursor-pointer"

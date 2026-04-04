@@ -17,7 +17,6 @@ export default function TrackingPage() {
 
   return (
     <main className="p-4 flex flex-col gap-4 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-zinc-900">{t('nav.tracking')}</h1>
       <DayWidget />
       <SessionsWidget
         events={events}
