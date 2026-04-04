@@ -12,7 +12,8 @@
     "month": "Month",
     "addEvent": "Add Event",
     "selectEventType": "What happened?",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "continue": "Continue"
   },
   "nav": {
     "dashboard": "Dashboard",

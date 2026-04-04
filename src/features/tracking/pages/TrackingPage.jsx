@@ -7,7 +7,7 @@ import SessionsWidget, { AddEventDialog } from '../components/SessionsWidget';
 
 export default function TrackingPage() {
   const { t } = useTranslation();
-  const { events, page, totalPages, isLoading, goToPage, addEvent, editEvent, removeEvent, selectedTypes, toggleType } = useEventHistory();
+  const { events, page, totalPages, isLoading, goToPage, addEvent, editEvent, removeEvent, continueEvent, hasActiveEvent, selectedTypes, toggleType } = useEventHistory();
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleAdd = async (payload) => {
@@ -26,6 +26,8 @@ export default function TrackingPage() {
         isLoading={isLoading}
         onEdit={editEvent}
         onDelete={removeEvent}
+        onContinue={continueEvent}
+        hasActiveEvent={hasActiveEvent}
         selectedTypes={selectedTypes}
         onTypeToggle={toggleType}
       />

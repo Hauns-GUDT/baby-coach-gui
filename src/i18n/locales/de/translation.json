@@ -12,7 +12,8 @@
     "month": "Monat",
     "addEvent": "Eintrag hinzufügen",
     "selectEventType": "Was ist passiert?",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "continue": "Fortsetzen"
   },
   "nav": {
     "dashboard": "Dashboard",
