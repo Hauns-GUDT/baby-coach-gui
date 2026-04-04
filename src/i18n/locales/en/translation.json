@@ -6,7 +6,10 @@
   "tracking": {
     "recentSessions": "Recent Sessions",
     "noSessions": "No sessions yet.",
-    "thisWeek": "This Week"
+    "thisWeek": "This Week",
+    "addEvent": "Add Event",
+    "selectEventType": "What happened?",
+    "cancel": "Cancel"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -36,6 +39,7 @@
     "title": "History",
     "sleep": {
       "title": "Sleep",
+      "newSession": "New Sleep Session",
       "todayTotal": "Today",
       "thisWeek": "This week",
       "clockTitle": "When today",
@@ -62,6 +66,7 @@
     },
     "diaper": {
       "title": "Diaper",
+      "newSession": "New Diaper Entry",
       "editSession": "Edit Diaper Session",
       "end": "End",
       "cancel": "Cancel",
@@ -74,6 +79,7 @@
     },
     "feeding": {
       "title": "Feeding",
+      "newSession": "New Feeding Session",
       "todayTotal": "Today",
       "thisWeek": "This week",
       "loading": "Loading feeding data...",

@@ -6,7 +6,10 @@
   "tracking": {
     "recentSessions": "Letzte Einträge",
     "noSessions": "Noch keine Einträge.",
-    "thisWeek": "Diese Woche"
+    "thisWeek": "Diese Woche",
+    "addEvent": "Eintrag hinzufügen",
+    "selectEventType": "Was ist passiert?",
+    "cancel": "Abbrechen"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -36,6 +39,7 @@
     "title": "Verlauf",
     "sleep": {
       "title": "Schlaf",
+      "newSession": "Neue Schlafeinheit",
       "todayTotal": "Heute",
       "thisWeek": "Diese Woche",
       "clockTitle": "Wann heute",
@@ -62,6 +66,7 @@
     },
     "diaper": {
       "title": "Windel",
+      "newSession": "Neuer Windeleintrag",
       "editSession": "Windeleintrag bearbeiten",
       "end": "Ende",
       "cancel": "Abbrechen",
@@ -74,6 +79,7 @@
     },
     "feeding": {
       "title": "Fütterung",
+      "newSession": "Neue Fütterungseinheit",
       "todayTotal": "Heute",
       "thisWeek": "Diese Woche",
       "loading": "Fütterungsdaten werden geladen...",
