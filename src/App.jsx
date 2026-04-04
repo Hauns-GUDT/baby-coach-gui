@@ -21,9 +21,10 @@ function NoBabyGuard({ children }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const { babies, hasFetched } = useBabyStore();
 
+  const onAppRoute = location.pathname.startsWith('/app');
   const onBabiesRoute = location.pathname.startsWith('/app/profile/babies');
 
-  if (isAuthenticated && hasFetched && babies.length === 0 && !onBabiesRoute) {
+  if (isAuthenticated && hasFetched && babies.length === 0 && onAppRoute && !onBabiesRoute) {
     return <NoBabyPage />;
   }
 
