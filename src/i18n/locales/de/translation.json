@@ -227,6 +227,24 @@
       "copyright": "© {{year}} BabyCoach. Alle Rechte vorbehalten."
     }
   },
+  "sleepAssistant": {
+    "fab": "Schlaf-Assistent",
+    "title": "Schlaf-Assistent",
+    "requestButton": "Schlafempfehlung abrufen",
+    "loading": "Berechne…",
+    "retry": "Erneut versuchen",
+    "norm": "Altersgruppe: {{label}}",
+    "types": {
+      "NAP": "Nächster Schlaf",
+      "BEDTIME": "Schlafenszeit"
+    },
+    "errors": {
+      "currentlySleeping": "Dein Baby schläft gerade.",
+      "invalidDuration": "Das letzte Schlaf-Event scheint zu lang. Hast du vergessen, den Timer zu stoppen?",
+      "noEvents": "Noch keine Schlaf-Events eingetragen.",
+      "generic": "Empfehlung konnte nicht abgerufen werden. Bitte erneut versuchen."
+    }
+  },
   "admin": {
     "title": "Admin",
     "createUser": "Benutzer erstellen",

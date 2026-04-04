@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import { useEventHistory } from '../hooks/useEventHistory';
 import DayWidget from '../../dashboard/components/widgets/DayWidget';
 import SessionsWidget, { AddEventDialog } from '../components/SessionsWidget';
+import SleepAssistantPanel from '../components/SleepAssistantPanel';
 
 export default function TrackingPage() {
   const { t } = useTranslation();
@@ -41,6 +42,7 @@ export default function TrackingPage() {
       {isAddOpen && (
         <AddEventDialog onCreate={handleAdd} onCancel={() => setIsAddOpen(false)} />
       )}
+      <SleepAssistantPanel />
     </main>
   );
 }
