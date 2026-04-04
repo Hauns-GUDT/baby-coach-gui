@@ -6,6 +6,7 @@ import { useBabyStore } from './features/babies/store/useBabyStore';
 import { useAuthStore } from './features/auth/store/useAuthStore';
 import Login from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
+import LandingPage from './features/landing/pages/LandingPage';
 import Dashboard from './features/dashboard/pages/Dashboard';
 import History from './features/history/pages/History';
 import Profile from './features/profile/pages/Profile';
@@ -45,6 +46,7 @@ export default function App() {
         <Navigation />
         <NoBabyGuard>
           <Routes>
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/register" element={<Register />} /> */}
             <Route
