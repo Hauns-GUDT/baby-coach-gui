@@ -62,15 +62,17 @@ axiosClient.interceptors.response.use(
       const { data } = await axiosClient.post('/auth/refresh');
       const newToken = data.accessToken;
 
-      // Decode username from JWT payload
+      // Decode username + isAdmin from JWT payload
       let username = null;
+      let isAdmin = false;
       try {
         const payload = JSON.parse(atob(newToken.split('.')[1]));
         username = payload.username ?? null;
+        isAdmin = payload.isAdmin ?? false;
       } catch {
-        // malformed JWT payload — proceed with null username
+        // malformed JWT payload — proceed with defaults
       }
-      useAuthStore.getState().setAuth(newToken, username);
+      useAuthStore.getState().setAuth(newToken, username, isAdmin);
 
       processQueue(null, newToken);
       original.headers.Authorization = `Bearer ${newToken}`;

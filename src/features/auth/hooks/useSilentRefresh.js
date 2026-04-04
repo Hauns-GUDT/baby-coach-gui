@@ -8,7 +8,7 @@ export function useSilentRefresh() {
 
   useEffect(() => {
     refresh()
-      .then(({ accessToken, username }) => setAuth(accessToken, username))
+      .then(({ accessToken, username, isAdmin }) => setAuth(accessToken, username, isAdmin))
       .catch(() => {
         // No valid refresh token — user must log in
       })

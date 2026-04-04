@@ -1,17 +1,17 @@
 import { axiosClient } from '../../../shared/api/axiosClient';
 
-function parseJwtUsername(token) {
+function parseJwt(token) {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.username ?? null;
+    return { username: payload.username ?? null, isAdmin: payload.isAdmin ?? false };
   } catch {
-    return null;
+    return { username: null, isAdmin: false };
   }
 }
 
 export async function login(credentials) {
   const { data } = await axiosClient.post('/auth/login', credentials);
-  return { accessToken: data.accessToken, username: parseJwtUsername(data.accessToken) };
+  return { accessToken: data.accessToken, ...parseJwt(data.accessToken) };
 }
 
 export async function logout() {
@@ -20,7 +20,7 @@ export async function logout() {
 
 export async function refresh() {
   const { data } = await axiosClient.post('/auth/refresh');
-  return { accessToken: data.accessToken, username: parseJwtUsername(data.accessToken) };
+  return { accessToken: data.accessToken, ...parseJwt(data.accessToken) };
 }
 
 export async function register(data) {

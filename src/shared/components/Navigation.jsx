@@ -12,6 +12,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBabyDialogOpen, setIsBabyDialogOpen] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const { babies, selectedBabyId, hasFetched, setBabies, setSelectedBaby, setHasFetched } = useBabyStore();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function Navigation() {
 
   if (['/app/login', '/app/register'].includes(location.pathname)) return null;
   if (!location.pathname.startsWith('/app')) return null;
-  if (hasFetched && babies.length === 0) return null;
+  if (hasFetched && babies.length === 0 && !location.pathname.startsWith('/app/admin')) return null;
 
   const navLinkClass = ({ isActive }) =>
     `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-zinc-600 hover:text-zinc-900'}`;
@@ -38,6 +39,7 @@ export default function Navigation() {
     if (p.startsWith('/app/profile/babies/')) return t('babies.editBaby');
     if (p === '/app/profile/babies') return t('babies.title');
     if (p.startsWith('/app/profile')) return t('profile.title');
+    if (p.startsWith('/app/admin')) return t('admin.title');
     return '';
   };
 
@@ -58,6 +60,7 @@ export default function Navigation() {
     // { to: '/app/chatbot', label: t('nav.chatbot') },
     { to: '/app/history', label: t('nav.history') },
     { to: '/app/profile', label: t('nav.profile') },
+    ...(isAdmin ? [{ to: '/app/admin', label: t('nav.admin') }] : []),
   ];
 
   return (
