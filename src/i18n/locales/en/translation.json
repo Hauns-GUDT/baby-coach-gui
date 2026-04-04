@@ -37,6 +37,8 @@
   },
   "history": {
     "title": "History",
+    "loadingDay": "Loading…",
+    "loadDayFailed": "Could not load events for this day.",
     "sleep": {
       "title": "Sleep",
       "newSession": "New Sleep Session",
@@ -137,7 +139,8 @@
     "title": "Profile",
     "loggedInAs": "Logged in as",
     "logout": "Logout",
-    "manageBabies": "Manage Babies"
+    "manageBabies": "Manage Babies",
+    "language": "Language"
   },
   "validation": {
     "minLength": "Value is too short.",

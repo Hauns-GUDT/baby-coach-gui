@@ -37,6 +37,8 @@
   },
   "history": {
     "title": "Verlauf",
+    "loadingDay": "Wird geladen…",
+    "loadDayFailed": "Ereignisse für diesen Tag konnten nicht geladen werden.",
     "sleep": {
       "title": "Schlaf",
       "newSession": "Neue Schlafeinheit",
@@ -139,7 +141,8 @@
     "title": "Profil",
     "loggedInAs": "Angemeldet als",
     "logout": "Abmelden",
-    "manageBabies": "Babys verwalten"
+    "manageBabies": "Babys verwalten",
+    "language": "Sprache"
   },
   "validation": {
     "minLength": "Wert ist zu kurz.",

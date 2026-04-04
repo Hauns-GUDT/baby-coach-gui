@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { computePeriodsForDate } from '../../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
 function buildMonthGrid(year, month) {
   const firstDay = new Date(year, month, 1);
@@ -22,7 +21,7 @@ function isFutureDay(date, today) {
   return d > t;
 }
 
-export default function EventCalendar({ eventSets = [], onDaySelect }) {
+export default function EventCalendar({ onDaySelect }) {
   const { i18n } = useTranslation();
   const today = new Date();
 
@@ -54,9 +53,9 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
     else setViewMonth((m) => m + 1);
   };
 
-  const handleDayClick = (date, periodsBySets) => {
+  const handleDayClick = (date) => {
     setSelectedDate(date);
-    onDaySelect?.({ date, periodsBySets });
+    onDaySelect?.(date);
   };
 
   return (
@@ -87,18 +86,12 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
           const selected = selectedDate && isSameDay(date, selectedDate);
           const todayCell = isSameDay(date, today);
 
-          // Compute once — reused for both dots and the onDaySelect payload
-          const periodsBySets = future ? null : eventSets.map(({ events }) => computePeriodsForDate(events, date));
-          const dotsToShow = periodsBySets
-            ? eventSets.filter((_, idx) => periodsBySets[idx].length > 0)
-            : [];
-
           return (
             <button
               key={date.toISOString()}
-              onClick={() => handleDayClick(date, periodsBySets)}
+              onClick={() => handleDayClick(date)}
               disabled={future}
-              className={`flex flex-col items-center justify-center rounded-xl py-2 gap-1 transition-all
+              className={`flex items-center justify-center rounded-xl py-2.5 transition-all
                 ${future ? 'opacity-25 cursor-not-allowed'
                   : selected ? 'bg-zinc-800 shadow-sm cursor-pointer'
                   : todayCell ? 'bg-zinc-100 cursor-pointer'
@@ -107,13 +100,6 @@ export default function EventCalendar({ eventSets = [], onDaySelect }) {
               <span className={`text-xs font-semibold leading-none ${selected ? 'text-white' : 'text-zinc-700'}`}>
                 {date.getDate()}
               </span>
-              <div className="flex gap-0.5 h-1.5 items-center">
-                {dotsToShow.length > 0
-                  ? dotsToShow.map(({ color }, idx) => (
-                      <span key={idx} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: selected ? '#ffffff' : color }} />
-                    ))
-                  : <span className="w-1.5 h-1.5" />}
-              </div>
             </button>
           );
         })}
