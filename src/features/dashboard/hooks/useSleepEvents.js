@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepEventStore } from '../store/useSleepEventStore';
-import { getEvents, createEvent, updateEvent, stopEvent, deleteEvent } from '../../../shared/api/eventService';
+import { getEvents, startEvent, updateEvent, stopEvent, deleteEvent } from '../../../shared/api/eventService';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { useEventVersion } from '../../events/store/useEventVersion';
 
@@ -65,10 +65,7 @@ export function useSleepEvents() {
     if (!selectedBabyId || activeSleep) return;
     setError('');
     try {
-      const event = await createEvent(selectedBabyId, {
-        type: 'sleep',
-        startedAt: new Date().toISOString(),
-      });
+      const event = await startEvent(selectedBabyId, 'sleep');
       addSleepEvent(event);
       bumpEventVersion();
     } catch (e) {
