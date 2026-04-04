@@ -34,7 +34,7 @@ export default function BabyList({ babies, onDelete }) {
               <IconButton
                 icon={Pencil}
                 label={t('babies.edit')}
-                onClick={() => navigate(`/profile/babies/${baby.id}/edit`)}
+                onClick={() => navigate(`/app/profile/babies/${baby.id}/edit`)}
               />
               <IconButton
                 icon={Trash2}

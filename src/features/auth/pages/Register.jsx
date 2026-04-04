@@ -101,7 +101,7 @@ export default function Register() {
 
         <p className="mt-6 text-center text-sm text-zinc-500">
           {t('registration.signInPrompt')}{' '}
-          <Link to="/login" className="text-indigo-600 font-semibold hover:underline">
+          <Link to="/app/login" className="text-indigo-600 font-semibold hover:underline">
             {t('registration.signInLink')}
           </Link>
         </p>

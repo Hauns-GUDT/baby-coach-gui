@@ -57,7 +57,7 @@ export function useBabyForm(babyId) {
         addBaby(created);
         setHasFetched(false);
       }
-      navigate('/profile/babies');
+      navigate('/app/profile/babies');
     } catch (err) {
       const { fieldErrors: fe, code } = parseApiError(err);
       if (fe && Object.keys(fe).length > 0) {

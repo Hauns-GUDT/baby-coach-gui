@@ -20,7 +20,7 @@ function NoBabyGuard({ children }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const { babies, hasFetched } = useBabyStore();
 
-  const onBabiesRoute = location.pathname.startsWith('/profile/babies');
+  const onBabiesRoute = location.pathname.startsWith('/app/profile/babies');
 
   if (isAuthenticated && hasFetched && babies.length === 0 && !onBabiesRoute) {
     return <NoBabyPage />;
@@ -46,11 +46,11 @@ export default function App() {
         <Navigation />
         <NoBabyGuard>
           <Routes>
-            <Route path="/landing" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<Register />} /> */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app/login" element={<Login />} />
+            {/* <Route path="/app/register" element={<Register />} /> */}
             <Route
-              path="/"
+              path="/app"
               element={
                 <ProtectedRoute>
                   <TrackingPage />
@@ -58,7 +58,7 @@ export default function App() {
               }
             />
             <Route
-              path="/dashboard"
+              path="/app/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -66,7 +66,7 @@ export default function App() {
               }
             />
             {/* {<Route
-              path="/chatbot"
+              path="/app/chatbot"
               element={
                 <ProtectedRoute>
                    <ChatBot />
@@ -74,7 +74,7 @@ export default function App() {
               }
             />} */}
             <Route
-              path="/history"
+              path="/app/history"
               element={
                 <ProtectedRoute>
                   <History />
@@ -82,7 +82,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile"
+              path="/app/profile"
               element={
                 <ProtectedRoute>
                   <Profile />
@@ -90,7 +90,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies"
+              path="/app/profile/babies"
               element={
                 <ProtectedRoute>
                   <BabiesPage />
@@ -98,7 +98,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies/new"
+              path="/app/profile/babies/new"
               element={
                 <ProtectedRoute>
                   <BabyFormPage />
@@ -106,7 +106,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies/:id/edit"
+              path="/app/profile/babies/:id/edit"
               element={
                 <ProtectedRoute>
                   <BabyFormPage />

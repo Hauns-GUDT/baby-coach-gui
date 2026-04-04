@@ -27,7 +27,7 @@ export default function BabyFormPage() {
             error={error}
             fieldErrors={fieldErrors}
             onSubmit={submit}
-            onCancel={() => navigate('/profile/babies')}
+            onCancel={() => navigate('/app/profile/babies')}
           />
         )}
       </div>

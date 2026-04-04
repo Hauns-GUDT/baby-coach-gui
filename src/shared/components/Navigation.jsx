@@ -22,7 +22,8 @@ export default function Navigation() {
     }
   }, [isAuthenticated, hasFetched]);
 
-  if (['/login', '/register'].includes(location.pathname)) return null;
+  if (['/app/login', '/app/register'].includes(location.pathname)) return null;
+  if (!location.pathname.startsWith('/app')) return null;
   if (hasFetched && babies.length === 0) return null;
 
   const navLinkClass = ({ isActive }) =>
@@ -30,13 +31,13 @@ export default function Navigation() {
 
   const getPageTitle = () => {
     const p = location.pathname;
-    if (p === '/') return t('nav.tracking');
-    if (p === '/dashboard') return t('nav.dashboard');
-    if (p === '/history') return t('nav.history');
-    if (p === '/profile/babies/new') return t('babies.addBaby');
-    if (p.startsWith('/profile/babies/')) return t('babies.editBaby');
-    if (p === '/profile/babies') return t('babies.title');
-    if (p.startsWith('/profile')) return t('profile.title');
+    if (p === '/app') return t('nav.tracking');
+    if (p === '/app/dashboard') return t('nav.dashboard');
+    if (p === '/app/history') return t('nav.history');
+    if (p === '/app/profile/babies/new') return t('babies.addBaby');
+    if (p.startsWith('/app/profile/babies/')) return t('babies.editBaby');
+    if (p === '/app/profile/babies') return t('babies.title');
+    if (p.startsWith('/app/profile')) return t('profile.title');
     return '';
   };
 
@@ -52,11 +53,11 @@ export default function Navigation() {
   );
 
   const links = [
-    { to: '/', label: t('nav.tracking'), end: true },
-    { to: '/dashboard', label: t('nav.dashboard') },
-    // { to: '/chatbot', label: t('nav.chatbot') },
-    { to: '/history', label: t('nav.history') },
-    { to: '/profile', label: t('nav.profile') },
+    { to: '/app', label: t('nav.tracking'), end: true },
+    { to: '/app/dashboard', label: t('nav.dashboard') },
+    // { to: '/app/chatbot', label: t('nav.chatbot') },
+    { to: '/app/history', label: t('nav.history') },
+    { to: '/app/profile', label: t('nav.profile') },
   ];
 
   return (
@@ -70,7 +71,7 @@ export default function Navigation() {
         {/* Top bar */}
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <NavLink to="/" onClick={() => setIsOpen(false)}>
+            <NavLink to="/app" onClick={() => setIsOpen(false)}>
               <img src="/logo.png" alt="Baby Coach" className="h-10 w-10" />
             </NavLink>
             <button

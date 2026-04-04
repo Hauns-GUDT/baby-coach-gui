@@ -10,7 +10,7 @@ function FeatureImage({ src, alt }) {
 
   if (failed) {
     return (
-      <div className="w-full aspect-video bg-gradient-to-br from-indigo-50 to-violet-50 rounded-2xl flex items-center justify-center border border-indigo-100">
+      <div className="w-full aspect-video bg-linear-to-br from-indigo-50 to-violet-50 rounded-2xl flex items-center justify-center border border-indigo-100">
         <span className="text-xs text-indigo-300 font-mono">{src}</span>
       </div>
     );
@@ -98,7 +98,7 @@ function PricingCard({ name, description, price, yearlyMonthly, yearlyTotal, fea
       </ul>
 
       <button
-        onClick={() => navigate('/register')}
+        onClick={() => navigate('/app/register')}
         className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
           isHighlighted
             ? 'bg-white text-indigo-600 hover:bg-indigo-50'
@@ -209,13 +209,13 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/app/login')}
               className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
             >
               {t('auth.title')}
             </button>
             <button
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/app/register')}
               className="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors cursor-pointer"
             >
               {t('landing.hero.cta')}
@@ -225,8 +225,8 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50/60 to-white pt-20 pb-24 px-4 sm:px-6 text-center">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent" />
+      <section className="relative overflow-hidden bg-linear-to-b from-indigo-50/60 to-white pt-20 pb-24 px-4 sm:px-6 text-center">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent" />
 
         <div className="max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
@@ -244,7 +244,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/app/register')}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold px-8 py-4 rounded-2xl hover:bg-indigo-700 transition-colors text-base shadow-lg shadow-indigo-200 cursor-pointer"
             >
               {t('landing.hero.cta')}
@@ -337,7 +337,7 @@ export default function LandingPage() {
             {t('landing.footer.subheadline')}
           </p>
           <button
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/app/register')}
             className="inline-flex items-center gap-2 bg-white text-indigo-600 font-bold px-8 py-4 rounded-2xl hover:bg-indigo-50 transition-colors text-base cursor-pointer"
           >
             {t('landing.hero.cta')}
