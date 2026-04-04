@@ -200,7 +200,7 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
 
       <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
 
-      {isLoading ? (
+      {isLoading && sessions.length === 0 ? (
         <p className="text-sm text-zinc-400">{t('common.loading', 'Loading…')}</p>
       ) : sessions.length === 0 ? (
         <p className="text-sm text-zinc-400">{t('tracking.noSessions')}</p>
