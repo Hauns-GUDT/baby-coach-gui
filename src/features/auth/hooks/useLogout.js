@@ -16,7 +16,7 @@ export function useLogout() {
     }
     clearAuth();
     clearBabies();
-    navigate('/login', { replace: true });
+    navigate('/app/login', { replace: true });
   };
 
   return { handleLogout };

@@ -21,7 +21,7 @@ export default function Profile() {
           <span className="font-semibold text-zinc-900">{username}</span>
         </p>
 
-        <Button onClick={() => navigate('/profile/babies')}>
+        <Button onClick={() => navigate('/app/profile/babies')}>
           {t('profile.manageBabies')}
         </Button>
 

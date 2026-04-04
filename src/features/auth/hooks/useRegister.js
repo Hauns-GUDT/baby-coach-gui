@@ -18,7 +18,7 @@ export function useRegister() {
     setIsSubmitting(true);
     try {
       await register(data);
-      navigate('/login', { state: { registered: true } });
+      navigate('/app/login', { state: { registered: true } });
     } catch (err) {
       const { fieldErrors: fe, code } = parseApiError(err);
       if (fe && Object.keys(fe).length > 0) {

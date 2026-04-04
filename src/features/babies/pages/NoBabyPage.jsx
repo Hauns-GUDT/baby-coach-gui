@@ -14,7 +14,7 @@ export default function NoBabyPage() {
           <h1 className="text-2xl font-bold text-zinc-900">{t('noBaby.title')}</h1>
           <p className="text-zinc-500">{t('noBaby.description')}</p>
         </div>
-        <Link to="/profile/babies/new">
+        <Link to="/app/profile/babies/new">
           <Button>{t('noBaby.cta')}</Button>
         </Link>
       </div>

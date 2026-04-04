@@ -84,7 +84,7 @@ export default function Login() {
 
         {/* <p className="mt-6 text-center text-sm text-zinc-500">
           {t('auth.registerPrompt')}{' '}
-          <Link to="/register" className="text-indigo-600 font-semibold hover:underline">
+          <Link to="/app/register" className="text-indigo-600 font-semibold hover:underline">
             {t('auth.registerLink')}
           </Link>
         </p> */}

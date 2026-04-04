@@ -156,6 +156,72 @@
     "eventAlreadyStopped": "Diese Einheit wurde bereits beendet.",
     "fallback": "Ungültiger Wert."
   },
+  "landing": {
+    "hero": {
+      "badge": "KI-gestütztes Baby-Tracking",
+      "headline": "Wisse, was kommt, bevor es weint",
+      "subheadline": "BabyCoach zeichnet jeden Schlaf, jede Mahlzeit und jede Windel auf — und sagt deinen nächsten Schritt voraus, damit du endlich durchatmen kannst.",
+      "cta": "Kostenlos starten",
+      "ctaSecondary": "So funktioniert's"
+    },
+    "features": {
+      "title": "Alles, was du brauchst — nichts, was du nicht brauchst",
+      "subtitle": "Von einfachem Tracking bis zu KI-gestützten Vorhersagen — alles in einer ruhigen, fokussierten App.",
+      "logging": {
+        "title": "Smartes Loggen",
+        "description": "Schlaf, Mahlzeiten und Windeln in Sekunden eintragen. Kein Aufwand — nur saubere Daten, die ein Bild von deinem Babytag zeichnen."
+      },
+      "predictions": {
+        "title": "Schläfchen-Vorhersagen",
+        "description": "Der SweetSpot-Algorithmus lernt die einzigartigen Rhythmen deines Babys und sagt das nächste Schläfchenfenster voraus — bevor die Quengelphase beginnt."
+      },
+      "insights": {
+        "title": "KI-Einblicke",
+        "description": "Chatte mit deinem persönlichen KI-Baby-Coach für Ratschläge, die auf die spezifischen Muster, die Geschichte und den Entwicklungsstand deines Babys zugeschnitten sind."
+      }
+    },
+    "pricing": {
+      "title": "Einfache, transparente Preise",
+      "subtitle": "Starte kostenlos. Upgrade, wenn du bereit bist.",
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "yearlyBadge": "25% sparen",
+      "basic": {
+        "name": "Basic",
+        "description": "Perfekt für den Einstieg. Manuelles Tracking mit Verlauf und Diagrammen.",
+        "cta": "Kostenlos loslegen",
+        "feature1": "Schlaf- & Mahlzeiten-Tracking",
+        "feature2": "Windelprotokoll",
+        "feature3": "Verlaufsansicht",
+        "feature4": "Einfache Diagramme & Zusammenfassungen"
+      },
+      "smart": {
+        "name": "Smart",
+        "description": "KI-gestützte Vorschläge, die die mentale Last des Ratens reduzieren.",
+        "cta": "Smart starten",
+        "feature1": "Alles aus Basic",
+        "feature2": "SweetSpot-Schläfchen-Algorithmus",
+        "feature3": "KI-Schlaf- & Mahlzeitenvorschläge",
+        "feature4": "Mustererkennung",
+        "feature5": "Wöchentliche Einblicksberichte"
+      },
+      "agent": {
+        "name": "Agent",
+        "description": "Dein persönlicher KI-Coach, immer erreichbar, wenn du reden möchtest.",
+        "cta": "Mit Agent starten",
+        "feature1": "Alles aus Smart",
+        "feature2": "KI-Chatbot-Berater",
+        "feature3": "Personalisierte Tagesroutinen",
+        "feature4": "Meilenstein-Tracking",
+        "feature5": "Prioritätssupport"
+      }
+    },
+    "footer": {
+      "headline": "Bereit, mit dem Raten aufzuhören?",
+      "subheadline": "Schließe dich tausenden Eltern an, die dank BabyCoach etwas besser schlafen.",
+      "copyright": "© {{year}} BabyCoach. Alle Rechte vorbehalten."
+    }
+  },
   "babies": {
     "title": "Babys",
     "addBaby": "Baby hinzufügen",

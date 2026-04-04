@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navigation from './shared/components/Navigation';
 import ProtectedRoute from './shared/components/ProtectedRoute';
+import GuestRoute from './shared/components/GuestRoute';
 import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import { useBabyStore } from './features/babies/store/useBabyStore';
 import { useAuthStore } from './features/auth/store/useAuthStore';
 import Login from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
+import LandingPage from './features/landing/pages/LandingPage';
 import Dashboard from './features/dashboard/pages/Dashboard';
 import History from './features/history/pages/History';
 import Profile from './features/profile/pages/Profile';
@@ -19,9 +21,10 @@ function NoBabyGuard({ children }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const { babies, hasFetched } = useBabyStore();
 
-  const onBabiesRoute = location.pathname.startsWith('/profile/babies');
+  const onAppRoute = location.pathname.startsWith('/app');
+  const onBabiesRoute = location.pathname.startsWith('/app/profile/babies');
 
-  if (isAuthenticated && hasFetched && babies.length === 0 && !onBabiesRoute) {
+  if (isAuthenticated && hasFetched && babies.length === 0 && onAppRoute && !onBabiesRoute) {
     return <NoBabyPage />;
   }
 
@@ -45,10 +48,11 @@ export default function App() {
         <Navigation />
         <NoBabyGuard>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<Register />} /> */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app/login" element={<GuestRoute><Login /></GuestRoute>} />
+            {/* <Route path="/app/register" element={<GuestRoute><Register /></GuestRoute>} /> */}
             <Route
-              path="/"
+              path="/app"
               element={
                 <ProtectedRoute>
                   <TrackingPage />
@@ -56,7 +60,7 @@ export default function App() {
               }
             />
             <Route
-              path="/dashboard"
+              path="/app/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -64,7 +68,7 @@ export default function App() {
               }
             />
             {/* {<Route
-              path="/chatbot"
+              path="/app/chatbot"
               element={
                 <ProtectedRoute>
                    <ChatBot />
@@ -72,7 +76,7 @@ export default function App() {
               }
             />} */}
             <Route
-              path="/history"
+              path="/app/history"
               element={
                 <ProtectedRoute>
                   <History />
@@ -80,7 +84,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile"
+              path="/app/profile"
               element={
                 <ProtectedRoute>
                   <Profile />
@@ -88,7 +92,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies"
+              path="/app/profile/babies"
               element={
                 <ProtectedRoute>
                   <BabiesPage />
@@ -96,7 +100,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies/new"
+              path="/app/profile/babies/new"
               element={
                 <ProtectedRoute>
                   <BabyFormPage />
@@ -104,7 +108,7 @@ export default function App() {
               }
             />
             <Route
-              path="/profile/babies/:id/edit"
+              path="/app/profile/babies/:id/edit"
               element={
                 <ProtectedRoute>
                   <BabyFormPage />
