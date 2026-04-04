@@ -51,5 +51,5 @@ export function useHistoryDayEvents(date) {
   const sleepPeriods = date ? computePeriodsForDate(sleepEvents, date) : [];
   const feedingPeriods = date ? computePeriodsForDate(feedingEvents, date) : [];
 
-  return { sleepPeriods, feedingPeriods, isLoading, error };
+  return { sleepPeriods, feedingPeriods, sleepEvents, feedingEvents, isLoading, error };
 }

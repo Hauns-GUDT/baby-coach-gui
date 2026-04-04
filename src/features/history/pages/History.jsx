@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Moon, Milk } from 'lucide-react';
 import EventCalendar from '../components/calendar/EventCalendar';
 import DayTimeline from '../../../shared/components/DayTimeline';
+import DayEventSummary from '../components/DayEventSummary';
 import { useHistoryDayEvents } from '../hooks/useHistoryDayEvents';
 
 const EVENT_SETS = [
@@ -14,7 +15,7 @@ export default function History() {
   const { t, i18n } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const { sleepPeriods, feedingPeriods, isLoading, error } = useHistoryDayEvents(selectedDate);
+  const { sleepPeriods, feedingPeriods, sleepEvents, feedingEvents, isLoading, error } = useHistoryDayEvents(selectedDate);
 
   const dateLabel = selectedDate
     ? new Intl.DateTimeFormat(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)
@@ -38,6 +39,25 @@ export default function History() {
           {error && <p className="text-sm text-rose-500">{t('history.loadDayFailed')}</p>}
           {!isLoading && !error && <DayTimeline rows={timelineRows} />}
         </div>
+      )}
+
+      {selectedDate && !isLoading && !error && (
+        <>
+          <DayEventSummary
+            events={sleepEvents}
+            date={selectedDate}
+            color={EVENT_SETS[0].color}
+            icon={EVENT_SETS[0].icon}
+            label={t(EVENT_SETS[0].i18nKey)}
+          />
+          <DayEventSummary
+            events={feedingEvents}
+            date={selectedDate}
+            color={EVENT_SETS[1].color}
+            icon={EVENT_SETS[1].icon}
+            label={t(EVENT_SETS[1].i18nKey)}
+          />
+        </>
       )}
     </main>
   );
