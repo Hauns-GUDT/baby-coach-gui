@@ -225,6 +225,24 @@
       "copyright": "© {{year}} BabyCoach. All rights reserved."
     }
   },
+  "sleepAssistant": {
+    "fab": "Sleep assistant",
+    "title": "Sleep Assistant",
+    "requestButton": "Get sleep suggestion",
+    "loading": "Calculating…",
+    "retry": "Try again",
+    "norm": "Age bracket: {{label}}",
+    "types": {
+      "NAP": "Next nap",
+      "BEDTIME": "Bedtime"
+    },
+    "errors": {
+      "currentlySleeping": "Your baby is currently sleeping.",
+      "invalidDuration": "The last sleep event looks too long. Did you forget to stop the timer?",
+      "noEvents": "No sleep events logged yet.",
+      "generic": "Could not get a prediction. Please try again."
+    }
+  },
   "admin": {
     "title": "Admin",
     "createUser": "Create User",
