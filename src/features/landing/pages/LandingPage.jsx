@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Utensils, Brain, Check, Sparkles, ArrowRight } from 'lucide-react';
+import { Brain, Check, Sparkles, ArrowRight } from 'lucide-react';
 
 // ─── Feature image with fallback placeholder ────────────────────────────────
 
@@ -202,9 +202,7 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
-              <Moon className="w-4 h-4 text-white" />
-            </div>
+            <img src="/logo.png" alt="BabyCoach" className="h-10 w-10" />
             <span className="font-bold text-zinc-900 text-lg">BabyCoach</span>
           </div>
           <div className="flex items-center gap-3">
@@ -349,9 +347,7 @@ export default function LandingPage() {
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer className="py-8 px-4 sm:px-6 bg-zinc-900 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center">
-            <Moon className="w-3.5 h-3.5 text-white" />
-          </div>
+          <img src="/logo.png" alt="BabyCoach" className="h-6 w-6 opacity-90" />
           <span className="font-bold text-white text-sm">BabyCoach</span>
         </div>
         <p className="text-zinc-500 text-xs">
