@@ -53,6 +53,11 @@ export async function stopEvent(babyId, eventId) {
   return data;
 }
 
+export async function continueEvent(babyId, eventId) {
+  const { data } = await axiosClient.post(`/babies/${babyId}/events/${eventId}/continue`);
+  return data;
+}
+
 export async function deleteEvent(babyId, eventId) {
   await axiosClient.delete(`/babies/${babyId}/events/${eventId}`);
 }

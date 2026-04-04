@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useBabyStore } from '../../babies/store/useBabyStore';
-import { getEvents, createEvent, updateEvent, deleteEvent } from '../../../shared/api/eventService';
+import { getEvents, createEvent, updateEvent, deleteEvent, continueEvent as continueEventApi } from '../../../shared/api/eventService';
 import { useEventVersion } from '../../events/store/useEventVersion';
 
 const PAGE_SIZE = 10;
@@ -89,6 +89,13 @@ export function useEventHistory() {
     }
   };
 
+  const continueEvent = async (eventId) => {
+    await continueEventApi(selectedBabyId, eventId);
+    bumpEventVersion();
+  };
+
+  const hasActiveEvent = events.some((e) => !e.endedAt);
+
   return {
     events,
     total,
@@ -102,6 +109,8 @@ export function useEventHistory() {
     addEvent,
     editEvent,
     removeEvent,
+    continueEvent,
+    hasActiveEvent,
     refetch: () => fetchPage(page, selectedTypes),
   };
 }

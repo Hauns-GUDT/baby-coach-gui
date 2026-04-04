@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navigation from './shared/components/Navigation';
 import ProtectedRoute from './shared/components/ProtectedRoute';
+import AdminRoute from './shared/components/AdminRoute';
 import GuestRoute from './shared/components/GuestRoute';
 import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import { useBabyStore } from './features/babies/store/useBabyStore';
@@ -112,7 +113,9 @@ export default function App() {
               path="/app/admin"
               element={
                 <ProtectedRoute>
-                  <AdminPage />
+                  <AdminRoute>
+                    <AdminPage />
+                  </AdminRoute>
                 </ProtectedRoute>
               }
             />
