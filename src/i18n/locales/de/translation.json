@@ -13,7 +13,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "tracking": "Tracking",
+    "tracking": "Aufzeichnen",
     "chatbot": "ChatBot",
     "history": "Verlauf",
     "profile": "Profil"
@@ -150,6 +150,7 @@
     "isEnum": "Bitte eine gültige Option auswählen.",
     "endedAtBeforeStartedAt": "Endzeit muss nach der Startzeit liegen.",
     "eventOverlap": "Diese Einheit überschneidet sich mit einer vorhandenen.",
+    "eventAlreadyStopped": "Diese Einheit wurde bereits beendet.",
     "fallback": "Ungültiger Wert."
   },
   "babies": {

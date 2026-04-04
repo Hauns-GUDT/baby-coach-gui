@@ -66,7 +66,6 @@
     },
     "diaper": {
       "title": "Diaper",
-      "newSession": "New Diaper Entry",
       "editSession": "Edit Diaper Session",
       "end": "End",
       "cancel": "Cancel",
@@ -79,7 +78,6 @@
     },
     "feeding": {
       "title": "Feeding",
-      "newSession": "New Feeding Session",
       "todayTotal": "Today",
       "thisWeek": "This week",
       "loading": "Loading feeding data...",
@@ -150,6 +148,7 @@
     "isEnum": "Please select a valid option.",
     "endedAtBeforeStartedAt": "End time must be after start time.",
     "eventOverlap": "This session overlaps with an existing one.",
+    "eventAlreadyStopped": "This session is already stopped.",
     "fallback": "Invalid value."
   },
   "babies": {

@@ -22,6 +22,11 @@ export async function updateEvent(babyId, eventId, payload) {
   return data;
 }
 
+export async function stopEvent(babyId, eventId) {
+  const { data } = await axiosClient.post(`/babies/${babyId}/events/${eventId}/stop`);
+  return data;
+}
+
 export async function deleteEvent(babyId, eventId) {
   await axiosClient.delete(`/babies/${babyId}/events/${eventId}`);
 }
