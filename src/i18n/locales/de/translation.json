@@ -7,6 +7,9 @@
     "recentSessions": "Letzte Einträge",
     "noSessions": "Noch keine Einträge.",
     "thisWeek": "Diese Woche",
+    "week": "Woche",
+    "twoWeeks": "2 Wochen",
+    "month": "Monat",
     "addEvent": "Eintrag hinzufügen",
     "selectEventType": "Was ist passiert?",
     "cancel": "Abbrechen"

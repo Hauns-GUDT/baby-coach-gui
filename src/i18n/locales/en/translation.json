@@ -7,6 +7,9 @@
     "recentSessions": "Recent Sessions",
     "noSessions": "No sessions yet.",
     "thisWeek": "This Week",
+    "week": "Week",
+    "twoWeeks": "2 Weeks",
+    "month": "Month",
     "addEvent": "Add Event",
     "selectEventType": "What happened?",
     "cancel": "Cancel"

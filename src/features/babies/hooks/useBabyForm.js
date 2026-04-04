@@ -5,7 +5,7 @@ import { useBabyStore } from '../store/useBabyStore';
 import { getBaby, createBaby, updateBaby as updateBabyApi } from '../api/babyService';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 
-export function useBabyForm(babyId) {
+export function useBabyForm(babyId, { onSuccess } = {}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { babies, addBaby, updateBaby, setHasFetched } = useBabyStore();
@@ -57,7 +57,11 @@ export function useBabyForm(babyId) {
         addBaby(created);
         setHasFetched(false);
       }
-      navigate('/app/profile/babies');
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/app/profile/babies');
+      }
     } catch (err) {
       const { fieldErrors: fe, code } = parseApiError(err);
       if (fe && Object.keys(fe).length > 0) {
