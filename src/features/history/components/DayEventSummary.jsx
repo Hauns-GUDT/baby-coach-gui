@@ -25,6 +25,7 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
         <h3 className="font-semibold text-zinc-900 flex items-center gap-2">
           {Icon && <Icon size={18} style={{ color }} strokeWidth={2} />}
           {label}
+          <span className="text-xs font-normal text-zinc-400">{dayEvents.length}×</span>
         </h3>
         <span className="text-xl font-bold" style={{ color }}>{formatHours(totalH)}</span>
       </div>

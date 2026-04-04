@@ -1,28 +1,85 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Moon, Milk } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
-import { computeWeeklyHistory, formatHours } from './shared/eventWidgetHelpers';
+import { computeWeeklyHistory, computePeriodsForDate, formatHours } from './shared/eventWidgetHelpers';
+import DayTimeline from '../../../../shared/components/DayTimeline';
+import DayEventSummary from '../../../history/components/DayEventSummary';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+
+// Draws formatted hours above each bar
+const hoursAboveBarsPlugin = {
+  id: 'hoursAboveBars',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    chart.data.datasets.forEach((dataset, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const value = dataset.data[i];
+        if (!value) return;
+        ctx.save();
+        ctx.font = '600 9px system-ui, sans-serif';
+        ctx.fillStyle = '#a1a1aa';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(formatHours(value), bar.x, bar.y - 2);
+        ctx.restore();
+      });
+    });
+  },
+};
+
+const EVENT_SETS = [
+  { key: 'sleep',   color: '#818cf8', icon: Moon,  i18nKey: 'history.sleep.title' },
+  { key: 'feeding', color: '#f97316', icon: Milk,  i18nKey: 'history.feeding.title' },
+];
+
+const RANGES = [
+  { days: 7,  labelKey: 'tracking.week' },
+  { days: 14, labelKey: 'tracking.twoWeeks' },
+];
+
+function buildDays(count) {
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (count - 1 - i));
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
+}
+
+function isSameDay(a, b) {
+  return a.toDateString() === b.toDateString();
+}
+
+function todayMidnight() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
 
 export default function WeeklyWidget() {
   const { t, i18n } = useTranslation();
   const { sleepEvents } = useSleepEvents();
   const { feedingEvents } = useFeedingEvents();
 
-  const sleepHistory   = computeWeeklyHistory(sleepEvents);
-  const feedingHistory = computeWeeklyHistory(feedingEvents);
+  const [range, setRange] = useState(7);
+  const [selectedDate, setSelectedDate] = useState(todayMidnight);
 
-  const dayLabels = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
-    return new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(d);
-  });
+  const days = buildDays(range);
+  const sleepHistory = computeWeeklyHistory(sleepEvents, range);
+  const maxVal = Math.max(...sleepHistory, 1);
+
+  // Use date number as chart label (ticks hidden; only used in tooltips)
+  const chartLabels = days.map((d) =>
+    new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(d)
+  );
 
   const chartData = {
-    labels: dayLabels,
+    labels: chartLabels,
     datasets: [
       {
         label: t('history.sleep.title'),
@@ -31,28 +88,15 @@ export default function WeeklyWidget() {
         borderRadius: 4,
         borderWidth: 0,
       },
-      {
-        label: t('history.feeding.title'),
-        data: feedingHistory,
-        backgroundColor: '#f97316cc',
-        borderRadius: 4,
-        borderWidth: 0,
-      },
     ],
   };
-
-  const maxVal = Math.max(...sleepHistory, ...feedingHistory, 1);
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     animation: false,
     plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-        labels: { boxWidth: 10, boxHeight: 10, font: { size: 11 }, color: '#a1a1aa', padding: 12 },
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           label: (item) => `${item.dataset.label}: ${formatHours(item.raw)}`,
@@ -62,19 +106,113 @@ export default function WeeklyWidget() {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 10 }, color: '#a1a1aa' },
+        ticks: { display: false },
         border: { display: false },
       },
-      y: { display: false, beginAtZero: true, max: maxVal * 1.4 },
+      y: { display: false, beginAtZero: true, max: maxVal * 1.6 },
     },
   };
 
+  // Derived periods for selected day
+  const sleepPeriods   = selectedDate ? computePeriodsForDate(sleepEvents, selectedDate) : [];
+  const feedingPeriods = selectedDate ? computePeriodsForDate(feedingEvents, selectedDate) : [];
+
+  const timelineRows = selectedDate
+    ? [
+        { label: t(EVENT_SETS[0].i18nKey), color: EVENT_SETS[0].color, icon: EVENT_SETS[0].icon, periods: sleepPeriods },
+        { label: t(EVENT_SETS[1].i18nKey), color: EVENT_SETS[1].color, icon: EVENT_SETS[1].icon, periods: feedingPeriods },
+      ]
+    : [];
+
+  const dateLabel = selectedDate
+    ? new Intl.DateTimeFormat(i18n.language, { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)
+    : null;
+
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
-      <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.thisWeek')}</h2>
-      <div className="h-40 w-full">
-        <Bar data={chartData} options={options} />
+    <div className="flex flex-col gap-4">
+      <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
+
+        {/* Header row: title + range buttons */}
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.thisWeek')}</h2>
+          <div className="flex gap-1">
+            {RANGES.map(({ days: d, labelKey }) => (
+              <button
+                key={d}
+                onClick={() => setRange(d)}
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer active:scale-95
+                  ${range === d
+                    ? 'bg-indigo-500 text-white shadow-sm'
+                    : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}
+              >
+                {t(labelKey)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="h-40 w-full">
+          <Bar data={chartData} options={options} plugins={[hoursAboveBarsPlugin]} />
+        </div>
+
+        {/* Day selector buttons — columns match the chart bars */}
+        <div className={`grid gap-1 ${range === 7 ? 'grid-cols-7' : 'grid-cols-14'}`}>
+          {days.map((day, i) => {
+            const isSelected = selectedDate && isSameDay(day, selectedDate);
+            const dayLabel = new Intl.DateTimeFormat(i18n.language, { weekday: range === 14 ? 'narrow' : 'short' }).format(day);
+            return (
+              <button
+                key={i}
+                onClick={() => setSelectedDate(isSelected ? null : day)}
+                className={`flex flex-col items-center gap-0.5 rounded-lg py-1.5 transition-all cursor-pointer active:scale-95
+                  ${isSelected
+                    ? 'bg-indigo-500 shadow-sm'
+                    : 'bg-zinc-100 hover:bg-zinc-200'}`}
+              >
+                <span className={`${range === 14 ? 'text-[9px]' : 'text-[10px]'} font-medium uppercase leading-none
+                  ${isSelected ? 'text-indigo-100' : 'text-zinc-400'}`}>
+                  {dayLabel}
+                </span>
+                <span className={`${range === 7 ? 'text-sm' : 'text-xs'} font-medium leading-none
+                  ${isSelected ? 'text-white' : 'text-zinc-600'}`}>
+                  {day.getDate()}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Day detail */}
+      {selectedDate && (
+        <>
+          {dateLabel && (
+            <p className="text-sm font-medium text-zinc-500 px-1 capitalize">{dateLabel}</p>
+          )}
+          <div className="bg-white rounded-2xl shadow-md p-4">
+            <DayTimeline rows={timelineRows} />
+          </div>
+        </>
+      )}
+
+      {selectedDate && (
+        <>
+          <DayEventSummary
+            events={sleepEvents}
+            date={selectedDate}
+            color={EVENT_SETS[0].color}
+            icon={EVENT_SETS[0].icon}
+            label={t(EVENT_SETS[0].i18nKey)}
+          />
+          <DayEventSummary
+            events={feedingEvents}
+            date={selectedDate}
+            color={EVENT_SETS[1].color}
+            icon={EVENT_SETS[1].icon}
+            label={t(EVENT_SETS[1].i18nKey)}
+          />
+        </>
+      )}
     </div>
   );
 }

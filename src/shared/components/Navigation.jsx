@@ -5,6 +5,33 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../features/auth/store/useAuthStore';
 import { useBabyStore } from '../../features/babies/store/useBabyStore';
 import { getBabies } from '../../features/babies/api/babyService';
+import { useBabyForm } from '../../features/babies/hooks/useBabyForm';
+import BabyForm from '../../features/babies/components/BabyForm';
+
+function BabyEditDialog({ baby, onClose }) {
+  const { t } = useTranslation();
+  const { name, setName, birthday, setBirthday, gender, setGender, isSubmitting, error, fieldErrors, submit } =
+    useBabyForm(baby.id, { onSuccess: onClose });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
+        <h2 className="text-lg font-semibold text-zinc-900">{t('babies.editBaby')}</h2>
+        <BabyForm
+          name={name} setName={setName}
+          birthday={birthday} setBirthday={setBirthday}
+          gender={gender} setGender={setGender}
+          isSubmitting={isSubmitting}
+          error={error}
+          fieldErrors={fieldErrors}
+          onSubmit={submit}
+          onCancel={onClose}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function Navigation() {
   const { t } = useTranslation();
@@ -13,7 +40,7 @@ export default function Navigation() {
   const [isBabyDialogOpen, setIsBabyDialogOpen] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isAdmin = useAuthStore((s) => s.isAdmin);
-  const { babies, selectedBabyId, hasFetched, setBabies, setSelectedBaby, setHasFetched } = useBabyStore();
+  const { babies, selectedBabyId, hasFetched, setBabies, setHasFetched } = useBabyStore();
 
   useEffect(() => {
     if (isAuthenticated && !hasFetched) {
@@ -34,7 +61,6 @@ export default function Navigation() {
     const p = location.pathname;
     if (p === '/app') return t('nav.tracking');
     if (p === '/app/dashboard') return t('nav.dashboard');
-    if (p === '/app/history') return t('nav.history');
     if (p === '/app/profile/babies/new') return t('babies.addBaby');
     if (p.startsWith('/app/profile/babies/')) return t('babies.editBaby');
     if (p === '/app/profile/babies') return t('babies.title');
@@ -43,14 +69,15 @@ export default function Navigation() {
     return '';
   };
 
-  const selectedBaby = babies.find((b) => b.id === selectedBabyId);
+  // With single-baby model, use the first baby
+  const currentBaby = babies.find((b) => b.id === selectedBabyId) ?? babies[0] ?? null;
 
-  const babySelector = babies.length > 0 && (
+  const babySelector = currentBaby && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
       className="text-sm font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
     >
-      {selectedBaby?.name ?? '—'}
+      {currentBaby.name}
     </button>
   );
 
@@ -58,14 +85,13 @@ export default function Navigation() {
     { to: '/app', label: t('nav.tracking'), end: true },
     { to: '/app/dashboard', label: t('nav.dashboard') },
     // { to: '/app/chatbot', label: t('nav.chatbot') },
-    { to: '/app/history', label: t('nav.history') },
     { to: '/app/profile', label: t('nav.profile') },
     ...(isAdmin ? [{ to: '/app/admin', label: t('nav.admin') }] : []),
   ];
 
   return (
     <nav className="bg-white border-b border-zinc-200 relative z-40">
-      {/* Click-outside overlay */}
+      {/* Click-outside overlay for mobile menu */}
       {isOpen && (
         <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
       )}
@@ -123,31 +149,10 @@ export default function Navigation() {
         )}
       </div>
 
-      {/* Baby selection dialog */}
-      {isBabyDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setIsBabyDialogOpen(false)} />
-          <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-3">
-            <h2 className="text-lg font-bold text-zinc-900">Select Baby</h2>
-            <div className="flex flex-col gap-1">
-              {babies.map((b) => (
-                <button
-                  key={b.id}
-                  onClick={() => { setSelectedBaby(b.id); setIsBabyDialogOpen(false); }}
-                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
-                    b.id === selectedBabyId
-                      ? 'bg-indigo-50 text-indigo-600'
-                      : 'text-zinc-700 hover:bg-zinc-50'
-                  }`}
-                >
-                  {b.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Baby edit dialog */}
+      {isBabyDialogOpen && currentBaby && (
+        <BabyEditDialog baby={currentBaby} onClose={() => setIsBabyDialogOpen(false)} />
       )}
-
     </nav>
   );
 }

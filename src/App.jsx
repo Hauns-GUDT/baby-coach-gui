@@ -9,7 +9,6 @@ import Login from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
 import LandingPage from './features/landing/pages/LandingPage';
 import Dashboard from './features/dashboard/pages/Dashboard';
-import History from './features/history/pages/History';
 import Profile from './features/profile/pages/Profile';
 import BabiesPage from './features/babies/pages/BabiesPage';
 import BabyFormPage from './features/babies/pages/BabyFormPage';
@@ -77,14 +76,6 @@ export default function App() {
                 </ProtectedRoute>
               }
             />} */}
-            <Route
-              path="/app/history"
-              element={
-                <ProtectedRoute>
-                  <History />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/app/profile"
               element={
