@@ -114,7 +114,7 @@ function PricingCard({ name, description, price, yearlyMonthly, yearlyTotal, fea
 // ─── Main landing page ───────────────────────────────────────────────────────
 
 export default function LandingPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(false);
 
@@ -201,11 +201,16 @@ export default function LandingPage() {
       {/* ── Top nav ─────────────────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <img src="/logo.png" alt="BabyCoach" className="h-10 w-10" />
-            <span className="font-bold text-zinc-900 text-lg">BabyCoach</span>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de')}
+              className="text-sm font-medium text-zinc-500 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full transition-colors cursor-pointer"
+            >
+              {i18n.language.startsWith('de') ? 'EN' : 'DE'}
+            </button>
             <button
               onClick={() => navigate('/app/login')}
               className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
