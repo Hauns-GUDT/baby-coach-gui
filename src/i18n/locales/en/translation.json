@@ -16,7 +16,8 @@
     "tracking": "Tracking",
     "chatbot": "ChatBot",
     "history": "History",
-    "profile": "Profile"
+    "profile": "Profile",
+    "admin": "Admin"
   },
   "chatbot": {
     "title": "Baby Coach",
@@ -218,6 +219,38 @@
       "headline": "Ready to stop guessing?",
       "subheadline": "Join thousands of parents who sleep a little better thanks to BabyCoach.",
       "copyright": "© {{year}} BabyCoach. All rights reserved."
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "createUser": "Create User",
+    "editUser": "Edit User",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "passwordOptional": "Password (leave blank to keep)",
+    "passwordPlaceholder": "Leave blank to keep current",
+    "isAdmin": "Admin",
+    "isActive": "Active",
+    "status": "Status",
+    "role": "Role",
+    "active": "Active",
+    "inactive": "Inactive",
+    "adminBadge": "Admin",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "search": "Search",
+    "searchPlaceholder": "Search by email or username...",
+    "loading": "Loading...",
+    "noUsers": "No users found.",
+    "pagination": "Page {{page}} of {{total}}",
+    "error": {
+      "loadFailed": "Could not load users.",
+      "saveFailed": "Could not save. Please try again.",
+      "emailAlreadyInUse": "Email is already in use.",
+      "usernameAlreadyInUse": "Username is already taken."
     }
   },
   "babies": {

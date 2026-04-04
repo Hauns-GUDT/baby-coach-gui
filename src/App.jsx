@@ -15,6 +15,7 @@ import BabiesPage from './features/babies/pages/BabiesPage';
 import BabyFormPage from './features/babies/pages/BabyFormPage';
 import NoBabyPage from './features/babies/pages/NoBabyPage';
 import TrackingPage from './features/tracking/pages/TrackingPage';
+import AdminPage from './features/admin/pages/AdminPage';
 
 function NoBabyGuard({ children }) {
   const location = useLocation();
@@ -23,8 +24,9 @@ function NoBabyGuard({ children }) {
 
   const onAppRoute = location.pathname.startsWith('/app');
   const onBabiesRoute = location.pathname.startsWith('/app/profile/babies');
+  const onAdminRoute = location.pathname.startsWith('/app/admin');
 
-  if (isAuthenticated && hasFetched && babies.length === 0 && onAppRoute && !onBabiesRoute) {
+  if (isAuthenticated && hasFetched && babies.length === 0 && onAppRoute && !onBabiesRoute && !onAdminRoute) {
     return <NoBabyPage />;
   }
 
@@ -112,6 +114,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <BabyFormPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/app/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminPage />
                 </ProtectedRoute>
               }
             />

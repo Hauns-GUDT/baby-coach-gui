@@ -10,6 +10,7 @@ export default defineConfig({
       '/auth': 'http://localhost:3000',
       '/babies': 'http://localhost:3000',
       '/events': 'http://localhost:3000',
+      '/admin': 'http://localhost:3000',
       '/api': 'http://localhost:8000',
     },
   },

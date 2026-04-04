@@ -16,8 +16,8 @@ export function useLogin() {
     setError('');
     setIsSubmitting(true);
     try {
-      const { accessToken, username } = await login(credentials);
-      setAuth(accessToken, username);
+      const { accessToken, username, isAdmin } = await login(credentials);
+      setAuth(accessToken, username, isAdmin);
       navigate('/app', { replace: true });
     } catch (err) {
       setError(err.response?.status === 401 ? t('auth.error.invalid') : t('auth.error.generic'));

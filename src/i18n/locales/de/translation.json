@@ -16,7 +16,8 @@
     "tracking": "Aufzeichnen",
     "chatbot": "ChatBot",
     "history": "Verlauf",
-    "profile": "Profil"
+    "profile": "Profil",
+    "admin": "Admin"
   },
   "chatbot": {
     "title": "Baby Coach",
@@ -220,6 +221,38 @@
       "headline": "Bereit, mit dem Raten aufzuhören?",
       "subheadline": "Schließe dich tausenden Eltern an, die dank BabyCoach etwas besser schlafen.",
       "copyright": "© {{year}} BabyCoach. Alle Rechte vorbehalten."
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "createUser": "Benutzer erstellen",
+    "editUser": "Benutzer bearbeiten",
+    "email": "E-Mail",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "passwordOptional": "Passwort (leer lassen zum Beibehalten)",
+    "passwordPlaceholder": "Leer lassen für aktuelles Passwort",
+    "isAdmin": "Admin",
+    "isActive": "Aktiv",
+    "status": "Status",
+    "role": "Rolle",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "adminBadge": "Admin",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "saving": "Wird gespeichert...",
+    "cancel": "Abbrechen",
+    "search": "Suchen",
+    "searchPlaceholder": "Nach E-Mail oder Benutzername suchen...",
+    "loading": "Wird geladen...",
+    "noUsers": "Keine Benutzer gefunden.",
+    "pagination": "Seite {{page}} von {{total}}",
+    "error": {
+      "loadFailed": "Benutzer konnten nicht geladen werden.",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "emailAlreadyInUse": "Diese E-Mail wird bereits verwendet.",
+      "usernameAlreadyInUse": "Dieser Benutzername ist bereits vergeben."
     }
   },
   "babies": {
