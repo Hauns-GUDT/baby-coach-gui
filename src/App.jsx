@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navigation from './shared/components/Navigation';
 import ProtectedRoute from './shared/components/ProtectedRoute';
+import GuestRoute from './shared/components/GuestRoute';
 import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import { useBabyStore } from './features/babies/store/useBabyStore';
 import { useAuthStore } from './features/auth/store/useAuthStore';
@@ -47,8 +48,8 @@ export default function App() {
         <NoBabyGuard>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/app/login" element={<Login />} />
-            {/* <Route path="/app/register" element={<Register />} /> */}
+            <Route path="/app/login" element={<GuestRoute><Login /></GuestRoute>} />
+            {/* <Route path="/app/register" element={<GuestRoute><Register /></GuestRoute>} /> */}
             <Route
               path="/app"
               element={
