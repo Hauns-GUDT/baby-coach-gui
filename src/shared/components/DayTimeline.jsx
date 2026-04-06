@@ -9,7 +9,7 @@ const TIME_MARKERS = [
   { h: 24, label: '12AM' },
 ];
 
-function TimelineRow({ label, color, icon: Icon, periods }) {
+function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
   const [hoverIdx, setHoverIdx] = useState(null);
   const [clickIdx, setClickIdx] = useState(null);
 
@@ -59,6 +59,12 @@ function TimelineRow({ label, color, icon: Icon, periods }) {
           ))}
         </div>
 
+        {/* Current-time marker */}
+        <div
+          className="absolute top-0 h-full pointer-events-none z-10"
+          style={{ left: `${(nowH / 24) * 100}%`, transform: 'translateX(-50%)', width: '1px', background: 'repeating-linear-gradient(to bottom, #a1a1aa 0px, #a1a1aa 2px, transparent 2px, transparent 5px)' }}
+        />
+
         {/* Tooltip — sibling of the clipped track, so it can overflow upward */}
         {openPeriod && (
           <div
@@ -96,6 +102,15 @@ function TimelineRow({ label, color, icon: Icon, periods }) {
  * @param {{ label: string, color: string, icon?: ComponentType, periods: { fromH: number, toH: number, tooltip: string }[] }[]} rows
  */
 export default function DayTimeline({ rows }) {
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const nowH = now.getHours() + now.getMinutes() / 60;
+
   return (
     <div className="flex flex-col gap-2 w-full">
       {/* Time axis */}
@@ -113,12 +128,17 @@ export default function DayTimeline({ rows }) {
               }
             </div>
           ))}
+          {/* Now marker on axis */}
+          <div
+            className="absolute bottom-0 -translate-x-1/2 w-1 h-1 rounded-full bg-zinc-400"
+            style={{ left: `${(nowH / 24) * 100}%` }}
+          />
         </div>
       </div>
 
       {/* Event rows */}
       {rows.map((row) => (
-        <TimelineRow key={row.label} {...row} />
+        <TimelineRow key={row.label} {...row} nowH={nowH} />
       ))}
     </div>
   );

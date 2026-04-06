@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, Play } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
@@ -179,8 +179,14 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
+  const [now, setNow] = useState(() => new Date());
 
-  const sessions = events.filter((e) => e.endedAt);
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const sessions = events;
 
   const handleSave = async (id, payload) => {
     await onEdit(id, payload);
@@ -208,20 +214,21 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
         <div className="flex flex-col divide-y divide-zinc-50">
           {sessions.map((session, idx) => {
             const { icon: Icon, color, i18nPrefix: prefix } = TYPE_META[session.type] ?? TYPE_META.sleep;
-            const duration = (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000;
+            const duration = session.endedAt
+              ? (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000
+              : (now - new Date(session.startedAt)) / 3_600_000; // live elapsed for active
             const showContinue = idx === 0 && page === 1 && !hasActiveEvent;
             return (
               <div key={session.id} className="flex items-center justify-between py-2.5">
                 <div className="flex items-center gap-3">
                   <Icon size={15} style={{ color }} strokeWidth={2} className="shrink-0" />
-                  <div>
-                    <p className="text-sm text-zinc-700">
-                      {formatTime(session.startedAt)}–{formatTime(session.endedAt)}
-                      <span className="text-zinc-400 ml-1">·</span>
-                      <span className="text-zinc-400 ml-1 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                    </p>
-                    <p className="text-xs text-zinc-400">{t(`${prefix}.title`)} · {formatHours(duration)}</p>
-                  </div>
+                  <p className="text-sm text-zinc-700">
+                    {formatTime(session.startedAt)}–{session.endedAt ? formatTime(session.endedAt) : t('tracking.now')}
+                    <span className="text-zinc-400 mx-1">·</span>
+                    <span className="text-zinc-400 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                    <span className="text-zinc-400 mx-1">·</span>
+                    <span className="text-zinc-400 text-xs">{formatHours(duration)}</span>
+                  </p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   {showContinue && (

@@ -13,7 +13,8 @@
     "addEvent": "Eintrag hinzufügen",
     "selectEventType": "Was ist passiert?",
     "cancel": "Abbrechen",
-    "continue": "Fortsetzen"
+    "continue": "Fortsetzen",
+    "now": "Jetzt"
   },
   "nav": {
     "dashboard": "Dashboard",

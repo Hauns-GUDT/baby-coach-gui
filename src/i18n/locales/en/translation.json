@@ -13,7 +13,8 @@
     "addEvent": "Add Event",
     "selectEventType": "What happened?",
     "cancel": "Cancel",
-    "continue": "Continue"
+    "continue": "Continue",
+    "now": "Now"
   },
   "nav": {
     "dashboard": "Dashboard",
