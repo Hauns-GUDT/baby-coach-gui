@@ -228,6 +228,21 @@
       "copyright": "© {{year}} BabyCoach. Alle Rechte vorbehalten."
     }
   },
+  "aiAssistant": {
+    "title": "Baby Coach",
+    "close": "Schließen",
+    "sleepSuggestion": "Schlafempfehlung abrufen",
+    "quickQuestions": "Schnellfragen",
+    "send": "Senden",
+    "placeholder": "Fragen zu Ernährung, Schlaf, Windeln…",
+    "loading": "Überlege…",
+    "chips": {
+      "sleepNormal": "Ist der Schlaf normal?",
+      "dreamFeeding": "Traumfütterung Tipps",
+      "napLength": "Wie lang sollte ein Nickerchen sein?",
+      "bedtimeRoutine": "Beste Schlafroutine?"
+    }
+  },
   "sleepAssistant": {
     "fab": "Schlaf-Assistent",
     "title": "Schlaf-Assistent",

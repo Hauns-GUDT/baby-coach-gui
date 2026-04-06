@@ -11,6 +11,7 @@ export default defineConfig({
       '/babies': 'http://localhost:3000',
       '/events': 'http://localhost:3000',
       '/admin': 'http://localhost:3000',
+      '/chat': 'http://localhost:3000',
       '/api': 'http://localhost:8000',
     },
   },

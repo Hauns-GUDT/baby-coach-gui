@@ -3,7 +3,7 @@ import { useBabyStore } from '../../babies/store/useBabyStore';
 import { getEvents, createEvent, updateEvent, deleteEvent, continueEvent as continueEventApi } from '../../../shared/api/eventService';
 import { useEventVersion } from '../../events/store/useEventVersion';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 6;
 
 /**
  * Fetches paginated event history for the selected baby.

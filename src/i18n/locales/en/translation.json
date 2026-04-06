@@ -226,6 +226,21 @@
       "copyright": "© {{year}} BabyCoach. All rights reserved."
     }
   },
+  "aiAssistant": {
+    "title": "Baby Coach",
+    "close": "Close",
+    "sleepSuggestion": "Get Sleep Suggestion",
+    "quickQuestions": "Quick Questions",
+    "send": "Send",
+    "placeholder": "Ask about feeding, sleep, diapers…",
+    "loading": "Thinking…",
+    "chips": {
+      "sleepNormal": "Is sleep normal?",
+      "dreamFeeding": "Dream feeding tips",
+      "napLength": "How long should naps be?",
+      "bedtimeRoutine": "Best bedtime routine?"
+    }
+  },
   "sleepAssistant": {
     "fab": "Sleep assistant",
     "title": "Sleep Assistant",

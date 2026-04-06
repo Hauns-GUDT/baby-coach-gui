@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import Navigation from './shared/components/Navigation';
+import AiAssistantDrawer from './features/tracking/components/AiAssistantDrawer';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 import AdminRoute from './shared/components/AdminRoute';
 import GuestRoute from './shared/components/GuestRoute';
@@ -7,7 +9,6 @@ import { useSilentRefresh } from './features/auth/hooks/useSilentRefresh';
 import { useBabyStore } from './features/babies/store/useBabyStore';
 import { useAuthStore } from './features/auth/store/useAuthStore';
 import Login from './features/auth/pages/Login';
-import Register from './features/auth/pages/Register';
 import LandingPage from './features/landing/pages/LandingPage';
 import Dashboard from './features/dashboard/pages/Dashboard';
 import Profile from './features/profile/pages/Profile';
@@ -35,6 +36,7 @@ function NoBabyGuard({ children }) {
 
 export default function App() {
   const { isInitializing } = useSilentRefresh();
+  const [isAiOpen, setIsAiOpen] = useState(false);
 
   if (isInitializing) {
     return (
@@ -47,7 +49,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-zinc-50">
-        <Navigation />
+        <Navigation onOpenAi={() => setIsAiOpen(true)} />
         <NoBabyGuard>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -121,6 +123,7 @@ export default function App() {
             />
           </Routes>
         </NoBabyGuard>
+        <AiAssistantDrawer isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
       </div>
     </BrowserRouter>
   );

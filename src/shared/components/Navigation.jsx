@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../features/auth/store/useAuthStore';
 import { useBabyStore } from '../../features/babies/store/useBabyStore';
@@ -33,7 +33,7 @@ function BabyEditDialog({ baby, onClose }) {
   );
 }
 
-export default function Navigation() {
+export default function Navigation({ onOpenAi }) {
   const { t } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -53,9 +53,6 @@ export default function Navigation() {
   if (['/app/login', '/app/register'].includes(location.pathname)) return null;
   if (!location.pathname.startsWith('/app')) return null;
   if (hasFetched && babies.length === 0 && !location.pathname.startsWith('/app/admin')) return null;
-
-  const navLinkClass = ({ isActive }) =>
-    `font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-zinc-600 hover:text-zinc-900'}`;
 
   const getPageTitle = () => {
     const p = location.pathname;
@@ -105,33 +102,29 @@ export default function Navigation() {
             </NavLink>
             <button
               onClick={() => setIsOpen((o) => !o)}
-              className="md:hidden flex items-center gap-1 text-lg font-bold text-zinc-900 cursor-pointer select-none"
+              className="flex items-center gap-1 text-lg font-bold text-zinc-900 cursor-pointer select-none"
             >
               {getPageTitle()}
               {isOpen ? <ChevronUp size={18} className="text-zinc-400" /> : <ChevronDown size={18} className="text-zinc-400" />}
             </button>
-            <span className="hidden md:block text-lg font-bold text-zinc-900">{getPageTitle()}</span>
           </div>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-6">
-            {links.map(({ to, label, end }) => (
-              <NavLink key={to} to={to} end={end} className={navLinkClass}>
-                {label}
-              </NavLink>
-            ))}
+          <div className="flex items-center gap-3">
             {babySelector}
-          </div>
-
-          {/* Mobile: baby selector */}
-          <div className="flex items-center gap-3 md:hidden">
-            {babySelector}
+            {onOpenAi && (
+              <button
+                onClick={onOpenAi}
+                aria-label={t('aiAssistant.title')}
+                className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 active:scale-95 transition-all"
+              >
+                <Moon size={17} />
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Mobile dropdown */}
         {isOpen && (
-          <div className="md:hidden border-t border-zinc-100 py-3 flex flex-col gap-1">
+          <div className="border-t border-zinc-100 py-3 flex flex-col gap-1">
             {links.map(({ to, label, end }) => (
               <NavLink
                 key={to}
