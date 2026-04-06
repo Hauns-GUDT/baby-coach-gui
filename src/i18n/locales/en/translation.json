@@ -14,7 +14,9 @@
     "selectEventType": "What happened?",
     "cancel": "Cancel",
     "continue": "Continue",
-    "now": "Now"
+    "now": "Now",
+    "new": "New",
+    "filter": "Filter"
   },
   "nav": {
     "dashboard": "Dashboard",

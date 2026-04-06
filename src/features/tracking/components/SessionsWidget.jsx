@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, Play } from 'lucide-react';
+import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, CirclePlay, Plus } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -9,8 +9,8 @@ import { parseApiError } from '../../../shared/utils/parseApiError';
 import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
 export const TYPE_META = {
-  sleep:   { icon: Moon,  color: '#818cf8', i18nPrefix: 'history.sleep' },
-  feeding: { icon: Milk,  color: '#f97316', i18nPrefix: 'history.feeding' },
+  sleep:   { icon: Moon,  color: '#425bbd', i18nPrefix: 'history.sleep' },   // twilight-indigo-500
+  feeding: { icon: Milk,  color: '#f5b20a', i18nPrefix: 'history.feeding' }, // light-apricot-500
   diaper:  { icon: Baby,  color: '#34d399', i18nPrefix: 'history.diaper' },
 };
 
@@ -29,8 +29,8 @@ function TypeFilterBar({ selectedTypes, onToggle }) {
             onClick={() => onToggle(type)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
               active
-                ? 'bg-indigo-600 border-indigo-600 text-white'
-                : 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-400'
+                ? 'bg-twilight-indigo-600 border-twilight-indigo-600 text-white'
+                : 'bg-white border-blue-grey-200 text-blue-grey-500 hover:border-blue-grey-400'
             }`}
           >
             <Icon size={13} style={{ color: active ? 'white' : color }} strokeWidth={2} />
@@ -42,9 +42,6 @@ function TypeFilterBar({ selectedTypes, onToggle }) {
   );
 }
 
-// Shared form dialog for both editing existing sessions and creating new ones.
-// Edit mode: pass `session` (the existing event object). Calls onSave(id, payload).
-// Create mode: pass only `type`. Calls onCreate({ type, startedAt, endedAt? }).
 function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
   const { i18nPrefix } = TYPE_META[type];
@@ -94,25 +91,25 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
         <div className="flex items-center gap-2">
           {onBack && (
-            <button onClick={onBack} className="text-zinc-400 hover:text-zinc-600 -ml-1 p-1 rounded-lg transition-colors">
+            <button onClick={onBack} className="text-blue-grey-400 hover:text-blue-grey-600 -ml-1 p-1 rounded-lg transition-colors">
               <ChevronLeft size={20} />
             </button>
           )}
-          <h2 className="text-lg font-bold text-zinc-900">
+          <h2 className="text-lg font-bold text-blue-grey-900">
             {isEdit ? t(`${i18nPrefix}.editSession`) : t(`${i18nPrefix}.newSession`)}
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-zinc-700">Start</label>
+            <label className="text-sm font-semibold text-blue-grey-700">Start</label>
             <input type="datetime-local" required value={startedAt} onChange={(e) => setStartedAt(e.target.value)}
-              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300" />
             {fieldErrors.startedAt && <p role="alert" className="text-sm text-rose-600">{fieldErrors.startedAt}</p>}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-zinc-700">{t(`${i18nPrefix}.end`)}</label>
+            <label className="text-sm font-semibold text-blue-grey-700">{t(`${i18nPrefix}.end`)}</label>
             <input type="datetime-local" value={endedAt} onChange={(e) => setEndedAt(e.target.value)}
-              className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300" />
             {fieldErrors.endedAt && <p role="alert" className="text-sm text-rose-600">{fieldErrors.endedAt}</p>}
           </div>
           {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
@@ -130,7 +127,6 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
   );
 }
 
-// Two-step dialog: first pick an event type, then fill in the form.
 export function AddEventDialog({ onCreate, onCancel }) {
   const { t } = useTranslation();
   const [pickedType, setPickedType] = useState(null);
@@ -151,7 +147,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-5">
-        <h2 className="text-lg font-bold text-zinc-900">{t('tracking.selectEventType')}</h2>
+        <h2 className="text-lg font-bold text-blue-grey-900">{t('tracking.selectEventType')}</h2>
         <div className="flex flex-col gap-3">
           {ALL_TYPES.map((type) => {
             const { icon: Icon, color, i18nPrefix } = TYPE_META[type];
@@ -159,12 +155,12 @@ export function AddEventDialog({ onCreate, onCancel }) {
               <button
                 key={type}
                 onClick={() => setPickedType(type)}
-                className="flex items-center gap-4 w-full rounded-2xl border-2 border-zinc-100 p-5 text-left hover:border-zinc-300 active:scale-[0.98] transition-all"
+                className="flex items-center gap-4 w-full rounded-2xl border-2 border-blue-grey-100 p-5 text-left hover:border-blue-grey-300 active:scale-[0.98] transition-all"
               >
                 <div className="rounded-xl p-3" style={{ backgroundColor: `${color}22` }}>
                   <Icon size={28} style={{ color }} strokeWidth={1.75} />
                 </div>
-                <span className="text-lg font-semibold text-zinc-800">{t(`${i18nPrefix}.title`)}</span>
+                <span className="text-lg font-semibold text-blue-grey-800">{t(`${i18nPrefix}.title`)}</span>
               </button>
             );
           })}
@@ -175,7 +171,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
   );
 }
 
-export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle }) {
+export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle, onAdd }) {
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
@@ -201,38 +197,52 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const i18nPrefix = pendingDelete ? TYPE_META[pendingDelete.type].i18nPrefix : 'history.sleep';
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
-      <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.recentSessions')}</h2>
+    <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.recentSessions')}</h2>
+        {onAdd && (
+          <button
+            onClick={onAdd}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-twilight-indigo-600 text-white text-xs font-medium hover:bg-twilight-indigo-700 active:scale-95 transition-all"
+          >
+            <Plus size={13} strokeWidth={2.5} />
+            {t('tracking.new')}
+          </button>
+        )}
+      </div>
 
-      <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-blue-grey-400">{t('tracking.filter')}</span>
+        <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
+      </div>
 
       {isLoading && sessions.length === 0 ? (
-        <p className="text-sm text-zinc-400">{t('common.loading', 'Loading…')}</p>
+        <p className="text-sm text-blue-grey-400">{t('common.loading', 'Loading…')}</p>
       ) : sessions.length === 0 ? (
-        <p className="text-sm text-zinc-400">{t('tracking.noSessions')}</p>
+        <p className="text-sm text-blue-grey-400">{t('tracking.noSessions')}</p>
       ) : (
-        <div className="flex flex-col divide-y divide-zinc-50">
+        <div className="flex flex-col divide-y divide-blue-grey-50">
           {sessions.map((session, idx) => {
             const { icon: Icon, color, i18nPrefix: prefix } = TYPE_META[session.type] ?? TYPE_META.sleep;
             const duration = session.endedAt
               ? (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000
-              : (now - new Date(session.startedAt)) / 3_600_000; // live elapsed for active
+              : (now - new Date(session.startedAt)) / 3_600_000;
             const showContinue = idx === 0 && page === 1 && !hasActiveEvent;
             return (
               <div key={session.id} className="flex items-center justify-between py-2.5">
                 <div className="flex items-center gap-3">
                   <Icon size={15} style={{ color }} strokeWidth={2} className="shrink-0" />
-                  <p className="text-sm text-zinc-700">
+                  <p className="text-sm text-blue-grey-700">
                     {formatTime(session.startedAt)}–{session.endedAt ? formatTime(session.endedAt) : t('tracking.now')}
-                    <span className="text-zinc-400 mx-1">·</span>
-                    <span className="text-zinc-400 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                    <span className="text-zinc-400 mx-1">·</span>
-                    <span className="text-zinc-400 text-xs">{formatHours(duration)}</span>
+                    <span className="text-blue-grey-300 mx-1">·</span>
+                    <span className="text-blue-grey-400 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                    <span className="text-blue-grey-300 mx-1">·</span>
+                    <span className="text-blue-grey-400 text-xs">{formatHours(duration)}</span>
                   </p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   {showContinue && (
-                    <IconButton icon={Play} label={t('tracking.continue')} className="hover:text-indigo-600" onClick={() => onContinue(session.id)} />
+                    <IconButton icon={CirclePlay} label={t('tracking.continue')} className="hover:text-twilight-indigo-600" onClick={() => onContinue(session.id)} />
                   )}
                   <IconButton icon={Pencil} label={t(`${prefix}.editSession`)} onClick={() => setEditingSession(session)} />
                   <IconButton icon={Trash2} label={t(`${prefix}.delete`)} className="hover:text-red-500" onClick={() => setPendingDelete({ id: session.id, type: session.type })} />

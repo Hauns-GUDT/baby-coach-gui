@@ -48,7 +48,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-zinc-50">
+      <div className="min-h-screen bg-blue-grey-50">
         <Navigation onOpenAi={() => setIsAiOpen(true)} />
         <NoBabyGuard>
           <Routes>
