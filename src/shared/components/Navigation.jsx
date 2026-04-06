@@ -85,7 +85,7 @@ export default function Navigation({ onOpenAi }) {
   ];
 
   return (
-    <nav className="bg-twilight-indigo-900 border-b border-twilight-indigo-800 relative z-40">
+    <nav className="bg-twilight-indigo-800 border-b border-twilight-indigo-700 relative z-40">
       {/* Click-outside overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />

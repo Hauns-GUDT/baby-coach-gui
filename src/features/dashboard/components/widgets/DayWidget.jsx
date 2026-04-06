@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Play } from 'lucide-react';
+import { Moon, Milk, CirclePlay } from 'lucide-react';
 import Button from '../../../../shared/components/Button';
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
@@ -124,7 +124,7 @@ export default function DayWidget() {
           const timeSince = !active ? getTimeSinceLastEnded(events, now) : null;
 
           return (
-            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-1">
+            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-0.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <Icon size={13} style={{ color }} strokeWidth={2} />
@@ -137,7 +137,7 @@ export default function DayWidget() {
                     className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
                     style={{ backgroundColor: color + '22' }}
                   >
-                    <Play size={10} style={{ color }} strokeWidth={2.5} fill={color} />
+                    <CirclePlay size={22} style={{ color }} strokeWidth={1.5} />
                   </button>
                 )}
               </div>
