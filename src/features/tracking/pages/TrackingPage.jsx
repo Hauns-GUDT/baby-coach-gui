@@ -34,7 +34,7 @@ export default function TrackingPage() {
       <button
         onClick={() => setIsAddOpen(true)}
         aria-label={t('tracking.addEvent')}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center hover:bg-indigo-700 active:scale-95 transition-all z-40"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-twilight-indigo-600 text-white shadow-lg flex items-center justify-center hover:bg-twilight-indigo-700 active:scale-95 transition-all z-40"
       >
         <Plus size={24} strokeWidth={2.5} />
       </button>

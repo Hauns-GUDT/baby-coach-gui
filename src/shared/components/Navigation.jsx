@@ -17,7 +17,7 @@ function BabyEditDialog({ baby, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-zinc-900">{t('babies.editBaby')}</h2>
+        <h2 className="text-lg font-semibold text-blue-grey-900">{t('babies.editBaby')}</h2>
         <BabyForm
           name={name} setName={setName}
           birthday={birthday} setBirthday={setBirthday}
@@ -66,13 +66,12 @@ export default function Navigation({ onOpenAi }) {
     return '';
   };
 
-  // With single-baby model, use the first baby
   const currentBaby = babies.find((b) => b.id === selectedBabyId) ?? babies[0] ?? null;
 
   const babySelector = currentBaby && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
-      className="text-sm font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
+      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-700 hover:bg-twilight-indigo-600 px-3 py-1 rounded-full cursor-pointer transition-colors"
     >
       {currentBaby.name}
     </button>
@@ -81,14 +80,13 @@ export default function Navigation({ onOpenAi }) {
   const links = [
     { to: '/app', label: t('nav.tracking'), end: true },
     { to: '/app/dashboard', label: t('nav.dashboard') },
-    // { to: '/app/chatbot', label: t('nav.chatbot') },
     { to: '/app/profile', label: t('nav.profile') },
     ...(isAdmin ? [{ to: '/app/admin', label: t('nav.admin') }] : []),
   ];
 
   return (
-    <nav className="bg-white border-b border-zinc-200 relative z-40">
-      {/* Click-outside overlay for mobile menu */}
+    <nav className="bg-twilight-indigo-900 border-b border-twilight-indigo-800 relative z-40">
+      {/* Click-outside overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
       )}
@@ -102,10 +100,12 @@ export default function Navigation({ onOpenAi }) {
             </NavLink>
             <button
               onClick={() => setIsOpen((o) => !o)}
-              className="flex items-center gap-1 text-lg font-bold text-zinc-900 cursor-pointer select-none"
+              className="flex items-center gap-1 text-lg font-bold text-white cursor-pointer select-none"
             >
               {getPageTitle()}
-              {isOpen ? <ChevronUp size={18} className="text-zinc-400" /> : <ChevronDown size={18} className="text-zinc-400" />}
+              {isOpen
+                ? <ChevronUp size={18} className="text-twilight-indigo-300" />
+                : <ChevronDown size={18} className="text-twilight-indigo-300" />}
             </button>
           </div>
 
@@ -115,7 +115,7 @@ export default function Navigation({ onOpenAi }) {
               <button
                 onClick={onOpenAi}
                 aria-label={t('aiAssistant.title')}
-                className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 active:scale-95 transition-all"
+                className="w-9 h-9 rounded-full bg-light-apricot-400 text-twilight-indigo-900 flex items-center justify-center hover:bg-light-apricot-300 active:scale-95 transition-all"
               >
                 <Moon size={17} />
               </button>
@@ -123,8 +123,9 @@ export default function Navigation({ onOpenAi }) {
           </div>
         </div>
 
+        {/* Dropdown nav links */}
         {isOpen && (
-          <div className="border-t border-zinc-100 py-3 flex flex-col gap-1">
+          <div className="border-t border-twilight-indigo-800 py-3 flex flex-col gap-1">
             {links.map(({ to, label, end }) => (
               <NavLink
                 key={to}
@@ -132,7 +133,11 @@ export default function Navigation({ onOpenAi }) {
                 end={end}
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded-lg font-medium transition-colors ${isActive ? 'text-indigo-600 bg-indigo-50' : 'text-zinc-600 hover:bg-zinc-50'}`
+                  `px-3 py-2 rounded-lg font-medium transition-colors ${
+                    isActive
+                      ? 'bg-twilight-indigo-700 text-white'
+                      : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white'
+                  }`
                 }
               >
                 {label}
@@ -142,7 +147,6 @@ export default function Navigation({ onOpenAi }) {
         )}
       </div>
 
-      {/* Baby edit dialog */}
       {isBabyDialogOpen && currentBaby && (
         <BabyEditDialog baby={currentBaby} onClose={() => setIsBabyDialogOpen(false)} />
       )}

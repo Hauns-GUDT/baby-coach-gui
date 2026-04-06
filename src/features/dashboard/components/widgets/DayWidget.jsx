@@ -11,24 +11,24 @@ const CONFIGS = [
   {
     key: 'sleep',
     icon: Moon,
-    color: '#818cf8',
+    color: '#425bbd', // twilight-indigo-500
     i18nPrefix: 'history.sleep',
-    accentBg: 'bg-indigo-50',
-    accentDot: 'bg-indigo-500',
-    accentText: 'text-indigo-700',
-    accentSubText: 'text-indigo-500',
-    totalText: 'text-indigo-600',
+    accentBg: 'bg-twilight-indigo-50',
+    accentDot: 'bg-twilight-indigo-500',
+    accentText: 'text-twilight-indigo-700',
+    accentSubText: 'text-twilight-indigo-500',
+    totalText: 'text-twilight-indigo-600',
   },
   {
     key: 'feeding',
     icon: Milk,
-    color: '#f97316',
+    color: '#f5b20a', // light-apricot-500
     i18nPrefix: 'history.feeding',
-    accentBg: 'bg-orange-50',
-    accentDot: 'bg-orange-500',
-    accentText: 'text-orange-700',
-    accentSubText: 'text-orange-500',
-    totalText: 'text-orange-500',
+    accentBg: 'bg-light-apricot-50',
+    accentDot: 'bg-light-apricot-500',
+    accentText: 'text-light-apricot-700',
+    accentSubText: 'text-light-apricot-500',
+    totalText: 'text-light-apricot-600',
   },
 ];
 
@@ -104,7 +104,7 @@ export default function DayWidget() {
   }));
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-4">
+    <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-4">
       {/* Active banners */}
       {data.map(({ config, active, onStop }) =>
         active ? (
@@ -124,11 +124,11 @@ export default function DayWidget() {
           const timeSince = !active ? getTimeSinceLastEnded(events, now) : null;
 
           return (
-            <div key={config.key} className="bg-zinc-50 rounded-xl p-3 flex flex-col gap-1">
+            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <Icon size={13} style={{ color }} strokeWidth={2} />
-                  <span className="text-xs font-medium text-zinc-400">{t(`${i18nPrefix}.title`)}</span>
+                  <span className="text-xs font-medium text-blue-grey-400">{t(`${i18nPrefix}.title`)}</span>
                 </div>
                 {!anyActive && (
                   <button
@@ -143,10 +143,10 @@ export default function DayWidget() {
               </div>
               <div className="flex items-baseline gap-2">
                 <span className={`text-2xl font-bold leading-tight ${totalText}`}>{formatHours(total)}</span>
-                <span className="text-xs font-medium text-zinc-400">×{count}</span>
+                <span className="text-xs font-medium text-blue-grey-400">×{count}</span>
               </div>
               {timeSince !== null && (
-                <span className="text-xs text-zinc-400">{statusLabel} · {formatHours(timeSince)}</span>
+                <span className="text-xs text-blue-grey-400">{statusLabel} · {formatHours(timeSince)}</span>
               )}
             </div>
           );
