@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, X, Sparkles, Send } from 'lucide-react';
+import { Moon, X, BotMessageSquare, Send } from 'lucide-react';
 import { useSleepPrediction } from '../hooks/useSleepPrediction';
 import { askChat } from '../../../shared/api/chatService';
 
@@ -115,7 +115,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-100 shrink-0">
           <div className="flex items-center gap-2">
-            <Sparkles size={15} className="text-twilight-indigo-500" />
+            <BotMessageSquare size={15} className="text-twilight-indigo-500" />
             <span className="text-sm font-semibold text-blue-grey-700">{t('aiAssistant.title')}</span>
           </div>
           <button
