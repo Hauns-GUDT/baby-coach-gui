@@ -13,22 +13,18 @@ function PredictionResult({ prediction }) {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Main suggestion */}
       <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isBedtime ? 'bg-indigo-100' : 'bg-amber-100'}`}>
-          <Moon size={18} className={isBedtime ? 'text-indigo-600' : 'text-amber-500'} />
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isBedtime ? 'bg-twilight-indigo-100' : 'bg-light-apricot-100'}`}>
+          <Moon size={18} className={isBedtime ? 'text-twilight-indigo-600' : 'text-light-apricot-600'} />
         </div>
         <div>
-          <p className="text-xs text-zinc-400">{t(`sleepAssistant.types.${prediction.type}`)}</p>
-          <p className="text-xl font-semibold text-zinc-800">{formatTime(prediction.time)}</p>
+          <p className="text-xs text-blue-grey-400">{t(`sleepAssistant.types.${prediction.type}`)}</p>
+          <p className="text-xl font-semibold text-blue-grey-800">{formatTime(prediction.time)}</p>
         </div>
       </div>
 
-      {/* Age label */}
-      <p className="text-xs text-zinc-400">{t('sleepAssistant.norm', { label: prediction.normLabel })}</p>
-
-      {/* Reason */}
-      <p className="text-xs text-zinc-500 leading-relaxed border-t border-zinc-100 pt-3">{prediction.reason}</p>
+      <p className="text-xs text-blue-grey-400">{t('sleepAssistant.norm', { label: prediction.normLabel })}</p>
+      <p className="text-xs text-blue-grey-500 leading-relaxed border-t border-blue-grey-100 pt-3">{prediction.reason}</p>
     </div>
   );
 }
@@ -36,7 +32,7 @@ function PredictionResult({ prediction }) {
 function ErrorMessage({ errorKey }) {
   const { t } = useTranslation();
   return (
-    <p className="text-sm text-red-500">{t(errorKey)}</p>
+    <p className="text-sm text-rose-500">{t(errorKey)}</p>
   );
 }
 
@@ -52,38 +48,35 @@ export default function SleepAssistantPanel() {
 
   return (
     <>
-      {/* Panel */}
       {isOpen && (
-        <div className="fixed bottom-24 left-6 w-72 bg-white rounded-2xl shadow-xl border border-zinc-100 z-40 flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+        <div className="fixed bottom-24 left-6 w-72 bg-white rounded-2xl border border-blue-grey-100 shadow-xl z-40 flex flex-col overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-blue-grey-100">
             <div className="flex items-center gap-2">
-              <Sparkles size={15} className="text-indigo-500" />
-              <span className="text-sm font-semibold text-zinc-700">{t('sleepAssistant.title')}</span>
+              <Sparkles size={15} className="text-twilight-indigo-500" />
+              <span className="text-sm font-semibold text-blue-grey-700">{t('sleepAssistant.title')}</span>
             </div>
             <button
               onClick={handleClose}
               aria-label={t('tracking.cancel')}
-              className="text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="text-blue-grey-400 hover:text-blue-grey-600 transition-colors"
             >
               <X size={16} />
             </button>
           </div>
 
-          {/* Body */}
           <div className="p-4 min-h-[100px] flex flex-col justify-center">
             {!prediction && !errorKey && !isLoading && (
               <button
                 onClick={fetchPrediction}
-                className="w-full py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 active:scale-95 transition-all"
+                className="w-full py-2.5 rounded-xl bg-twilight-indigo-600 text-white text-sm font-medium hover:bg-twilight-indigo-700 active:scale-95 transition-all"
               >
                 {t('sleepAssistant.requestButton')}
               </button>
             )}
 
             {isLoading && (
-              <div className="flex items-center justify-center gap-2 text-sm text-zinc-400">
-                <span className="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+              <div className="flex items-center justify-center gap-2 text-sm text-blue-grey-400">
+                <span className="w-4 h-4 border-2 border-twilight-indigo-400 border-t-transparent rounded-full animate-spin" />
                 {t('sleepAssistant.loading')}
               </div>
             )}
@@ -91,11 +84,10 @@ export default function SleepAssistantPanel() {
             {prediction && <PredictionResult prediction={prediction} />}
             {errorKey && <ErrorMessage errorKey={errorKey} />}
 
-            {/* Retry link after result or error */}
             {(prediction || errorKey) && (
               <button
                 onClick={fetchPrediction}
-                className="mt-3 text-xs text-indigo-500 hover:text-indigo-700 text-center transition-colors"
+                className="mt-3 text-xs text-twilight-indigo-500 hover:text-twilight-indigo-700 text-center transition-colors"
               >
                 {t('sleepAssistant.retry')}
               </button>
@@ -104,11 +96,10 @@ export default function SleepAssistantPanel() {
         </div>
       )}
 
-      {/* FAB */}
       <button
         onClick={() => setIsOpen((v) => !v)}
         aria-label={t('sleepAssistant.fab')}
-        className={`fixed bottom-6 left-6 w-14 h-14 rounded-full text-white shadow-lg flex items-center justify-center active:scale-95 transition-all z-40 ${isOpen ? 'bg-zinc-700 hover:bg-zinc-800' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+        className={`fixed bottom-6 left-6 w-14 h-14 rounded-full text-white shadow-lg flex items-center justify-center active:scale-95 transition-all z-40 ${isOpen ? 'bg-blue-grey-700 hover:bg-blue-grey-800' : 'bg-twilight-indigo-600 hover:bg-twilight-indigo-700'}`}
       >
         {isOpen ? <X size={22} /> : <Moon size={22} />}
       </button>

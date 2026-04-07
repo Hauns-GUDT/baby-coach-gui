@@ -38,7 +38,7 @@ function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
       <div className="relative flex-1 h-5" style={{ overflow: 'visible' }}>
 
         {/* Clipped track */}
-        <div className="absolute inset-0 bg-zinc-200 rounded-full overflow-hidden">
+        <div className="absolute inset-0 bg-blue-grey-200 rounded-full overflow-hidden">
           {periods.map((p, i) => (
             <div
               key={i}
@@ -62,7 +62,7 @@ function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
         {/* Current-time marker */}
         <div
           className="absolute top-0 h-full pointer-events-none z-10"
-          style={{ left: `${(nowH / 24) * 100}%`, transform: 'translateX(-50%)', width: '1px', background: 'repeating-linear-gradient(to bottom, #a1a1aa 0px, #a1a1aa 2px, transparent 2px, transparent 5px)' }}
+          style={{ left: `${(nowH / 24) * 100}%`, transform: 'translateX(-50%)', width: '1px', background: 'repeating-linear-gradient(to bottom, #6e9dc4 0px, #6e9dc4 2px, transparent 2px, transparent 5px)' }}
         />
 
         {/* Tooltip — sibling of the clipped track, so it can overflow upward */}
@@ -75,7 +75,7 @@ function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
               transform: 'translateX(-50%)',
             }}
           >
-            <div className="bg-zinc-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
+            <div className="bg-blue-grey-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
               {openPeriod.tooltip}
             </div>
             <div
@@ -86,7 +86,7 @@ function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
                 height: 0,
                 borderLeft: '5px solid transparent',
                 borderRight: '5px solid transparent',
-                borderTop: '5px solid #27272a',
+                borderTop: '5px solid #1e3548',
               }}
             />
           </div>
@@ -123,14 +123,14 @@ export default function DayTimeline({ rows }) {
               style={{ left: `${(h / 24) * 100}%` }}
             >
               {Icon
-                ? <Icon size={11} className="text-zinc-400" />
-                : <span className="text-[10px] leading-none text-zinc-400 font-medium">{label}</span>
+                ? <Icon size={11} className="text-blue-grey-400" />
+                : <span className="text-[10px] leading-none text-blue-grey-400 font-medium">{label}</span>
               }
             </div>
           ))}
           {/* Now marker on axis */}
           <div
-            className="absolute bottom-0 -translate-x-1/2 w-1 h-1 rounded-full bg-zinc-400"
+            className="absolute bottom-0 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-grey-400"
             style={{ left: `${(nowH / 24) * 100}%` }}
           />
         </div>

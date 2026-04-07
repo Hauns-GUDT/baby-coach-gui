@@ -6,14 +6,13 @@ const FEEDING_CONFIG = {
   i18nPrefix: 'history.feeding',
   showGapPeriods: false,
   icon: Milk,
-  svgPrimaryColor: '#f97316',
+  svgPrimaryColor: '#f5b20a', // light-apricot-500
   svgSecondaryColor: null,
-  accentBg: 'bg-orange-50',
-  accentDot: 'bg-orange-500',
-  accentText: 'text-orange-700',
-  accentSubText: 'text-orange-500',
-  totalText: 'text-orange-500',
-  inputRingClass: 'focus:ring-orange-400',
+  accentBg: 'bg-light-apricot-50',
+  accentDot: 'bg-light-apricot-500',
+  accentText: 'text-light-apricot-700',
+  accentSubText: 'text-light-apricot-500',
+  totalText: 'text-light-apricot-500',
 };
 
 export default function FeedingWidget() {

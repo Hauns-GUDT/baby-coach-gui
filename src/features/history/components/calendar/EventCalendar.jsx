@@ -59,20 +59,20 @@ export default function EventCalendar({ onDaySelect }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3">
+    <div className="bg-white rounded-2xl border border-blue-grey-100 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <button onClick={prevMonth} className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors cursor-pointer" aria-label="Previous month">
+        <button onClick={prevMonth} className="p-2 rounded-xl text-blue-grey-400 hover:text-blue-grey-700 hover:bg-blue-grey-100 transition-colors cursor-pointer" aria-label="Previous month">
           <ChevronLeft size={18} />
         </button>
-        <span className="text-sm font-semibold text-zinc-700 capitalize">{monthLabel}</span>
-        <button onClick={nextMonth} className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors cursor-pointer" aria-label="Next month">
+        <span className="text-sm font-semibold text-blue-grey-700 capitalize">{monthLabel}</span>
+        <button onClick={nextMonth} className="p-2 rounded-xl text-blue-grey-400 hover:text-blue-grey-700 hover:bg-blue-grey-100 transition-colors cursor-pointer" aria-label="Next month">
           <ChevronRight size={18} />
         </button>
       </div>
 
       <div className="grid grid-cols-7 gap-1">
         {weekdayLabels.map((label) => (
-          <div key={label} className="text-center text-[10px] font-semibold text-zinc-400 uppercase py-1">
+          <div key={label} className="text-center text-[10px] font-semibold text-blue-grey-400 uppercase py-1">
             {label}
           </div>
         ))}
@@ -93,11 +93,11 @@ export default function EventCalendar({ onDaySelect }) {
               disabled={future}
               className={`flex items-center justify-center rounded-xl py-2.5 transition-all
                 ${future ? 'opacity-25 cursor-not-allowed'
-                  : selected ? 'bg-zinc-800 shadow-sm cursor-pointer'
-                  : todayCell ? 'bg-zinc-100 cursor-pointer'
-                  : 'hover:bg-zinc-50 cursor-pointer'}`}
+                  : selected ? 'bg-twilight-indigo-700 shadow-sm cursor-pointer'
+                  : todayCell ? 'bg-blue-grey-100 cursor-pointer'
+                  : 'hover:bg-blue-grey-50 cursor-pointer'}`}
             >
-              <span className={`text-xs font-semibold leading-none ${selected ? 'text-white' : 'text-zinc-700'}`}>
+              <span className={`text-xs font-semibold leading-none ${selected ? 'text-white' : 'text-blue-grey-700'}`}>
                 {date.getDate()}
               </span>
             </button>
