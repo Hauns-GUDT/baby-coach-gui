@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronUp, Moon } from 'lucide-react';
+import { ChevronDown, ChevronUp, BotMessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../features/auth/store/useAuthStore';
 import { useBabyStore } from '../../features/babies/store/useBabyStore';
@@ -117,7 +117,7 @@ export default function Navigation({ onOpenAi }) {
                 aria-label={t('aiAssistant.title')}
                 className="w-9 h-9 rounded-full bg-light-apricot-400 text-twilight-indigo-900 flex items-center justify-center hover:bg-light-apricot-300 active:scale-95 transition-all"
               >
-                <Moon size={17} />
+                <BotMessageSquare size={17} />
               </button>
             )}
           </div>
