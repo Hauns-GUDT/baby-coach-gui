@@ -9,63 +9,93 @@ const TIME_MARKERS = [
   { h: 24, label: '12AM' },
 ];
 
-function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
-  const [hoverIdx, setHoverIdx] = useState(null);
-  const [clickIdx, setClickIdx] = useState(null);
+/**
+ * Horizontal 24-hour timeline — all event types on a single straight track,
+ * with a colour-coded legend below.
+ *
+ * @param {{ label: string, color: string, icon: ComponentType, periods: { fromH: number, toH: number, tooltip: string }[] }[]} rows
+ */
+export default function DayTimeline({ rows, isToday = false }) {
+  const [now, setNow] = useState(() => new Date());
+  const [openPeriod, setOpenPeriod] = useState(null);
 
-  const openIdx = hoverIdx ?? clickIdx;
-
-  // Close click-open on any outside tap
   useEffect(() => {
-    if (clickIdx === null) return;
-    const close = () => setClickIdx(null);
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Close tooltip on outside tap
+  useEffect(() => {
+    if (!openPeriod) return;
+    const close = () => setOpenPeriod(null);
     document.addEventListener('pointerdown', close);
     return () => document.removeEventListener('pointerdown', close);
-  }, [clickIdx]);
+  }, [openPeriod]);
 
-  const openPeriod = openIdx !== null ? periods[openIdx] : null;
+  const nowH = now.getHours() + now.getMinutes() / 60;
+
+  // Flatten all rows into one sorted list of periods
+  const allPeriods = rows
+    .flatMap((row) => row.periods.map((p) => ({ ...p, color: row.color })))
+    .sort((a, b) => a.fromH - b.fromH);
+
   const tooltipCenter = openPeriod
     ? ((openPeriod.fromH + openPeriod.toH) / 2 / 24) * 100
     : 0;
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-3 flex items-center shrink-0">
-        {Icon && <Icon size={11} style={{ color }} strokeWidth={2} title={label} />}
+    <div className="flex flex-col gap-2 w-full">
+      {/* Time axis */}
+      <div className="relative h-4">
+        {TIME_MARKERS.map(({ h, icon: Icon, label }) => (
+          <div
+            key={h}
+            className="absolute bottom-0 flex flex-col items-center -translate-x-1/2"
+            style={{ left: `${(h / 24) * 100}%` }}
+          >
+            {Icon
+              ? <Icon size={11} className="text-blue-grey-400" />
+              : <span className="text-[10px] leading-none text-blue-grey-400 font-medium">{label}</span>
+            }
+          </div>
+        ))}
       </div>
 
-      {/* Positioning context — overflow-visible so tooltip isn't clipped */}
-      <div className="relative flex-1 h-5" style={{ overflow: 'visible' }}>
-
-        {/* Clipped track */}
-        <div className="absolute inset-0 bg-blue-grey-200 rounded-full overflow-hidden">
-          {periods.map((p, i) => (
+      {/* Single unified track — rounded ends, straight internal segments */}
+      <div className="relative h-6" style={{ overflow: 'visible' }}>
+        <div className="absolute inset-0 bg-blue-grey-100 rounded-full overflow-hidden">
+          {allPeriods.map((p, i) => (
             <div
               key={i}
               onPointerDown={(e) => {
                 e.stopPropagation();
-                setClickIdx(i === clickIdx ? null : i);
+                setOpenPeriod(openPeriod === p ? null : p);
               }}
-              onMouseEnter={() => setHoverIdx(i)}
-              onMouseLeave={() => setHoverIdx(null)}
-              className="absolute top-0 h-full rounded-full cursor-pointer active:brightness-90 transition-[filter]"
+              className="absolute top-0 h-full cursor-pointer active:brightness-90 transition-[filter]"
               style={{
                 left: `${(p.fromH / 24) * 100}%`,
                 width: `${((p.toH - p.fromH) / 24) * 100}%`,
-                minWidth: '6px',
-                backgroundColor: color,
+                minWidth: '3px',
+                backgroundColor: p.color,
               }}
             />
           ))}
         </div>
 
-        {/* Current-time marker */}
-        <div
-          className="absolute top-0 h-full pointer-events-none z-10"
-          style={{ left: `${(nowH / 24) * 100}%`, transform: 'translateX(-50%)', width: '1px', background: 'repeating-linear-gradient(to bottom, #6e9dc4 0px, #6e9dc4 2px, transparent 2px, transparent 5px)' }}
-        />
+        {/* Current-time marker — only for today */}
+        {isToday && (
+          <div
+            className="absolute top-0 h-full pointer-events-none z-10"
+            style={{
+              left: `${(nowH / 24) * 100}%`,
+              transform: 'translateX(-50%)',
+              width: '1px',
+              background: 'repeating-linear-gradient(to bottom, #6e9dc4 0px, #6e9dc4 2px, transparent 2px, transparent 5px)',
+            }}
+          />
+        )}
 
-        {/* Tooltip — sibling of the clipped track, so it can overflow upward */}
+        {/* Tooltip */}
         {openPeriod && (
           <div
             className="absolute z-50 pointer-events-none inline-block"
@@ -92,54 +122,16 @@ function TimelineRow({ label, color, icon: Icon, periods, nowH }) {
           </div>
         )}
       </div>
-    </div>
-  );
-}
 
-/**
- * Horizontal 24-hour timeline showing one row per event type.
- *
- * @param {{ label: string, color: string, icon?: ComponentType, periods: { fromH: number, toH: number, tooltip: string }[] }[]} rows
- */
-export default function DayTimeline({ rows }) {
-  const [now, setNow] = useState(() => new Date());
-
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 60_000);
-    return () => clearInterval(id);
-  }, []);
-
-  const nowH = now.getHours() + now.getMinutes() / 60;
-
-  return (
-    <div className="flex flex-col gap-2 w-full">
-      {/* Time axis */}
-      <div className="flex items-end pl-5">
-        <div className="relative flex-1 h-4">
-          {TIME_MARKERS.map(({ h, icon: Icon, label }) => (
-            <div
-              key={h}
-              className="absolute bottom-0 flex flex-col items-center -translate-x-1/2"
-              style={{ left: `${(h / 24) * 100}%` }}
-            >
-              {Icon
-                ? <Icon size={11} className="text-blue-grey-400" />
-                : <span className="text-[10px] leading-none text-blue-grey-400 font-medium">{label}</span>
-              }
-            </div>
-          ))}
-          {/* Now marker on axis */}
-          <div
-            className="absolute bottom-0 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-grey-400"
-            style={{ left: `${(nowH / 24) * 100}%` }}
-          />
-        </div>
+      {/* Legend */}
+      <div className="flex gap-4 pt-0.5">
+        {rows.map((row) => (
+          <div key={row.label} className="flex items-center gap-1.5">
+            <row.icon size={12} style={{ color: row.color }} strokeWidth={2} />
+            <span className="text-[10px] text-blue-grey-400 font-medium">{row.label}</span>
+          </div>
+        ))}
       </div>
-
-      {/* Event rows */}
-      {rows.map((row) => (
-        <TimelineRow key={row.label} {...row} nowH={nowH} />
-      ))}
     </div>
   );
 }

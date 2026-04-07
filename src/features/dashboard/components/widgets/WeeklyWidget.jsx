@@ -188,7 +188,7 @@ export default function WeeklyWidget() {
             <p className="text-sm font-medium text-blue-grey-500 px-1 capitalize">{dateLabel}</p>
           )}
           <div className="bg-white rounded-2xl border border-blue-grey-100 p-4">
-            <DayTimeline rows={timelineRows} />
+            <DayTimeline rows={timelineRows} isToday={selectedDate?.toDateString() === new Date().toDateString()} />
           </div>
         </>
       )}

@@ -233,16 +233,89 @@
   "aiAssistant": {
     "title": "Baby Assistent",
     "close": "Schließen",
-    "sleepSuggestion": "Schlafempfehlung abrufen",
-    "quickQuestions": "Schnellfragen",
     "send": "Senden",
-    "placeholder": "Fragen zu Ernährung, Schlaf, Windeln…",
+    "back": "Zurück",
     "loading": "Überlege…",
-    "chips": {
-      "sleepNormal": "Ist der Schlaf normal?",
-      "dreamFeeding": "Traumfütterung Tipps",
-      "napLength": "Wie lang sollte ein Nickerchen sein?",
-      "bedtimeRoutine": "Beste Schlafroutine?"
+    "placeholder": "Frag mich alles über dein Baby…",
+    "placeholderTopic": "Frage zu {{topic}}…",
+    "placeholderFollowUp": "Nachfragen…",
+    "quickActionsLabel": "Schnellaktionen",
+    "topicsLabel": "Themen",
+    "topicSubtitle": "Wähle eine Frage oder tippe deine eigene",
+    "moreQuestions": "Mehr {{topic}}-Fragen",
+    "allTopics": "Alle Themen",
+    "quickActions": {
+      "sleep": {
+        "label": "Schlafempfehlung",
+        "sub": "Basierend auf heutigen Daten",
+        "question": "Wann sollte mein Baby als nächstes schlafen?",
+        "prompt": "Basierend auf den letzten Schlafdaten meines Babys: Wann sollte es als nächstes schlafen und wie lange?"
+      },
+      "feeding": {
+        "label": "Fütterungscheck",
+        "sub": "Letzte Fütterungsanalyse",
+        "question": "Wie läuft die Fütterung heute?",
+        "prompt": "Basierend auf den letzten Fütterungsdaten meines Babys: Wie läuft die Fütterung und wann sollte die nächste sein?"
+      }
+    },
+    "topics": {
+      "sleep": {
+        "label": "Schlaf",
+        "questions": [
+          "Ist der Schlaf meines Babys für sein Alter normal?",
+          "Wie lange sollten Nickerchen dauern?",
+          "Was ist eine gute Schlafroutine?",
+          "Traumfütterung – Tipps & Tricks",
+          "Warum wacht mein Baby nachts auf?",
+          "Wann schläft mein Baby durch?"
+        ]
+      },
+      "feeding": {
+        "label": "Fütterung",
+        "questions": [
+          "Wie oft sollte ich mein Baby füttern?",
+          "Bekommt mein Baby genug Milch?",
+          "Wann Beikost einführen?",
+          "Hunger vs. Saugen zur Beruhigung erkennen",
+          "Was tun bei einem Stillstreik?"
+        ]
+      },
+      "diapers": {
+        "label": "Windeln",
+        "questions": [
+          "Wie viele nasse Windeln pro Tag sind normal?",
+          "Was verrät mir die Windelfarbe?",
+          "Wie vermeide ich Windelausschlag?",
+          "Wann sollte ich wegen dem Stuhlgang zum Arzt?"
+        ]
+      },
+      "development": {
+        "label": "Entwicklung",
+        "questions": [
+          "Welche Meilensteine sind in diesem Alter zu erwarten?",
+          "Wie fördere ich die Bauchlage?",
+          "Wann fangen Babys an zu sprechen?",
+          "Wie unterstütze ich die kognitive Entwicklung?"
+        ]
+      },
+      "routines": {
+        "label": "Routinen",
+        "questions": [
+          "Wie baue ich eine Tagesroutine auf?",
+          "Was ist die Essen-Spielen-Schlafen-Methode?",
+          "Wie gehe ich mit Störungen im Tagesablauf um?",
+          "Beste Einschlafaktivitäten vor dem Schlafen?"
+        ]
+      },
+      "health": {
+        "label": "Gesundheit",
+        "questions": [
+          "Wann sollte ich zum Kinderarzt?",
+          "Normaler Temperaturbereich für Babys?",
+          "Wie gehe ich mit Fieber zu Hause um?",
+          "Koliken erkennen und lindern?"
+        ]
+      }
     }
   },
   "sleepAssistant": {
@@ -261,6 +334,14 @@
       "invalidDuration": "Das letzte Schlaf-Event scheint zu lang. Hast du vergessen, den Timer zu stoppen?",
       "noEvents": "Noch keine Schlaf-Events eingetragen.",
       "generic": "Empfehlung konnte nicht abgerufen werden. Bitte erneut versuchen."
+    },
+    "reasons": {
+      "REASON_AGE": "Altersgruppe: {{normLabel}} ({{ageInDays}} Tage alt).",
+      "REASON_WAKE_WINDOW": "Wachfenster: {{used}} Min. (Norm {{min}}–{{max}} Min.).",
+      "REASON_SHORT_NAP": "Kurzes Schläfchen ({{actual}} Min., Schwelle {{threshold}} Min.) — Fenster um {{penalty}} Min. verkürzt.",
+      "REASON_EARLY_WAKE_ANCHORED": "Frühes Aufwachen wurde angepasst, um den Tag nicht zu früh zu verankern.",
+      "REASON_USER_OFFSET": "Persönlicher Versatz angewendet: {{offsetMins}} Min.",
+      "REASON_PREDICTION": "Vorhersage basierend auf dem aktuellen Schlafmuster deines Babys."
     }
   },
   "admin": {

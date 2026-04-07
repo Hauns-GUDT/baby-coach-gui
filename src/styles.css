@@ -79,6 +79,19 @@
   --color-dusk-blue-900: #111622;
   --color-dusk-blue-950: #0c1018;
 
+  /* ── Warm Brown (diaper) ─────────────────────────────────── */
+  --color-warm-brown-50:  #f5ede8;
+  --color-warm-brown-100: #ecdbd1;
+  --color-warm-brown-200: #d9b7a3;
+  --color-warm-brown-300: #c59375;
+  --color-warm-brown-400: #b26f47;
+  --color-warm-brown-500: #8f5535;
+  --color-warm-brown-600: #72432a;
+  --color-warm-brown-700: #553220;
+  --color-warm-brown-800: #382115;
+  --color-warm-brown-900: #1c110b;
+  --color-warm-brown-950: #130b07;
+
   /* ── Blue Grey (neutral / replaces zinc) ─────────────────── */
   --color-blue-grey-50:  #edf3f8;
   --color-blue-grey-100: #dbe7f0;

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baby Assistent – UX Preview</title>
+  <style>
+    /* ── Custom palette (mirrors Tailwind config) ── */
+    :root {
+      --bg-app:        #F4F6F8;
+      --bg-card:       #ffffff;
+      --border-card:   #E2E8F0;
+      --border-input:  #CBD5E0;
+
+      --text-900:      #1A202C;
+      --text-700:      #4A5568;
+      --text-500:      #718096;
+      --text-400:      #A0AEC0;
+
+      --indigo-700:    #4C3FB5;
+      --indigo-600:    #5A4FCF;
+      --indigo-500:    #6B63D4;
+      --indigo-100:    #EAE8F9;
+      --indigo-50:     #F5F4FD;
+
+      --apricot-600:   #D97559;
+      --apricot-100:   #FCEEE8;
+      --apricot-50:    #FDF6F3;
+
+      --blue-grey-100: #E2E8F0;
+      --blue-grey-50:  #F4F6F8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #B8BEC6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+      gap: 12px;
+    }
+
+    h1 {
+      color: #3a3a3a;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    /* ── Phone shell ── */
+    .phone {
+      width: 360px;
+      height: 700px;
+      background: var(--bg-app);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,.30), 0 0 0 8px #222;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Blurred app background */
+    .app-bg {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg-app);
+    }
+    .app-bg-bar {
+      width: 260px; height: 10px;
+      border-radius: 99px;
+      background: var(--blue-grey-100);
+    }
+    .app-bg-bar.short { width: 180px; }
+    .app-bg-bar.med { width: 220px; }
+
+    /* Backdrop */
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.28);
+      transition: opacity .3s;
+      pointer-events: none;
+    }
+
+    /* ── Drawer ── */
+    .drawer {
+      position: absolute;
+      inset-x: 0;
+      bottom: 0;
+      background: var(--bg-card);
+      border-radius: 22px 22px 0 0;
+      display: flex;
+      flex-direction: column;
+      max-height: 78%;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform .35s cubic-bezier(.32,.72,0,1);
+    }
+    .drawer.open { transform: translateY(0); }
+
+    /* ── Drawer header ── */
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--blue-grey-100);
+      flex-shrink: 0;
+    }
+    .drawer-header-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .drawer-title { font-size: 13px; font-weight: 700; color: var(--text-700); }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 600; color: var(--indigo-600);
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+
+    .close-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--blue-grey-50);
+      color: var(--text-500);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 14px; flex-shrink: 0;
+    }
+
+    /* ── Screen slider ── */
+    .screens-viewport {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screens-track {
+      display: flex;
+      height: 100%;
+      transition: transform .32s cubic-bezier(.32,.72,0,1);
+    }
+
+    .screen {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Input bar ── */
+    .input-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px 14px;
+      border-top: 1px solid var(--blue-grey-100);
+      flex-shrink: 0;
+      background: var(--bg-card);
+    }
+    .chat-input {
+      flex: 1;
+      font-size: 12px;
+      background: var(--blue-grey-50);
+      border: 1px solid var(--border-input);
+      border-radius: 99px;
+      padding: 9px 16px;
+      outline: none;
+      color: var(--text-700);
+    }
+    .chat-input::placeholder { color: var(--text-400); }
+    .send-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--indigo-600);
+      color: white; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .send-btn:hover { background: var(--indigo-700); }
+
+    /* ── Screen 1: Home ── */
+    .section-label {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .07em;
+      color: var(--text-400);
+      margin-bottom: 8px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .qa-btn {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 6px; padding: 14px 12px;
+      border-radius: 16px; border: none; cursor: pointer; text-align: left;
+      transition: filter .15s;
+    }
+    .qa-btn:active { filter: brightness(.94); }
+    .qa-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .qa-label { font-size: 12px; font-weight: 700; line-height: 1.3; }
+    .qa-sub   { font-size: 10px; opacity: .7; }
+
+    .qa-sleep { background: var(--indigo-50); color: var(--indigo-600); }
+    .qa-sleep .qa-icon { background: var(--indigo-100); }
+    .qa-feed  { background: var(--apricot-50); color: var(--apricot-600); }
+    .qa-feed  .qa-icon { background: var(--apricot-100); }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .topic-btn {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 14px 8px;
+      border-radius: 16px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .topic-btn:hover, .topic-btn:active {
+      border-color: var(--indigo-600);
+      background: var(--indigo-50);
+    }
+    .t-icon  { font-size: 22px; }
+    .t-label { font-size: 10px; font-weight: 600; color: var(--text-700); text-align: center; }
+
+    /* ── Screen 2: Topic questions ── */
+    .topic-hero {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--indigo-50);
+      flex-shrink: 0;
+    }
+    .topic-hero-icon {
+      width: 42px; height: 42px; border-radius: 13px;
+      background: var(--indigo-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 21px; flex-shrink: 0;
+    }
+    .topic-hero-title { font-size: 14px; font-weight: 700; color: var(--indigo-600); }
+    .topic-hero-sub   { font-size: 10px; color: var(--indigo-600); opacity: .7; margin-top: 2px; }
+
+    .q-list { display: flex; flex-direction: column; gap: 6px; }
+    .q-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-card);
+      cursor: pointer; gap: 8px;
+      transition: border-color .15s, background .15s;
+      text-align: left;
+    }
+    .q-item:hover, .q-item:active {
+      border-color: var(--indigo-600);
+      background: var(--indigo-50);
+    }
+    .q-text    { font-size: 12px; color: var(--text-700); font-weight: 500; line-height: 1.4; flex: 1; }
+    .q-chevron { color: var(--text-400); font-size: 16px; flex-shrink: 0; }
+
+    /* ── Screen 3: Answer ── */
+    .q-bubble {
+      align-self: flex-end;
+      max-width: 80%;
+      padding: 10px 14px;
+      background: var(--indigo-100);
+      border-radius: 14px 14px 4px 14px;
+      font-size: 12px; font-weight: 600; color: var(--indigo-600);
+      line-height: 1.4;
+    }
+
+    .answer-row {
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .bot-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--indigo-600); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0; margin-top: 2px;
+    }
+    .answer-bubble {
+      background: var(--blue-grey-50);
+      border: 1px solid var(--border-card);
+      border-radius: 4px 14px 14px 14px;
+      padding: 10px 14px;
+      font-size: 12px; color: var(--text-700); line-height: 1.65;
+      max-width: calc(100% - 38px);
+    }
+
+    .loading-row {
+      display: flex; gap: 8px; align-items: center;
+      font-size: 12px; color: var(--text-400);
+    }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid var(--indigo-100);
+      border-top-color: var(--indigo-600);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pill-row { display: flex; gap: 7px; flex-wrap: wrap; }
+    .pill {
+      padding: 7px 13px; border-radius: 99px;
+      font-size: 11px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--border-card);
+      transition: all .15s;
+    }
+    .pill-outline { background: var(--bg-card); color: var(--text-700); }
+    .pill-outline:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .pill-primary { background: var(--indigo-600); color: white; border-color: var(--indigo-600); }
+    .pill-primary:hover { background: var(--indigo-700); }
+
+    /* ── FAB (open button) ── */
+    .fab {
+      position: absolute;
+      bottom: 20px; right: 20px;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--indigo-600);
+      color: white; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 16px rgba(90,79,207,.4);
+      transition: background .15s, transform .15s;
+      z-index: 10;
+    }
+    .fab:hover { background: var(--indigo-700); transform: scale(1.06); }
+
+    /* outer page */
+    .page-note {
+      font-size: 11px; color: #555; text-align: center; max-width: 360px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Baby Assistent – UX Preview</h1>
+  <p class="page-note">Interactive prototype. Tap the bot button to open, tap topics and questions to navigate.</p>
+
+  <div class="phone">
+    <!-- App background -->
+    <div class="app-bg">
+      <div class="app-bg-bar"></div>
+      <div class="app-bg-bar short"></div>
+      <div class="app-bg-bar med"></div>
+      <div class="app-bg-bar short"></div>
+      <div class="app-bg-bar"></div>
+      <div class="app-bg-bar med"></div>
+    </div>
+
+    <!-- Open FAB -->
+    <button class="fab" id="fabBtn" title="Open assistant">🤖</button>
+
+    <!-- Backdrop -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- Drawer -->
+    <div class="drawer" id="drawer">
+
+      <!-- Header — content swaps per screen -->
+      <div class="drawer-header" id="drawerHeader">
+        <div class="drawer-header-left" id="headerLeft">
+          <!-- filled by JS -->
+        </div>
+        <button class="close-btn" id="closeBtn">✕</button>
+      </div>
+
+      <!-- Sliding viewport -->
+      <div class="screens-viewport">
+        <div class="screens-track" id="track">
+
+          <!-- ── SCREEN 0: HOME ── -->
+          <div class="screen" id="screenHome">
+            <div>
+              <p class="section-label">Quick Actions</p>
+              <div class="quick-actions">
+                <button class="qa-btn qa-sleep" id="btnSleep">
+                  <div class="qa-icon">🌙</div>
+                  <span class="qa-label">Sleep suggestion</span>
+                  <span class="qa-sub">Based on today's data</span>
+                </button>
+                <button class="qa-btn qa-feed" id="btnFeed">
+                  <div class="qa-icon">🍼</div>
+                  <span class="qa-label">Feeding check</span>
+                  <span class="qa-sub">Last feeding analysis</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <p class="section-label">Topics</p>
+              <div class="topic-grid">
+                <button class="topic-btn" data-topic="sleep">
+                  <span class="t-icon">😴</span>
+                  <span class="t-label">Sleep</span>
+                </button>
+                <button class="topic-btn" data-topic="feeding">
+                  <span class="t-icon">🍼</span>
+                  <span class="t-label">Feeding</span>
+                </button>
+                <button class="topic-btn" data-topic="diapers">
+                  <span class="t-icon">💧</span>
+                  <span class="t-label">Diapers</span>
+                </button>
+                <button class="topic-btn" data-topic="development">
+                  <span class="t-icon">🌱</span>
+                  <span class="t-label">Development</span>
+                </button>
+                <button class="topic-btn" data-topic="routines">
+                  <span class="t-icon">📅</span>
+                  <span class="t-label">Routines</span>
+                </button>
+                <button class="topic-btn" data-topic="health">
+                  <span class="t-icon">❤️</span>
+                  <span class="t-label">Health</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SCREEN 1: TOPIC QUESTIONS ── -->
+          <div class="screen" id="screenTopic">
+            <div class="topic-hero" id="topicHero">
+              <div class="topic-hero-icon" id="topicHeroIcon"></div>
+              <div>
+                <div class="topic-hero-title" id="topicHeroTitle"></div>
+                <div class="topic-hero-sub">Select a question or type your own</div>
+              </div>
+            </div>
+            <div class="q-list" id="questionList"></div>
+          </div>
+
+          <!-- ── SCREEN 2: ANSWER ── -->
+          <div class="screen" id="screenAnswer" style="gap:12px;">
+            <div class="q-bubble" id="answerQuestion"></div>
+            <div id="answerContent"></div>
+            <div class="pill-row" id="answerPills"></div>
+          </div>
+
+        </div><!-- /track -->
+      </div><!-- /viewport -->
+
+      <!-- Input bar -->
+      <div class="input-bar">
+        <input class="chat-input" id="chatInput" placeholder="Ask anything about your baby…" />
+        <button class="send-btn" id="sendBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+
+    </div><!-- /drawer -->
+  </div><!-- /phone -->
+
+  <p class="page-note" style="margin-top:8px">Click topics → questions → see the answer screen with follow-up actions.<br>The quick action buttons simulate a direct API call (loading state).</p>
+
+  <script>
+    // ── Data ──────────────────────────────────────────────────────────────────
+    const TOPICS = {
+      sleep: {
+        icon: '😴', label: 'Sleep',
+        questions: [
+          'Is my baby\'s sleep normal for their age?',
+          'How long should naps be?',
+          'What is a good bedtime routine?',
+          'Dream feeding – tips & tricks',
+          'Why does my baby wake up at night?',
+          'When will my baby sleep through the night?',
+        ]
+      },
+      feeding: {
+        icon: '🍼', label: 'Feeding',
+        questions: [
+          'How often should I feed my baby?',
+          'Is my baby getting enough milk?',
+          'When to introduce solid foods?',
+          'Signs of hunger vs. comfort nursing',
+          'How to handle a nursing strike?',
+        ]
+      },
+      diapers: {
+        icon: '💧', label: 'Diapers',
+        questions: [
+          'How many wet diapers per day is normal?',
+          'What does diaper color tell me?',
+          'How to prevent diaper rash?',
+          'When to call the doctor about poop?',
+        ]
+      },
+      development: {
+        icon: '🌱', label: 'Development',
+        questions: [
+          'What milestones should I expect at this age?',
+          'How to encourage tummy time?',
+          'When do babies start talking?',
+          'Is my baby\'s head shape normal?',
+          'How to support cognitive development?',
+        ]
+      },
+      routines: {
+        icon: '📅', label: 'Routines',
+        questions: [
+          'How to build a daily routine?',
+          'What is the eat-play-sleep method?',
+          'How to handle schedule disruptions?',
+          'Best wind-down activities before bed?',
+        ]
+      },
+      health: {
+        icon: '❤️', label: 'Health',
+        questions: [
+          'When should I call the pediatrician?',
+          'Normal temperature range for babies?',
+          'How to handle a fever at home?',
+          'Signs of colic and how to soothe it?',
+          'Vaccination schedule overview',
+        ]
+      },
+    };
+
+    const MOCK_ANSWERS = {
+      sleep: 'Based on your tracking data, your baby is sleeping about <strong>13.5 hours</strong> per day — within the normal range of 12–16 hours for this age group. Night wakings (2–3×) are typical for this developmental stage.<br><br>Try keeping bedtime consistently between <strong>18:30 – 19:30</strong> to support the circadian rhythm.',
+      feeding: 'Your baby\'s feeding intervals look healthy. At this age, <strong>8–12 feedings per 24 hours</strong> is typical for breastfed babies. Wet diapers and weight gain are the best indicators that intake is sufficient.',
+      default: 'Great question! Based on your baby\'s age and recent tracking data, here is some guidance to help you understand the situation and take the right next steps.',
+    };
+
+    // ── State ─────────────────────────────────────────────────────────────────
+    let currentScreen = 0; // 0=home, 1=topic, 2=answer
+    let activeTopic = null;
+    let isOpen = false;
+
+    // ── Elements ──────────────────────────────────────────────────────────────
+    const drawer     = document.getElementById('drawer');
+    const backdrop   = document.getElementById('backdrop');
+    const fabBtn     = document.getElementById('fabBtn');
+    const closeBtn   = document.getElementById('closeBtn');
+    const track      = document.getElementById('track');
+    const headerLeft = document.getElementById('headerLeft');
+    const chatInput  = document.getElementById('chatInput');
+    const sendBtn    = document.getElementById('sendBtn');
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function setScreen(n) {
+      currentScreen = n;
+      track.style.transform = `translateX(-${n * 100}%)`;
+      updateHeader();
+      updatePlaceholder();
+    }
+
+    function updateHeader() {
+      if (currentScreen === 0) {
+        headerLeft.innerHTML = `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color:var(--indigo-600)">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="drawer-title">Baby Assistent</span>`;
+      } else if (currentScreen === 1) {
+        headerLeft.innerHTML = `
+          <button class="back-btn" id="backToHome">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>`;
+        document.getElementById('backToHome').addEventListener('click', () => goHome());
+      } else {
+        const topic = TOPICS[activeTopic];
+        headerLeft.innerHTML = `
+          <button class="back-btn" id="backToTopic">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            ${topic ? topic.label : 'Back'}
+          </button>`;
+        document.getElementById('backToTopic').addEventListener('click', () => setScreen(1));
+      }
+    }
+
+    function updatePlaceholder() {
+      if (currentScreen === 0) chatInput.placeholder = 'Ask anything about your baby…';
+      else if (currentScreen === 1 && activeTopic) chatInput.placeholder = `Ask about ${TOPICS[activeTopic].label.toLowerCase()}…`;
+      else chatInput.placeholder = 'Follow up…';
+    }
+
+    // ── Open / Close ──────────────────────────────────────────────────────────
+    function openDrawer() {
+      isOpen = true;
+      drawer.classList.add('open');
+      backdrop.style.opacity = '1';
+      backdrop.style.pointerEvents = 'auto';
+      fabBtn.style.display = 'none';
+    }
+
+    function closeDrawer() {
+      isOpen = false;
+      drawer.classList.remove('open');
+      backdrop.style.opacity = '0';
+      backdrop.style.pointerEvents = 'none';
+      fabBtn.style.display = 'flex';
+      // reset after animation
+      setTimeout(() => { goHome(false); }, 340);
+    }
+
+    function goHome(animate = true) {
+      activeTopic = null;
+      if (animate) setScreen(0);
+      else {
+        currentScreen = 0;
+        track.style.transition = 'none';
+        track.style.transform = 'translateX(0)';
+        setTimeout(() => { track.style.transition = ''; }, 50);
+        updateHeader();
+        updatePlaceholder();
+      }
+    }
+
+    fabBtn.addEventListener('click', openDrawer);
+    closeBtn.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+
+    // ── Topic navigation ──────────────────────────────────────────────────────
+    document.querySelectorAll('[data-topic]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.topic;
+        activeTopic = key;
+        buildTopicScreen(key);
+        setScreen(1);
+      });
+    });
+
+    function buildTopicScreen(key) {
+      const topic = TOPICS[key];
+      document.getElementById('topicHeroIcon').textContent = topic.icon;
+      document.getElementById('topicHeroTitle').textContent = topic.label;
+
+      const list = document.getElementById('questionList');
+      list.innerHTML = '';
+      topic.questions.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-item';
+        btn.innerHTML = `<span class="q-text">${q}</span><span class="q-chevron">›</span>`;
+        btn.addEventListener('click', () => showAnswer(q));
+        list.appendChild(btn);
+      });
+    }
+
+    // ── Answer screen ─────────────────────────────────────────────────────────
+    function showAnswer(question) {
+      document.getElementById('answerQuestion').textContent = question;
+
+      // Show loading
+      const content = document.getElementById('answerContent');
+      content.innerHTML = `
+        <div class="answer-row">
+          <div class="bot-avatar">🤖</div>
+          <div class="answer-bubble">
+            <div class="loading-row">
+              <div class="spinner"></div>
+              Thinking…
+            </div>
+          </div>
+        </div>`;
+
+      const pills = document.getElementById('answerPills');
+      pills.innerHTML = '';
+
+      setScreen(2);
+
+      // Simulate API delay
+      setTimeout(() => {
+        const answerKey = activeTopic && MOCK_ANSWERS[activeTopic] ? activeTopic : 'default';
+        content.innerHTML = `
+          <div class="answer-row">
+            <div class="bot-avatar">🤖</div>
+            <div class="answer-bubble">${MOCK_ANSWERS[answerKey]}</div>
+          </div>`;
+
+        const topic = TOPICS[activeTopic];
+        pills.innerHTML = `
+          <button class="pill pill-outline" id="pillMore">More ${topic ? topic.label : ''} questions</button>
+          <button class="pill pill-primary" id="pillSleep">🌙 Sleep suggestion</button>`;
+
+        document.getElementById('pillMore').addEventListener('click', () => setScreen(1));
+        document.getElementById('pillSleep').addEventListener('click', () => showDirectAnswer('sleep'));
+      }, 1200);
+    }
+
+    // ── Quick action buttons ──────────────────────────────────────────────────
+    function showDirectAnswer(type) {
+      activeTopic = type;
+      const label = type === 'sleep' ? 'When should my baby sleep next?' : 'How is feeding going today?';
+      document.getElementById('answerQuestion').textContent = label;
+
+      const content = document.getElementById('answerContent');
+      content.innerHTML = `
+        <div class="answer-row">
+          <div class="bot-avatar">🤖</div>
+          <div class="answer-bubble">
+            <div class="loading-row">
+              <div class="spinner"></div>
+              ${type === 'sleep' ? 'Calculating sleep prediction…' : 'Analysing feeding data…'}
+            </div>
+          </div>
+        </div>`;
+      document.getElementById('answerPills').innerHTML = '';
+      setScreen(2);
+
+      setTimeout(() => {
+        const answer = type === 'sleep'
+          ? 'Your baby\'s next <strong>nap</strong> is predicted around <strong>14:30</strong>.<br><br>Age bracket: 3–6 months · Expected duration: 45–90 min. Last sleep ended 2 h ago — window is opening soon.'
+          : 'Last feeding was <strong>2 h 10 min ago</strong>. Average interval today: 2.5 h. The next feeding window starts in about <strong>20 minutes</strong>.';
+
+        content.innerHTML = `
+          <div class="answer-row">
+            <div class="bot-avatar">🤖</div>
+            <div class="answer-bubble">${answer}</div>
+          </div>`;
+
+        document.getElementById('answerPills').innerHTML = `
+          <button class="pill pill-outline" id="pillHome2">Back to topics</button>`;
+        document.getElementById('pillHome2').addEventListener('click', () => goHome());
+      }, 1400);
+    }
+
+    document.getElementById('btnSleep').addEventListener('click', () => showDirectAnswer('sleep'));
+    document.getElementById('btnFeed').addEventListener('click', () => showDirectAnswer('feeding'));
+
+    // ── Free-text send ────────────────────────────────────────────────────────
+    function sendFreeText() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      chatInput.value = '';
+      showAnswer(text);
+    }
+    sendBtn.addEventListener('click', sendFreeText);
+    chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendFreeText(); });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    updateHeader();
+  </script>
+</body>
+</html>

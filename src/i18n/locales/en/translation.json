@@ -231,16 +231,89 @@
   "aiAssistant": {
     "title": "Baby Assistent",
     "close": "Close",
-    "sleepSuggestion": "Get Sleep Suggestion",
-    "quickQuestions": "Quick Questions",
     "send": "Send",
-    "placeholder": "Ask about feeding, sleep, diapers…",
+    "back": "Back",
     "loading": "Thinking…",
-    "chips": {
-      "sleepNormal": "Is sleep normal?",
-      "dreamFeeding": "Dream feeding tips",
-      "napLength": "How long should naps be?",
-      "bedtimeRoutine": "Best bedtime routine?"
+    "placeholder": "Ask anything about your baby…",
+    "placeholderTopic": "Ask about {{topic}}…",
+    "placeholderFollowUp": "Follow up…",
+    "quickActionsLabel": "Quick Actions",
+    "topicsLabel": "Topics",
+    "topicSubtitle": "Select a question or type your own",
+    "moreQuestions": "More {{topic}} questions",
+    "allTopics": "All topics",
+    "quickActions": {
+      "sleep": {
+        "label": "Sleep suggestion",
+        "sub": "Based on today's data",
+        "question": "When should my baby sleep next?",
+        "prompt": "Based on my baby's recent sleep tracking data, when should they sleep next and for how long?"
+      },
+      "feeding": {
+        "label": "Feeding check",
+        "sub": "Last feeding analysis",
+        "question": "How is feeding going today?",
+        "prompt": "Based on my baby's recent feeding data, how is feeding going and when should the next feeding be?"
+      }
+    },
+    "topics": {
+      "sleep": {
+        "label": "Sleep",
+        "questions": [
+          "Is my baby's sleep normal for their age?",
+          "How long should naps be?",
+          "What is a good bedtime routine?",
+          "Dream feeding – tips & tricks",
+          "Why does my baby wake up at night?",
+          "When will my baby sleep through the night?"
+        ]
+      },
+      "feeding": {
+        "label": "Feeding",
+        "questions": [
+          "How often should I feed my baby?",
+          "Is my baby getting enough milk?",
+          "When to introduce solid foods?",
+          "Signs of hunger vs. comfort nursing",
+          "How to handle a nursing strike?"
+        ]
+      },
+      "diapers": {
+        "label": "Diapers",
+        "questions": [
+          "How many wet diapers per day is normal?",
+          "What does diaper color tell me?",
+          "How to prevent diaper rash?",
+          "When to call the doctor about poop?"
+        ]
+      },
+      "development": {
+        "label": "Development",
+        "questions": [
+          "What milestones should I expect at this age?",
+          "How to encourage tummy time?",
+          "When do babies start talking?",
+          "How to support cognitive development?"
+        ]
+      },
+      "routines": {
+        "label": "Routines",
+        "questions": [
+          "How to build a daily routine?",
+          "What is the eat-play-sleep method?",
+          "How to handle schedule disruptions?",
+          "Best wind-down activities before bed?"
+        ]
+      },
+      "health": {
+        "label": "Health",
+        "questions": [
+          "When should I call the pediatrician?",
+          "Normal temperature range for babies?",
+          "How to handle a fever at home?",
+          "Signs of colic and how to soothe it?"
+        ]
+      }
     }
   },
   "sleepAssistant": {
@@ -259,6 +332,14 @@
       "invalidDuration": "The last sleep event looks too long. Did you forget to stop the timer?",
       "noEvents": "No sleep events logged yet.",
       "generic": "Could not get a prediction. Please try again."
+    },
+    "reasons": {
+      "REASON_AGE": "Age bracket: {{normLabel}} ({{ageInDays}} days old).",
+      "REASON_WAKE_WINDOW": "Wake window: {{used}} min (norm {{min}}–{{max}} min).",
+      "REASON_SHORT_NAP": "Short nap ({{actual}} min, threshold {{threshold}} min) — window reduced by {{penalty}} min.",
+      "REASON_EARLY_WAKE_ANCHORED": "Early wake time adjusted to avoid anchoring the day.",
+      "REASON_USER_OFFSET": "Personal offset applied: {{offsetMins}} min.",
+      "REASON_PREDICTION": "Predicted {{type}} based on your baby's recent sleep pattern."
     }
   },
   "admin": {

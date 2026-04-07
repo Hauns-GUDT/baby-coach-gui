@@ -273,6 +273,7 @@ export default function EventWidget({
             icon: Icon,
             periods: todayPeriods,
           }]}
+          isToday
         />
         <div className="flex items-center justify-between">
           <div>

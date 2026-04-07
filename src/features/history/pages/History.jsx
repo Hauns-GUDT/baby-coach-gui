@@ -37,7 +37,7 @@ export default function History() {
           {dateLabel && <p className="text-xs text-blue-grey-400">{dateLabel}</p>}
           {isLoading && <p className="text-sm text-blue-grey-400">{t('history.loadingDay')}</p>}
           {error && <p className="text-sm text-rose-500">{t('history.loadDayFailed')}</p>}
-          {!isLoading && !error && <DayTimeline rows={timelineRows} />}
+          {!isLoading && !error && <DayTimeline rows={timelineRows} isToday={selectedDate?.toDateString() === new Date().toDateString()} />}
         </div>
       )}
 

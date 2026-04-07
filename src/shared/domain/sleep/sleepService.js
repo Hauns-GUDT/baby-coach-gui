@@ -8,6 +8,8 @@ export async function getSleepData() {
 }
 
 export async function getPrediction(babyId) {
-  const { data } = await axiosClient.get(`/babies/${babyId}/prediction`);
+  // Send client's UTC offset so the backend can correctly classify NAP vs BEDTIME in local time
+  const utcOffset = -new Date().getTimezoneOffset();
+  const { data } = await axiosClient.get(`/babies/${babyId}/prediction`, { params: { utcOffset } });
   return data;
 }

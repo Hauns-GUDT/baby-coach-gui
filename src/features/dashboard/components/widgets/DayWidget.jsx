@@ -113,7 +113,7 @@ export default function DayWidget() {
       )}
 
       {/* Timeline */}
-      <DayTimeline rows={timelineRows} />
+      <DayTimeline rows={timelineRows} isToday />
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, CirclePlay } from 'lucide-react';
+import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -11,7 +11,7 @@ import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/compon
 export const TYPE_META = {
   sleep:   { icon: Moon,  color: '#425bbd', i18nPrefix: 'history.sleep' },   // twilight-indigo-500
   feeding: { icon: Milk,  color: '#f5b20a', i18nPrefix: 'history.feeding' }, // light-apricot-500
-  diaper:  { icon: Baby,  color: '#34d399', i18nPrefix: 'history.diaper' },
+  diaper:  { icon: Droplets, color: '#8f5535', i18nPrefix: 'history.diaper' }, // warm-brown-500
 };
 
 const ALL_TYPES = Object.keys(TYPE_META);
