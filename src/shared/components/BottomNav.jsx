@@ -17,10 +17,10 @@ export default function BottomNav({ onOpenAi }) {
   if (hasFetched && babies.length === 0) return null;
 
   const linkClass = ({ isActive }) =>
-    `flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[56px] py-1 ${isActive ? 'text-indigo-600' : 'text-zinc-400'}`;
+    `flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-[56px] py-1 ${isActive ? 'text-twilight-indigo-600' : 'text-blue-grey-400'}`;
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-30 bg-white border-t border-zinc-200">
+    <nav className="fixed bottom-0 inset-x-0 z-30 bg-white border-t border-blue-grey-100">
       <div className="flex items-end justify-around px-4 pt-2 pb-3 max-w-md mx-auto">
         <NavLink to="/app" end className={linkClass}>
           <Home size={22} />
@@ -36,9 +36,9 @@ export default function BottomNav({ onOpenAi }) {
         <button
           onClick={onOpenAi}
           aria-label={t('aiAssistant.title')}
-          className="flex flex-col items-center gap-1 text-xs font-medium text-indigo-600 -translate-y-3"
+          className="flex flex-col items-center gap-1 text-xs font-medium text-twilight-indigo-600 -translate-y-3"
         >
-          <div className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+          <div className="w-14 h-14 rounded-full bg-twilight-indigo-600 text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform">
             <Moon size={24} />
           </div>
           <span>{t('aiAssistant.title')}</span>

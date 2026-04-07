@@ -7,8 +7,8 @@ import DayEventSummary from '../components/DayEventSummary';
 import { useHistoryDayEvents } from '../hooks/useHistoryDayEvents';
 
 const EVENT_SETS = [
-  { key: 'sleep',   color: '#818cf8', icon: Moon,  i18nKey: 'history.sleep.title' },
-  { key: 'feeding', color: '#f97316', icon: Milk,  i18nKey: 'history.feeding.title' },
+  { key: 'sleep',   color: '#425bbd', icon: Moon,  i18nKey: 'history.sleep.title' },   // twilight-indigo-500
+  { key: 'feeding', color: '#f5b20a', icon: Milk,  i18nKey: 'history.feeding.title' }, // light-apricot-500
 ];
 
 export default function History() {
@@ -33,9 +33,9 @@ export default function History() {
       <EventCalendar onDaySelect={setSelectedDate} />
 
       {selectedDate && (
-        <div className="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3">
-          {dateLabel && <p className="text-xs text-zinc-400">{dateLabel}</p>}
-          {isLoading && <p className="text-sm text-zinc-400">{t('history.loadingDay')}</p>}
+        <div className="bg-white rounded-2xl border border-blue-grey-100 p-4 flex flex-col gap-3">
+          {dateLabel && <p className="text-xs text-blue-grey-400">{dateLabel}</p>}
+          {isLoading && <p className="text-sm text-blue-grey-400">{t('history.loadingDay')}</p>}
           {error && <p className="text-sm text-rose-500">{t('history.loadDayFailed')}</p>}
           {!isLoading && !error && <DayTimeline rows={timelineRows} />}
         </div>

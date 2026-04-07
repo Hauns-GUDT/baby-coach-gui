@@ -113,7 +113,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-100 shrink-0">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-blue-grey-100 shrink-0">
           <div className="flex items-center gap-2">
             <BotMessageSquare size={15} className="text-twilight-indigo-500" />
             <span className="text-sm font-semibold text-blue-grey-700">{t('aiAssistant.title')}</span>
@@ -178,7 +178,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
         </div>
 
         {/* Text input */}
-        <div className="flex items-center gap-2 px-4 py-3 border-t border-zinc-100 shrink-0">
+        <div className="flex items-center gap-2 px-4 py-3 border-t border-blue-grey-100 shrink-0">
           <input
             type="text"
             value={inputValue}

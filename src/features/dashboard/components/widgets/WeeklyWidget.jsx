@@ -22,7 +22,7 @@ const hoursAboveBarsPlugin = {
         if (!value) return;
         ctx.save();
         ctx.font = '600 9px system-ui, sans-serif';
-        ctx.fillStyle = '#a1a1aa';
+        ctx.fillStyle = '#6e9dc4'; // blue-grey-400
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
         ctx.fillText(formatHours(value), bar.x, bar.y - 2);
@@ -33,8 +33,8 @@ const hoursAboveBarsPlugin = {
 };
 
 const EVENT_SETS = [
-  { key: 'sleep',   color: '#818cf8', icon: Moon,  i18nKey: 'history.sleep.title' },
-  { key: 'feeding', color: '#f97316', icon: Milk,  i18nKey: 'history.feeding.title' },
+  { key: 'sleep',   color: '#425bbd', icon: Moon,  i18nKey: 'history.sleep.title' },   // twilight-indigo-500
+  { key: 'feeding', color: '#f5b20a', icon: Milk,  i18nKey: 'history.feeding.title' }, // light-apricot-500
 ];
 
 const RANGES = [
@@ -73,7 +73,6 @@ export default function WeeklyWidget() {
   const sleepHistory = computeWeeklyHistory(sleepEvents, range);
   const maxVal = Math.max(...sleepHistory, 1);
 
-  // Use date number as chart label (ticks hidden; only used in tooltips)
   const chartLabels = days.map((d) =>
     new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(d)
   );
@@ -84,7 +83,7 @@ export default function WeeklyWidget() {
       {
         label: t('history.sleep.title'),
         data: sleepHistory,
-        backgroundColor: '#818cf8cc',
+        backgroundColor: '#425bbdcc', // twilight-indigo-500
         borderRadius: 4,
         borderWidth: 0,
       },
@@ -113,7 +112,6 @@ export default function WeeklyWidget() {
     },
   };
 
-  // Derived periods for selected day
   const sleepPeriods   = selectedDate ? computePeriodsForDate(sleepEvents, selectedDate) : [];
   const feedingPeriods = selectedDate ? computePeriodsForDate(feedingEvents, selectedDate) : [];
 
@@ -130,11 +128,11 @@ export default function WeeklyWidget() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
+      <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-3">
 
         {/* Header row: title + range buttons */}
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-zinc-900 text-lg">{t('tracking.thisWeek')}</h2>
+          <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.thisWeek')}</h2>
           <div className="flex gap-1">
             {RANGES.map(({ days: d, labelKey }) => (
               <button
@@ -142,8 +140,8 @@ export default function WeeklyWidget() {
                 onClick={() => setRange(d)}
                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer active:scale-95
                   ${range === d
-                    ? 'bg-indigo-500 text-white shadow-sm'
-                    : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}
+                    ? 'bg-twilight-indigo-500 text-white shadow-sm'
+                    : 'bg-blue-grey-100 text-blue-grey-500 hover:bg-blue-grey-200'}`}
               >
                 {t(labelKey)}
               </button>
@@ -166,15 +164,15 @@ export default function WeeklyWidget() {
                 onClick={() => setSelectedDate(isSelected ? null : day)}
                 className={`flex flex-col items-center gap-0.5 rounded-lg py-1.5 transition-all cursor-pointer active:scale-95
                   ${isSelected
-                    ? 'bg-indigo-500 shadow-sm'
-                    : 'bg-zinc-100 hover:bg-zinc-200'}`}
+                    ? 'bg-twilight-indigo-500 shadow-sm'
+                    : 'bg-blue-grey-100 hover:bg-blue-grey-200'}`}
               >
                 <span className={`${range === 14 ? 'text-[9px]' : 'text-[10px]'} font-medium uppercase leading-none
-                  ${isSelected ? 'text-indigo-100' : 'text-zinc-400'}`}>
+                  ${isSelected ? 'text-twilight-indigo-100' : 'text-blue-grey-400'}`}>
                   {dayLabel}
                 </span>
                 <span className={`${range === 7 ? 'text-sm' : 'text-xs'} font-medium leading-none
-                  ${isSelected ? 'text-white' : 'text-zinc-600'}`}>
+                  ${isSelected ? 'text-white' : 'text-blue-grey-600'}`}>
                   {day.getDate()}
                 </span>
               </button>
@@ -187,9 +185,9 @@ export default function WeeklyWidget() {
       {selectedDate && (
         <>
           {dateLabel && (
-            <p className="text-sm font-medium text-zinc-500 px-1 capitalize">{dateLabel}</p>
+            <p className="text-sm font-medium text-blue-grey-500 px-1 capitalize">{dateLabel}</p>
           )}
-          <div className="bg-white rounded-2xl shadow-md p-4">
+          <div className="bg-white rounded-2xl border border-blue-grey-100 p-4">
             <DayTimeline rows={timelineRows} />
           </div>
         </>

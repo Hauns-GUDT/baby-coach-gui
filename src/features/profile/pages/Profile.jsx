@@ -13,18 +13,18 @@ export default function Profile() {
 
   return (
     <main className="p-4 flex flex-col gap-3 max-w-2xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-md divide-y divide-zinc-100">
+      <div className="bg-white rounded-2xl border border-blue-grey-100 divide-y divide-blue-grey-100">
 
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-sm text-zinc-400">{t('profile.loggedInAs')}</span>
-          <span className="text-sm font-semibold text-zinc-800">{username}</span>
+          <span className="text-sm text-blue-grey-400">{t('profile.loggedInAs')}</span>
+          <span className="text-sm font-semibold text-blue-grey-800">{username}</span>
         </div>
 
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-sm text-zinc-700">{t('profile.language')}</span>
+          <span className="text-sm text-blue-grey-700">{t('profile.language')}</span>
           <button
             onClick={toggleLanguage}
-            className="text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
+            className="text-xs font-semibold bg-blue-grey-100 hover:bg-blue-grey-200 px-3 py-1 rounded-full cursor-pointer transition-colors"
           >
             {i18n.language.startsWith('de') ? 'EN' : 'DE'}
           </button>

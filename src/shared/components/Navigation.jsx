@@ -84,23 +84,42 @@ export default function Navigation({ onOpenAi }) {
     ...(isAdmin ? [{ to: '/app/admin', label: t('nav.admin') }] : []),
   ];
 
+  const navLinkClass = ({ isActive }) =>
+    `px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+      isActive
+        ? 'bg-twilight-indigo-800 text-white'
+        : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white'
+    }`;
+
   return (
     <nav className="bg-linear-to-b from-twilight-indigo-700 to-twilight-indigo-600 border-b border-white/10 relative z-40">
-      {/* Click-outside overlay */}
+      {/* Click-outside overlay for mobile dropdown */}
       {isOpen && (
-        <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
+        <div className="fixed inset-0 z-30 sm:hidden" onClick={() => setIsOpen(false)} />
       )}
 
       <div className="relative z-40 max-w-5xl mx-auto px-6">
-        {/* Top bar */}
         <div className="h-16 flex items-center justify-between">
+
+          {/* Left: logo + mobile title/burger OR desktop links */}
           <div className="flex items-center gap-3">
             <NavLink to="/app" onClick={() => setIsOpen(false)}>
-              <img src="/logo.png" alt="Baby Coach" className="h-10 w-10 rounded-full ring-1 ring-light-apricot-400" />
+              <img src="/logo.png" alt="Baby Coach" className="h-10 w-10 rounded-xl ring-1 ring-light-apricot-400" />
             </NavLink>
+
+            {/* Desktop nav links */}
+            <div className="hidden sm:flex items-center gap-1">
+              {links.map(({ to, label, end }) => (
+                <NavLink key={to} to={to} end={end} className={navLinkClass}>
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* Mobile: page title + burger */}
             <button
               onClick={() => setIsOpen((o) => !o)}
-              className="flex items-center gap-1 text-lg font-bold text-white cursor-pointer select-none"
+              className="flex sm:hidden items-center gap-1 text-lg font-bold text-white cursor-pointer select-none"
             >
               {getPageTitle()}
               {isOpen
@@ -109,6 +128,7 @@ export default function Navigation({ onOpenAi }) {
             </button>
           </div>
 
+          {/* Right: baby selector + AI button */}
           <div className="flex items-center gap-3">
             {babySelector}
             {onOpenAi && (
@@ -123,9 +143,9 @@ export default function Navigation({ onOpenAi }) {
           </div>
         </div>
 
-        {/* Dropdown nav links */}
+        {/* Mobile dropdown */}
         {isOpen && (
-          <div className="border-t border-twilight-indigo-800 py-3 flex flex-col gap-1">
+          <div className="sm:hidden border-t border-twilight-indigo-800 py-3 flex flex-col gap-1">
             {links.map(({ to, label, end }) => (
               <NavLink
                 key={to}

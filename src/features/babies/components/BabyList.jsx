@@ -13,7 +13,7 @@ export default function BabyList({ babies, onDelete }) {
   const pendingBaby = babies.find((b) => b.id === pendingDeleteId);
 
   if (babies.length === 0) {
-    return <p className="text-zinc-400 text-sm">{t('babies.empty')}</p>;
+    return <p className="text-blue-grey-400 text-sm">{t('babies.empty')}</p>;
   }
 
   return (
@@ -22,11 +22,11 @@ export default function BabyList({ babies, onDelete }) {
         {babies.map((baby) => (
           <li
             key={baby.id}
-            className="flex items-center justify-between bg-zinc-50 rounded-xl px-4 py-3"
+            className="flex items-center justify-between bg-blue-grey-50 rounded-xl px-4 py-3"
           >
             <div>
-              <p className="font-semibold text-zinc-900">{baby.name}</p>
-              <p className="text-sm text-zinc-500">
+              <p className="font-semibold text-blue-grey-900">{baby.name}</p>
+              <p className="text-sm text-blue-grey-500">
                 {new Date(baby.birthday).toLocaleDateString()} · {t(`babies.${baby.gender}`)}
               </p>
             </div>

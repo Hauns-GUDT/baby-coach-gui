@@ -15,13 +15,13 @@ export default function BabiesPage() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate('/app/profile/babies/new')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-4 py-2 transition-colors cursor-pointer"
+            className="bg-twilight-indigo-600 hover:bg-twilight-indigo-700 text-white text-sm font-semibold rounded-xl px-4 py-2 transition-colors cursor-pointer"
           >
             + {t('babies.addBaby')}
           </button>
         </div>
 
-        {isLoading && <p className="text-sm text-zinc-400">{t('babies.loading')}</p>}
+        {isLoading && <p className="text-sm text-blue-grey-400">{t('babies.loading')}</p>}
         {error && <p className="text-sm text-rose-500">{error}</p>}
 
         {!isLoading && <BabyList babies={babies} onDelete={deleteBaby} />}

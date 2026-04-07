@@ -6,7 +6,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label className="font-semibold text-zinc-700 text-sm" htmlFor="name">
+        <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="name">
           {t('babies.name')}
         </label>
         <input
@@ -15,7 +15,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
         />
         {fieldErrors.name && (
           <p role="alert" className="text-sm text-rose-600">{fieldErrors.name}</p>
@@ -23,7 +23,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="font-semibold text-zinc-700 text-sm" htmlFor="birthday">
+        <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="birthday">
           {t('babies.birthday')}
         </label>
         <input
@@ -32,7 +32,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           required
           value={birthday}
           onChange={(e) => setBirthday(e.target.value)}
-          className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
         />
         {fieldErrors.birthday && (
           <p role="alert" className="text-sm text-rose-600">{fieldErrors.birthday}</p>
@@ -40,7 +40,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="font-semibold text-zinc-700 text-sm" htmlFor="gender">
+        <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="gender">
           {t('babies.gender')}
         </label>
         <select
@@ -48,7 +48,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           required
           value={gender}
           onChange={(e) => setGender(e.target.value)}
-          className="border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
         >
           <option value="" disabled>{t('babies.selectGender')}</option>
           <option value="male">{t('babies.male')}</option>
@@ -67,14 +67,14 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors cursor-pointer"
+          className="bg-twilight-indigo-600 hover:bg-twilight-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors cursor-pointer"
         >
           {isSubmitting ? t('babies.saving') : t('babies.save')}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-zinc-600 hover:text-zinc-900 font-medium px-4 py-2 cursor-pointer"
+          className="text-blue-grey-600 hover:text-blue-grey-900 font-medium px-4 py-2 cursor-pointer"
         >
           {t('babies.cancel')}
         </button>

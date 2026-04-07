@@ -16,6 +16,17 @@
 - Ensure touch-friendly UI (min ~44px targets)
 - Prefer simple, clean layouts
 
+## Theme & Colors
+- Always use the custom color palette — never default Tailwind colors (no `zinc`, `gray`, `slate`, `indigo`, `orange`, `amber`)
+- Neutrals: `blue-grey-*` (replaces zinc/gray/slate)
+- Primary: `twilight-indigo-*` (replaces indigo)
+- Accent/warm: `light-apricot-*` (replaces orange/amber)
+- Errors/danger: `rose-*` (keep as-is)
+- Success: `emerald-*` (keep as-is, no custom equivalent)
+- Cards: `bg-white rounded-2xl border border-blue-grey-100` (no shadows on cards)
+- Page backgrounds: `bg-blue-grey-50`
+- Form inputs: `border border-blue-grey-200 rounded-xl focus:ring-2 focus:ring-twilight-indigo-300`
+
 ## State
 - Use Zustand via existing hooks
 - Avoid prop drilling

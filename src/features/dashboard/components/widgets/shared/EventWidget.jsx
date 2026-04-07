@@ -36,7 +36,7 @@ const valueLabelsPlugin = {
       const value = data.datasets[0].data[i];
       if (value > 0) {
         ctx.save();
-        ctx.fillStyle = '#a1a1aa';
+        ctx.fillStyle = '#6e9dc4'; // blue-grey-400
         ctx.font = '10px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
@@ -77,7 +77,7 @@ function WeeklyBars({ history, primaryColor }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 10 }, color: '#a1a1aa' },
+        ticks: { font: { size: 10 }, color: '#6e9dc4' }, // blue-grey-400
         border: { display: false },
       },
       y: { display: false, beginAtZero: true, max: maxVal * 1.5 },
@@ -93,7 +93,7 @@ function WeeklyBars({ history, primaryColor }) {
 
 // ─── Edit dialog ──────────────────────────────────────────────────────────────
 
-function EditEventDialog({ event, onSave, onCancel, i18nPrefix, inputRingClass }) {
+function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
   const { t } = useTranslation();
   const [startedAt, setStartedAt] = useState(toDatetimeLocal(event.startedAt));
   const [endedAt, setEndedAt] = useState(event.endedAt ? toDatetimeLocal(event.endedAt) : '');
@@ -129,16 +129,16 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix, inputRingClass }
     }
   };
 
-  const inputClass = `border border-zinc-300 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 ${inputRingClass}`;
+  const inputClass = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-zinc-900">{t(`${i18nPrefix}.editSession`)}</h2>
+      <div className="relative bg-white rounded-2xl border border-blue-grey-100 shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
+        <h2 className="text-lg font-bold text-blue-grey-900">{t(`${i18nPrefix}.editSession`)}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-zinc-700">Start</label>
+            <label className="text-sm font-semibold text-blue-grey-700">Start</label>
             <input
               type="datetime-local"
               required
@@ -151,7 +151,7 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix, inputRingClass }
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-zinc-700">{t(`${i18nPrefix}.end`)}</label>
+            <label className="text-sm font-semibold text-blue-grey-700">{t(`${i18nPrefix}.end`)}</label>
             <input
               type="datetime-local"
               value={endedAt}
@@ -200,7 +200,6 @@ export default function EventWidget({
     accentText,
     accentSubText,
     totalText,
-    inputRingClass,
   } = config;
 
   const { t } = useTranslation();
@@ -230,8 +229,8 @@ export default function EventWidget({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-5">
-      <h2 className="font-semibold text-zinc-900 text-lg flex items-center gap-2">
+    <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-5">
+      <h2 className="font-semibold text-blue-grey-900 text-lg flex items-center gap-2">
         {Icon && <Icon size={20} className={totalText} strokeWidth={2} />}
         {t(`${i18nPrefix}.title`)}
       </h2>
@@ -255,11 +254,11 @@ export default function EventWidget({
       )}
 
       {/* Loading / error */}
-      {isLoading && <p className="text-sm text-zinc-400">{t(`${i18nPrefix}.loading`)}</p>}
+      {isLoading && <p className="text-sm text-blue-grey-400">{t(`${i18nPrefix}.loading`)}</p>}
       {error && !isLoading && (
         <div className="flex items-center gap-3">
-          <p className="text-sm text-red-500">{error}</p>
-          <button onClick={onRefetch} className="text-xs text-indigo-600 hover:underline cursor-pointer">
+          <p className="text-sm text-rose-500">{error}</p>
+          <button onClick={onRefetch} className="text-xs text-twilight-indigo-600 hover:underline cursor-pointer">
             {t(`${i18nPrefix}.retry`)}
           </button>
         </div>
@@ -277,7 +276,7 @@ export default function EventWidget({
         />
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-zinc-400 uppercase tracking-wide mb-1">
+            <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-1">
               {t(`${i18nPrefix}.todayTotal`)}
             </p>
             <p className={`text-3xl font-bold ${totalText} leading-none`}>
@@ -295,7 +294,7 @@ export default function EventWidget({
       {/* Weekly bar chart */}
       {weeklyHistory.some((h) => h > 0) && (
         <div>
-          <p className="text-xs text-zinc-400 uppercase tracking-wide mb-3 border-t-2 border-dashed border-gray-100 pt-4">
+          <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-3 border-t-2 border-dashed border-blue-grey-100 pt-4">
             {t(`${i18nPrefix}.thisWeek`)}
           </p>
           <WeeklyBars history={weeklyHistory} primaryColor={svgPrimaryColor} />
@@ -305,19 +304,19 @@ export default function EventWidget({
       {/* Recent sessions */}
       {recentSessions.length > 0 && (
         <div>
-          <p className="text-xs text-zinc-400 uppercase tracking-wide mb-2">{t(`${i18nPrefix}.recentSessions`)}</p>
+          <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-2">{t(`${i18nPrefix}.recentSessions`)}</p>
           <div className="flex flex-col gap-1">
             {recentSessions.map((e) => {
               const duration = (new Date(e.endedAt) - new Date(e.startedAt)) / 3_600_000;
               return (
-                <div key={e.id} className="flex items-center justify-between py-2 border-b border-zinc-50 last:border-0">
+                <div key={e.id} className="flex items-center justify-between py-2 border-b border-blue-grey-50 last:border-0">
                   <div className="flex items-center gap-2">
                     {Icon && <Icon size={14} style={{ color: svgPrimaryColor }} strokeWidth={2} />}
                     <div>
-                      <p className="text-sm text-zinc-700">
+                      <p className="text-sm text-blue-grey-700">
                         {formatSessionLabel(e.startedAt, t, i18nPrefix)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
                       </p>
-                      <p className="text-xs text-zinc-400">{formatHours(duration)}</p>
+                      <p className="text-xs text-blue-grey-400">{formatHours(duration)}</p>
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -325,7 +324,7 @@ export default function EventWidget({
                     <IconButton
                       icon={Trash2}
                       label={t(`${i18nPrefix}.delete`)}
-                      className="hover:text-red-500"
+                      className="hover:text-rose-500"
                       onClick={() => setPendingDeleteId(e.id)}
                     />
                   </div>
@@ -343,7 +342,6 @@ export default function EventWidget({
           onSave={handleEdit}
           onCancel={() => setEditingEvent(null)}
           i18nPrefix={i18nPrefix}
-          inputRingClass={inputRingClass}
         />
       )}
 

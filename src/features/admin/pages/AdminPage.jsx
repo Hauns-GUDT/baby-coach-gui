@@ -46,33 +46,33 @@ function UserFormModal({ user, onClose, onSaved, t }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-md flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-zinc-900">
+      <div className="relative bg-white rounded-2xl border border-blue-grey-100 shadow-xl p-6 w-full max-w-md flex flex-col gap-4">
+        <h2 className="text-lg font-bold text-blue-grey-900">
           {isEdit ? t('admin.editUser') : t('admin.createUser')}
         </h2>
         <form onSubmit={submit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">{t('admin.email')}</label>
+            <label className="text-sm font-medium text-blue-grey-700">{t('admin.email')}</label>
             <input
               type="email"
               required
               value={form.email}
               onChange={set('email')}
-              className="border border-zinc-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">{t('admin.username')}</label>
+            <label className="text-sm font-medium text-blue-grey-700">{t('admin.username')}</label>
             <input
               type="text"
               required
               value={form.username}
               onChange={set('username')}
-              className="border border-zinc-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">
+            <label className="text-sm font-medium text-blue-grey-700">
               {isEdit ? t('admin.passwordOptional') : t('admin.password')}
             </label>
             <input
@@ -82,17 +82,17 @@ function UserFormModal({ user, onClose, onSaved, t }) {
               value={form.password}
               onChange={set('password')}
               placeholder={isEdit ? t('admin.passwordPlaceholder') : ''}
-              className="border border-zinc-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
             />
           </div>
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 cursor-pointer">
-              <input type="checkbox" checked={form.isAdmin} onChange={set('isAdmin')} className="w-4 h-4 accent-indigo-600" />
+            <label className="flex items-center gap-2 text-sm font-medium text-blue-grey-700 cursor-pointer">
+              <input type="checkbox" checked={form.isAdmin} onChange={set('isAdmin')} className="w-4 h-4 accent-twilight-indigo-600" />
               {t('admin.isAdmin')}
             </label>
             {isEdit && (
-              <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 cursor-pointer">
-                <input type="checkbox" checked={form.isActive} onChange={set('isActive')} className="w-4 h-4 accent-indigo-600" />
+              <label className="flex items-center gap-2 text-sm font-medium text-blue-grey-700 cursor-pointer">
+                <input type="checkbox" checked={form.isActive} onChange={set('isActive')} className="w-4 h-4 accent-twilight-indigo-600" />
                 {t('admin.isActive')}
               </label>
             )}
@@ -159,7 +159,7 @@ export default function AdminPage() {
     <main className="min-h-[calc(100vh-65px)] p-6">
       <div className="max-w-5xl mx-auto flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h1 className="text-xl font-bold text-zinc-900">{t('admin.title')}</h1>
+          <h1 className="text-xl font-bold text-blue-grey-900">{t('admin.title')}</h1>
           <Button className="py-2 text-sm self-start sm:self-auto" onClick={() => setShowCreate(true)}>
             + {t('admin.createUser')}
           </Button>
@@ -172,50 +172,50 @@ export default function AdminPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={t('admin.searchPlaceholder')}
-            className="flex-1 border border-zinc-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
           />
           <Button type="submit" variant="secondary" className="py-2 text-sm">
             {t('admin.search')}
           </Button>
         </form>
 
-        {isLoading && <p className="text-sm text-zinc-400">{t('admin.loading')}</p>}
+        {isLoading && <p className="text-sm text-blue-grey-400">{t('admin.loading')}</p>}
         {error && <p className="text-sm text-rose-500">{error}</p>}
 
         {!isLoading && (
-          <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-blue-grey-200 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-zinc-100 text-left">
-                  <th className="px-4 py-3 font-semibold text-zinc-500">{t('admin.username')}</th>
-                  <th className="px-4 py-3 font-semibold text-zinc-500 hidden sm:table-cell">{t('admin.email')}</th>
-                  <th className="px-4 py-3 font-semibold text-zinc-500">{t('admin.status')}</th>
-                  <th className="px-4 py-3 font-semibold text-zinc-500">{t('admin.role')}</th>
+                <tr className="border-b border-blue-grey-100 text-left">
+                  <th className="px-4 py-3 font-semibold text-blue-grey-500">{t('admin.username')}</th>
+                  <th className="px-4 py-3 font-semibold text-blue-grey-500 hidden sm:table-cell">{t('admin.email')}</th>
+                  <th className="px-4 py-3 font-semibold text-blue-grey-500">{t('admin.status')}</th>
+                  <th className="px-4 py-3 font-semibold text-blue-grey-500">{t('admin.role')}</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-zinc-400">
+                    <td colSpan={5} className="px-4 py-8 text-center text-blue-grey-400">
                       {t('admin.noUsers')}
                     </td>
                   </tr>
                 )}
                 {users.map((u) => (
-                  <tr key={u.id} className="border-t border-zinc-50 hover:bg-zinc-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-zinc-900">{u.username}</td>
-                    <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">{u.email}</td>
+                  <tr key={u.id} className="border-t border-blue-grey-50 hover:bg-blue-grey-50 transition-colors">
+                    <td className="px-4 py-3 font-medium text-blue-grey-900">{u.username}</td>
+                    <td className="px-4 py-3 text-blue-grey-600 hidden sm:table-cell">{u.email}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                        u.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-100 text-zinc-500'
+                        u.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-grey-100 text-blue-grey-500'
                       }`}>
                         {u.isActive ? t('admin.active') : t('admin.inactive')}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       {u.isAdmin && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-twilight-indigo-50 text-twilight-indigo-700">
                           {t('admin.adminBadge')}
                         </span>
                       )}
@@ -223,7 +223,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => setEditUser(u)}
-                        className="text-sm text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer transition-colors"
+                        className="text-sm text-twilight-indigo-600 hover:text-twilight-indigo-800 font-medium cursor-pointer transition-colors"
                       >
                         {t('admin.edit')}
                       </button>
@@ -235,10 +235,9 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between">
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-blue-grey-500">
               {t('admin.pagination', { page, total: totalPages })}
             </p>
             <div className="flex gap-2">

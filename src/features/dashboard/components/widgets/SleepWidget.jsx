@@ -6,14 +6,13 @@ const SLEEP_CONFIG = {
   i18nPrefix: 'history.sleep',
   showGapPeriods: true,
   icon: Moon,
-  svgPrimaryColor: '#818cf8',
-  svgSecondaryColor: '#38bdf8',
-  accentBg: 'bg-indigo-50',
-  accentDot: 'bg-indigo-500',
-  accentText: 'text-indigo-700',
-  accentSubText: 'text-indigo-500',
-  totalText: 'text-indigo-600',
-  inputRingClass: 'focus:ring-indigo-400',
+  svgPrimaryColor: '#425bbd', // twilight-indigo-500
+  svgSecondaryColor: '#8e9cd7', // twilight-indigo-300
+  accentBg: 'bg-twilight-indigo-50',
+  accentDot: 'bg-twilight-indigo-500',
+  accentText: 'text-twilight-indigo-700',
+  accentSubText: 'text-twilight-indigo-500',
+  totalText: 'text-twilight-indigo-600',
 };
 
 export default function SleepWidget() {
