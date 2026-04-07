@@ -71,7 +71,7 @@ export default function Navigation({ onOpenAi }) {
   const babySelector = currentBaby && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
-      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-700 hover:bg-twilight-indigo-600 px-3 py-1 rounded-full cursor-pointer transition-colors"
+      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-800 hover:bg-twilight-indigo-700 px-3 py-1 rounded-full cursor-pointer transition-colors"
     >
       {currentBaby.name}
     </button>
@@ -85,7 +85,7 @@ export default function Navigation({ onOpenAi }) {
   ];
 
   return (
-    <nav className="bg-twilight-indigo-800 border-b border-twilight-indigo-700 relative z-40">
+    <nav className="bg-linear-to-b from-twilight-indigo-700 to-twilight-indigo-600 border-b border-white/10 relative z-40">
       {/* Click-outside overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-30" onClick={() => setIsOpen(false)} />
@@ -96,7 +96,7 @@ export default function Navigation({ onOpenAi }) {
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <NavLink to="/app" onClick={() => setIsOpen(false)}>
-              <img src="/logo.png" alt="Baby Coach" className="h-10 w-10" />
+              <img src="/logo.png" alt="Baby Coach" className="h-10 w-10 rounded-full ring-1 ring-light-apricot-400" />
             </NavLink>
             <button
               onClick={() => setIsOpen((o) => !o)}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, CirclePlay, Plus } from 'lucide-react';
+import { Moon, Milk, Baby, Pencil, Trash2, ChevronLeft, CirclePlay } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -171,7 +171,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
   );
 }
 
-export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle, onAdd }) {
+export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle }) {
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
@@ -198,23 +198,8 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
 
   return (
     <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.recentSessions')}</h2>
-        {onAdd && (
-          <button
-            onClick={onAdd}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-twilight-indigo-600 text-white text-xs font-medium hover:bg-twilight-indigo-700 active:scale-95 transition-all"
-          >
-            <Plus size={13} strokeWidth={2.5} />
-            {t('tracking.new')}
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium text-blue-grey-400">{t('tracking.filter')}</span>
-        <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
-      </div>
+      <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.recentSessions')}</h2>
+      <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
 
       {isLoading && sessions.length === 0 ? (
         <p className="text-sm text-blue-grey-400">{t('common.loading', 'Loading…')}</p>
