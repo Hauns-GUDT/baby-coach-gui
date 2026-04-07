@@ -124,22 +124,19 @@ export default function DayWidget() {
           const timeSince = !active ? getTimeSinceLastEnded(events, now) : null;
 
           return (
-            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-0.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <Icon size={13} style={{ color }} strokeWidth={2} />
-                  <span className="text-xs font-medium text-blue-grey-400">{t(`${i18nPrefix}.title`)}</span>
-                </div>
-                {!anyActive && (
-                  <button
-                    onClick={onStart}
-                    aria-label={t(`${i18nPrefix}.start`)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-                    style={{ backgroundColor: color + '22' }}
-                  >
-                    <CirclePlay size={22} style={{ color }} strokeWidth={1.5} />
-                  </button>
-                )}
+            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-0.5 relative">
+              {!anyActive && (
+                <button
+                  onClick={onStart}
+                  aria-label={t(`${i18nPrefix}.start`)}
+                  className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <CirclePlay size={26} style={{ color }} strokeWidth={1.5} />
+                </button>
+              )}
+              <div className="flex items-center gap-1.5">
+                <Icon size={13} style={{ color }} strokeWidth={2} />
+                <span className="text-xs font-medium text-blue-grey-400">{t(`${i18nPrefix}.title`)}</span>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className={`text-2xl font-bold leading-tight ${totalText}`}>{formatHours(total)}</span>

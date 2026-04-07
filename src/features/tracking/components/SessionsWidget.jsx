@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay } from 'lucide-react';
+import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay, Plus } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -171,7 +171,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
   );
 }
 
-export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle }) {
+export default function SessionsWidget({ events, page, totalPages, onPageChange, isLoading, onEdit, onDelete, onContinue, hasActiveEvent, selectedTypes, onTypeToggle, onAdd }) {
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
@@ -198,7 +198,18 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
 
   return (
     <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-3">
-      <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.recentSessions')}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold text-blue-grey-900 text-lg">{t('tracking.recentSessions')}</h2>
+        {onAdd && (
+          <button
+            onClick={onAdd}
+            aria-label={t('tracking.addEvent')}
+            className="w-8 h-8 rounded-full bg-twilight-indigo-600 text-white flex items-center justify-center hover:bg-twilight-indigo-700 active:scale-95 transition-all"
+          >
+            <Plus size={16} strokeWidth={2.5} />
+          </button>
+        )}
+      </div>
       <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
 
       {isLoading && sessions.length === 0 ? (
