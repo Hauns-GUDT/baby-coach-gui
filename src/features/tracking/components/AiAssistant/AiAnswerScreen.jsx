@@ -16,7 +16,6 @@ export default function AiAnswerScreen({
   isAnswerLoading,
   answerError,
   onMoreQuestions,
-  onGoHome,
 }) {
   const { t } = useTranslation();
   return (
@@ -44,7 +43,7 @@ export default function AiAnswerScreen({
       {answerMode === 'chat' && messages.map((msg) =>
         msg.role === 'user' ? (
           <div key={msg.id} className="flex justify-end">
-            <div className="max-w-[80%] px-4 py-2.5 bg-twilight-indigo-100 rounded-2xl rounded-tr-sm text-xs font-semibold text-twilight-indigo-700 leading-snug">
+            <div className="max-w-[80%] px-4 py-2.5 bg-twilight-indigo-100 rounded-2xl rounded-tr-sm text-sm font-semibold text-twilight-indigo-700 leading-snug">
               {msg.content}
             </div>
           </div>
@@ -54,7 +53,7 @@ export default function AiAnswerScreen({
               <Bot size={14} className="text-white" />
             </div>
             <div className="flex-1 bg-blue-grey-50 border border-blue-grey-100 rounded-sm rounded-r-2xl rounded-bl-2xl px-4 py-3">
-              <p className="text-xs text-blue-grey-700 leading-relaxed">{msg.content}</p>
+              <p className="text-sm text-blue-grey-700 leading-relaxed">{msg.content}</p>
             </div>
           </div>
         )
@@ -76,21 +75,13 @@ export default function AiAnswerScreen({
 
       {chatError && <p className="text-xs text-rose-500 px-1">{chatError}</p>}
 
-      {!isAnswerLoading && (messages.length > 0 || prediction || answerError) && (
+      {!isAnswerLoading && activeTopic && (messages.length > 0 || prediction || answerError) && (
         <div className="flex gap-2 flex-wrap">
-          {activeTopic && (
-            <button
-              onClick={onMoreQuestions}
-              className="px-3.5 py-2 rounded-full border border-blue-grey-200 bg-white text-xs font-semibold text-blue-grey-700 hover:border-twilight-indigo-400 hover:text-twilight-indigo-600 transition-all"
-            >
-              {t('aiAssistant.moreQuestions', { topic: t(`aiAssistant.topics.${activeTopic}.label`) })}
-            </button>
-          )}
           <button
-            onClick={onGoHome}
+            onClick={onMoreQuestions}
             className="px-3.5 py-2 rounded-full border border-blue-grey-200 bg-white text-xs font-semibold text-blue-grey-700 hover:border-twilight-indigo-400 hover:text-twilight-indigo-600 transition-all"
           >
-            {t('aiAssistant.allTopics')}
+            {t('aiAssistant.moreQuestions', { topic: t(`aiAssistant.topics.${activeTopic}.label`) })}
           </button>
         </div>
       )}

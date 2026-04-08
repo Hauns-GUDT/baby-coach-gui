@@ -134,9 +134,12 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl border border-blue-grey-100 shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-blue-grey-900">{t(`${i18nPrefix}.editSession`)}</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+        {/* Nav-style header */}
+        <div className="bg-twilight-indigo-700 px-6 py-4">
+          <h2 className="text-lg font-semibold text-white">{t(`${i18nPrefix}.editSession`)}</h2>
+        </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-blue-grey-700">Start</label>
             <input

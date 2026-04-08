@@ -10,24 +10,38 @@ import BabyForm from '../../features/babies/components/BabyForm';
 
 function BabyEditDialog({ baby, onClose }) {
   const { t } = useTranslation();
-  const { name, setName, birthday, setBirthday, gender, setGender, isSubmitting, error, fieldErrors, submit } =
+  const { name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isSubmitting, error, fieldErrors, submit } =
     useBabyForm(baby.id, { onSuccess: onClose });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-blue-grey-900">{t('babies.editBaby')}</h2>
-        <BabyForm
-          name={name} setName={setName}
-          birthday={birthday} setBirthday={setBirthday}
-          gender={gender} setGender={setGender}
-          isSubmitting={isSubmitting}
-          error={error}
-          fieldErrors={fieldErrors}
-          onSubmit={submit}
-          onCancel={onClose}
-        />
+      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+        {/* Nav-style header */}
+        <div className="bg-twilight-indigo-700 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">{t('babies.editBaby')}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-twilight-indigo-200 hover:text-white transition-colors cursor-pointer"
+            aria-label={t('babies.cancel')}
+          >
+            ✕
+          </button>
+        </div>
+        <div className="p-6">
+          <BabyForm
+            name={name} setName={setName}
+            birthday={birthday} setBirthday={setBirthday}
+            gender={gender} setGender={setGender}
+            weightGrams={weightGrams} setWeightGrams={setWeightGrams}
+            isSubmitting={isSubmitting}
+            error={error}
+            fieldErrors={fieldErrors}
+            onSubmit={submit}
+            onCancel={onClose}
+          />
+        </div>
       </div>
     </div>
   );

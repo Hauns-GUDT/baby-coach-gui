@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-export default function BabyForm({ name, setName, birthday, setBirthday, gender, setGender, isSubmitting, error, fieldErrors = {}, onSubmit, onCancel }) {
+export default function BabyForm({ name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isSubmitting, error, fieldErrors = {}, onSubmit, onCancel }) {
   const { t } = useTranslation();
 
   return (
@@ -59,24 +59,43 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
         )}
       </div>
 
+      <div className="flex flex-col gap-1">
+        <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="weightGrams">
+          {t('babies.weight')}
+        </label>
+        <input
+          id="weightGrams"
+          type="number"
+          min="0"
+          max="30000"
+          value={weightGrams}
+          onChange={(e) => setWeightGrams(e.target.value)}
+          placeholder={t('babies.weightPlaceholder')}
+          className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+        />
+        {fieldErrors.weightGrams && (
+          <p role="alert" className="text-sm text-rose-600">{fieldErrors.weightGrams}</p>
+        )}
+      </div>
+
       {error && (
         <p role="alert" className="text-sm text-rose-600">{error}</p>
       )}
 
-      <div className="flex gap-3 mt-2">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-twilight-indigo-600 hover:bg-twilight-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors cursor-pointer"
-        >
-          {isSubmitting ? t('babies.saving') : t('babies.save')}
-        </button>
+      <div className="flex gap-3 mt-2 justify-end">
         <button
           type="button"
           onClick={onCancel}
           className="text-blue-grey-600 hover:text-blue-grey-900 font-medium px-4 py-2 cursor-pointer"
         >
           {t('babies.cancel')}
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-twilight-indigo-600 hover:bg-twilight-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl px-6 py-2 transition-colors cursor-pointer"
+        >
+          {isSubmitting ? t('babies.saving') : t('babies.save')}
         </button>
       </div>
     </form>

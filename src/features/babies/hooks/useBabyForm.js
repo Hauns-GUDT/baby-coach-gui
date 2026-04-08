@@ -13,6 +13,7 @@ export function useBabyForm(babyId, { onSuccess } = {}) {
   const [name, setName] = useState('');
   const [birthday, setBirthday] = useState('');
   const [gender, setGender] = useState('');
+  const [weightGrams, setWeightGrams] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -26,6 +27,7 @@ export function useBabyForm(babyId, { onSuccess } = {}) {
       setName(existing.name);
       setBirthday(existing.birthday.slice(0, 10));
       setGender(existing.gender);
+      setWeightGrams(existing.weightGrams ?? '');
       return;
     }
 
@@ -35,6 +37,7 @@ export function useBabyForm(babyId, { onSuccess } = {}) {
         setName(baby.name);
         setBirthday(baby.birthday.slice(0, 10));
         setGender(baby.gender);
+        setWeightGrams(baby.weightGrams ?? '');
       })
       .catch(() => setError(t('babies.error.notFound')))
       .finally(() => setIsLoading(false));
@@ -46,7 +49,13 @@ export function useBabyForm(babyId, { onSuccess } = {}) {
     setError('');
     setFieldErrors({});
 
-    const payload = { name, birthday, gender };
+    const payload = {
+      name,
+      birthday,
+      gender,
+      // send null to clear, or parse to int
+      weightGrams: weightGrams !== '' ? parseInt(weightGrams, 10) : null,
+    };
 
     try {
       if (babyId) {
@@ -80,5 +89,5 @@ export function useBabyForm(babyId, { onSuccess } = {}) {
     }
   };
 
-  return { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, fieldErrors, submit };
+  return { name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isLoading, isSubmitting, error, fieldErrors, submit };
 }

@@ -7,7 +7,7 @@ export default function BabyFormPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { name, setName, birthday, setBirthday, gender, setGender, isLoading, isSubmitting, error, fieldErrors, submit } =
+  const { name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isLoading, isSubmitting, error, fieldErrors, submit } =
     useBabyForm(id);
 
   return (
@@ -23,6 +23,8 @@ export default function BabyFormPage() {
             setBirthday={setBirthday}
             gender={gender}
             setGender={setGender}
+            weightGrams={weightGrams}
+            setWeightGrams={setWeightGrams}
             isSubmitting={isSubmitting}
             error={error}
             fieldErrors={fieldErrors}

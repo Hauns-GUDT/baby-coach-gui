@@ -237,7 +237,6 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
               isAnswerLoading={isAnswerLoading}
               answerError={answerError}
               onMoreQuestions={() => { resetAnswerState(); setScreen(SCREEN_TOPIC); }}
-              onGoHome={goHome}
             />
           )}
         </div>

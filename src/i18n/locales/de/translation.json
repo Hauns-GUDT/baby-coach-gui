@@ -403,6 +403,8 @@
     "selectGender": "Geschlecht wählen",
     "male": "Männlich",
     "female": "Weiblich",
+    "weight": "Gewicht (g)",
+    "weightPlaceholder": "z.B. 3500",
     "save": "Speichern",
     "saving": "Wird gespeichert...",
     "cancel": "Abbrechen",

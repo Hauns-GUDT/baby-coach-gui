@@ -137,18 +137,19 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4">
-        <div className="flex items-center gap-2">
+      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+        {/* Nav-style header */}
+        <div className="bg-twilight-indigo-700 px-6 py-4 flex items-center gap-2">
           {onBack && (
-            <button onClick={onBack} className="text-blue-grey-400 hover:text-blue-grey-600 -ml-1 p-1 rounded-lg transition-colors">
+            <button onClick={onBack} className="text-twilight-indigo-200 hover:text-white -ml-1 p-1 rounded-lg transition-colors">
               <ChevronLeft size={20} />
             </button>
           )}
-          <h2 className="text-lg font-bold text-blue-grey-900">
+          <h2 className="text-lg font-semibold text-white">
             {isEdit ? t(`${i18nPrefix}.editSession`) : t(`${i18nPrefix}.newSession`)}
           </h2>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-blue-grey-700">
               {isDiaper ? t('common.time') : 'Start'}
@@ -242,26 +243,33 @@ export function AddEventDialog({ onCreate, onCancel }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-5">
-        <h2 className="text-lg font-bold text-blue-grey-900">{t('tracking.selectEventType')}</h2>
-        <div className="flex flex-col gap-3">
-          {ALL_TYPES.map((type) => {
-            const { icon: Icon, color, i18nPrefix } = TYPE_META[type];
-            return (
-              <button
-                key={type}
-                onClick={() => setPickedType(type)}
-                className="flex items-center gap-4 w-full rounded-2xl border-2 border-blue-grey-100 p-5 text-left hover:border-blue-grey-300 active:scale-[0.98] transition-all"
-              >
-                <div className="rounded-xl p-3" style={{ backgroundColor: `${color}22` }}>
-                  <Icon size={28} style={{ color }} strokeWidth={1.75} />
-                </div>
-                <span className="text-lg font-semibold text-blue-grey-800">{t(`${i18nPrefix}.title`)}</span>
-              </button>
-            );
-          })}
+      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+        {/* Nav-style header */}
+        <div className="bg-twilight-indigo-700 px-6 py-4">
+          <h2 className="text-lg font-semibold text-white">{t('tracking.selectEventType')}</h2>
         </div>
-        <Button variant="secondary" onClick={onCancel}>{t('tracking.cancel')}</Button>
+        <div className="p-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
+            {ALL_TYPES.map((type) => {
+              const { icon: Icon, color, i18nPrefix } = TYPE_META[type];
+              return (
+                <button
+                  key={type}
+                  onClick={() => setPickedType(type)}
+                  className="flex items-center gap-4 w-full rounded-2xl border-2 border-blue-grey-100 bg-white p-5 text-left hover:border-blue-grey-300 active:scale-[0.98] transition-all"
+                >
+                  <div className="rounded-xl p-3" style={{ backgroundColor: `${color}22` }}>
+                    <Icon size={28} style={{ color }} strokeWidth={1.75} />
+                  </div>
+                  <span className="text-lg font-semibold text-blue-grey-800">{t(`${i18nPrefix}.title`)}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex justify-end">
+            <Button variant="secondary" className="py-2 text-sm" onClick={onCancel}>{t('tracking.cancel')}</Button>
+          </div>
+        </div>
       </div>
     </div>
   );
