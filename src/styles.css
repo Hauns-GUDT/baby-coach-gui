@@ -107,6 +107,9 @@
 }
 
 @layer base {
+  html {
+    font-size: 17px; /* base rem scale — increase to make everything larger */
+  }
   body {
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
