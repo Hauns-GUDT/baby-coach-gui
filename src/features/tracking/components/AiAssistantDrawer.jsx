@@ -183,20 +183,20 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
       )}
 
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 flex flex-col bg-white rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out max-h-[72vh] ${isOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed inset-x-0 bottom-0 z-50 flex flex-col bg-blue-grey-50 rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out max-h-[72vh] ${isOpen ? 'translate-y-0' : 'translate-y-full'}`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-blue-grey-100 shrink-0">
+        {/* Header — matches app nav gradient */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0 bg-linear-to-b from-twilight-indigo-700 to-twilight-indigo-600 rounded-t-2xl">
           <div className="flex items-center gap-2 min-w-0">
             {screen === SCREEN_HOME ? (
               <>
-                <BotMessageSquare size={15} className="text-twilight-indigo-500 shrink-0" />
-                <span className="text-sm font-semibold text-blue-grey-700">{t('aiAssistant.title')}</span>
+                <BotMessageSquare size={15} className="text-twilight-indigo-200 shrink-0" />
+                <span className="text-sm font-semibold text-white">{t('aiAssistant.title')}</span>
               </>
             ) : (
               <button
                 onClick={handleBack}
-                className="flex items-center gap-1 text-sm font-semibold text-twilight-indigo-600"
+                className="flex items-center gap-1 text-sm font-semibold text-white"
               >
                 <ChevronLeft size={16} />
                 {backLabel}
@@ -206,7 +206,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
           <button
             onClick={handleClose}
             aria-label={t('aiAssistant.close')}
-            className="w-7 h-7 rounded-full bg-blue-grey-50 flex items-center justify-center text-blue-grey-400 hover:text-blue-grey-600 transition-colors"
+            className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
           >
             <X size={15} />
           </button>

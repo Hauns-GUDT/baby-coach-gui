@@ -76,18 +76,23 @@
     },
     "diaper": {
       "title": "Diaper",
-      "editSession": "Edit Diaper Session",
+      "newSession": "New Diaper Event",
+      "editSession": "Edit Diaper Event",
       "end": "End",
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving…",
       "saveFailed": "Failed to save. Please try again.",
-      "deleteSession": "Delete Session",
-      "deleteSessionMessage": "Are you sure you want to delete this diaper session?",
-      "delete": "Delete"
+      "deleteSession": "Delete Event",
+      "deleteSessionMessage": "Are you sure you want to delete this diaper event?",
+      "delete": "Delete",
+      "pee": "Pee",
+      "poo": "Poo",
+      "both": "Both"
     },
     "feeding": {
       "title": "Feeding",
+      "newSession": "New Feeding Session",
       "todayTotal": "Today",
       "thisWeek": "This week",
       "loading": "Loading feeding data...",
@@ -108,8 +113,19 @@
       "saveFailed": "Failed to save. Please try again.",
       "deleteSession": "Delete Session",
       "deleteSessionMessage": "Are you sure you want to delete this feeding session?",
-      "delete": "Delete"
+      "delete": "Delete",
+      "breast": "Breast",
+      "bottle": "Bottle",
+      "pre": "Pre-made"
     }
+  },
+  "common": {
+    "time": "Time",
+    "type": "Type",
+    "notes": "Notes",
+    "notesPlaceholder": "Add a note…",
+    "ml": "Amount (ml)",
+    "mlPlaceholder": "e.g. 120"
   },
   "auth": {
     "title": "Sign In",
@@ -157,7 +173,7 @@
     "isDateString": "Must be a valid date.",
     "isPastDate": "Date must not be in the future.",
     "isEnum": "Please select a valid option.",
-    "endedAtBeforeStartedAt": "End time must be after start time.",
+    "endedAtBeforeStartedAt": "End time must not be before start time.",
     "eventOverlap": "This session overlaps with an existing one.",
     "eventAlreadyStopped": "This session is already stopped.",
     "fallback": "Invalid value."

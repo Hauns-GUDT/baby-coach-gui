@@ -85,7 +85,10 @@
       "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
       "deleteSession": "Eintrag löschen",
       "deleteSessionMessage": "Möchtest du diesen Windeleintrag wirklich löschen?",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "pee": "Pipi",
+      "poo": "Kacka",
+      "both": "Beides"
     },
     "feeding": {
       "title": "Fütterung",
@@ -110,8 +113,19 @@
       "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
       "deleteSession": "Einheit löschen",
       "deleteSessionMessage": "Möchtest du diese Fütterungseinheit wirklich löschen?",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "breast": "Brust",
+      "bottle": "Flasche",
+      "pre": "Pre-Nahrung"
     }
+  },
+  "common": {
+    "time": "Uhrzeit",
+    "type": "Typ",
+    "notes": "Notizen",
+    "notesPlaceholder": "Notiz hinzufügen…",
+    "ml": "Menge (ml)",
+    "mlPlaceholder": "z. B. 120"
   },
   "auth": {
     "title": "Anmelden",
@@ -159,7 +173,7 @@
     "isDateString": "Muss ein gültiges Datum sein.",
     "isPastDate": "Datum darf nicht in der Zukunft liegen.",
     "isEnum": "Bitte eine gültige Option auswählen.",
-    "endedAtBeforeStartedAt": "Endzeit muss nach der Startzeit liegen.",
+    "endedAtBeforeStartedAt": "Endzeit darf nicht vor der Startzeit liegen.",
     "eventOverlap": "Diese Einheit überschneidet sich mit einer vorhandenen.",
     "eventAlreadyStopped": "Diese Einheit wurde bereits beendet.",
     "fallback": "Ungültiger Wert."

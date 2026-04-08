@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay, Plus } from 'lucide-react';
+import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay, Plus, MessageCircle } from 'lucide-react';
 import IconButton from '../../../shared/components/IconButton';
 import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
@@ -9,12 +9,18 @@ import { parseApiError } from '../../../shared/utils/parseApiError';
 import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
 
 export const TYPE_META = {
-  sleep:   { icon: Moon,  color: '#425bbd', i18nPrefix: 'history.sleep' },   // twilight-indigo-500
-  feeding: { icon: Milk,  color: '#f5b20a', i18nPrefix: 'history.feeding' }, // light-apricot-500
-  diaper:  { icon: Droplets, color: '#8f5535', i18nPrefix: 'history.diaper' }, // warm-brown-500
+  sleep:   { icon: Moon,     color: '#425bbd', i18nPrefix: 'history.sleep' },
+  feeding: { icon: Milk,     color: '#f5b20a', i18nPrefix: 'history.feeding' },
+  diaper:  { icon: Droplets, color: '#8f5535', i18nPrefix: 'history.diaper' },
 };
 
 const ALL_TYPES = Object.keys(TYPE_META);
+
+// SubType toggle options per event type
+const SUBTYPE_OPTIONS = {
+  diaper:  ['pee', 'poo', 'both'],
+  feeding: ['breast', 'bottle', 'pre'],
+};
 
 function TypeFilterBar({ selectedTypes, onToggle }) {
   const { t } = useTranslation();
@@ -42,27 +48,70 @@ function TypeFilterBar({ selectedTypes, onToggle }) {
   );
 }
 
+function SubTypeToggle({ type, value, onChange }) {
+  const { t } = useTranslation();
+  const options = SUBTYPE_OPTIONS[type];
+  if (!options) return null;
+  const { i18nPrefix } = TYPE_META[type];
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-semibold text-blue-grey-700">{t('common.type')}</label>
+      <div className="flex gap-2 flex-wrap">
+        {options.map((opt) => (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => onChange(value === opt ? null : opt)}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              value === opt
+                ? 'bg-twilight-indigo-600 border-twilight-indigo-600 text-white'
+                : 'bg-white border-blue-grey-200 text-blue-grey-600 hover:border-blue-grey-400'
+            }`}
+          >
+            {t(`${i18nPrefix}.${opt}`)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
   const { i18nPrefix } = TYPE_META[type];
   const isEdit = !!session;
+  const isDiaper = type === 'diaper';
+
   const [startedAt, setStartedAt] = useState(
     session ? toDatetimeLocal(session.startedAt) : toDatetimeLocal(new Date().toISOString())
   );
   const [endedAt, setEndedAt] = useState(
     session?.endedAt ? toDatetimeLocal(session.endedAt) : ''
   );
-  const [error, setError]             = useState('');
+  const [subType, setSubType]     = useState(session?.subType ?? null);
+  const [ml, setMl]               = useState(session?.ml != null ? String(session.ml) : '');
+  const [notes, setNotes]         = useState(session?.notes ?? '');
+  const [error, setError]         = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
-  const [isSaving, setIsSaving]       = useState(false);
+  const [isSaving, setIsSaving]   = useState(false);
+
+  // ml input only makes sense for bottle/pre feeding
+  const showMl = type === 'feeding' && (subType === 'bottle' || subType === 'pre');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); setFieldErrors({}); setIsSaving(true);
     try {
+      const mlValue = showMl && ml !== '' ? parseInt(ml, 10) : null;
+      const startISO = new Date(startedAt).toISOString();
       const payload = {
-        startedAt: new Date(startedAt).toISOString(),
-        ...(endedAt ? { endedAt: new Date(endedAt).toISOString() } : {}),
+        startedAt: startISO,
+        // Diaper is point-in-time — endedAt equals startedAt so the interval is closed (prevents overlap issues)
+        endedAt: isDiaper ? startISO : (endedAt ? new Date(endedAt).toISOString() : null),
+        ...(subType ? { subType } : { subType: null }),
+        ...(mlValue != null ? { ml: mlValue } : { ml: null }),
+        ...(notes.trim() ? { notes: notes.trim() } : { notes: null }),
       };
       if (isEdit) {
         await onSave(session.id, payload);
@@ -101,17 +150,64 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700">Start</label>
-            <input type="datetime-local" required value={startedAt} onChange={(e) => setStartedAt(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300" />
+            <label className="text-sm font-semibold text-blue-grey-700">
+              {isDiaper ? t('common.time') : 'Start'}
+            </label>
+            <input
+              type="datetime-local"
+              required
+              value={startedAt}
+              onChange={(e) => setStartedAt(e.target.value)}
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+            />
             {fieldErrors.startedAt && <p role="alert" className="text-sm text-rose-600">{fieldErrors.startedAt}</p>}
           </div>
+
+          {/* End time — hidden for diaper (point-in-time events) */}
+          {!isDiaper && (
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-blue-grey-700">{t(`${i18nPrefix}.end`)}</label>
+              <input
+                type="datetime-local"
+                value={endedAt}
+                onChange={(e) => setEndedAt(e.target.value)}
+                className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+              />
+              {fieldErrors.endedAt && <p role="alert" className="text-sm text-rose-600">{fieldErrors.endedAt}</p>}
+            </div>
+          )}
+
+          {/* SubType toggle for diaper and feeding */}
+          <SubTypeToggle type={type} value={subType} onChange={(v) => { setSubType(v); if (v !== 'bottle' && v !== 'pre') setMl(''); }} />
+
+          {/* ml input — only for bottle/pre feeding */}
+          {showMl && (
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-blue-grey-700">{t('common.ml')}</label>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={ml}
+                onChange={(e) => setMl(e.target.value)}
+                placeholder={t('common.mlPlaceholder')}
+                className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+              />
+            </div>
+          )}
+
+          {/* Notes — available for all event types */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700">{t(`${i18nPrefix}.end`)}</label>
-            <input type="datetime-local" value={endedAt} onChange={(e) => setEndedAt(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300" />
-            {fieldErrors.endedAt && <p role="alert" className="text-sm text-rose-600">{fieldErrors.endedAt}</p>}
+            <label className="text-sm font-semibold text-blue-grey-700">{t('common.notes')}</label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={t('common.notesPlaceholder')}
+              rows={2}
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 resize-none"
+            />
           </div>
+
           {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
           <div className="flex gap-3 justify-end mt-1">
             <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
@@ -175,6 +271,7 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const { t } = useTranslation();
   const [editingSession, setEditingSession] = useState(null);
   const [pendingDelete, setPendingDelete]   = useState(null);
+  const [expandedNotes, setExpandedNotes]   = useState(new Set()); // IDs with notes expanded on mobile
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -192,6 +289,14 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const handleDelete = async () => {
     await onDelete(pendingDelete.id);
     setPendingDelete(null);
+  };
+
+  const toggleNote = (id) => {
+    setExpandedNotes((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
   };
 
   const i18nPrefix = pendingDelete ? TYPE_META[pendingDelete.type].i18nPrefix : 'history.sleep';
@@ -223,25 +328,70 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
             const duration = session.endedAt
               ? (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000
               : (now - new Date(session.startedAt)) / 3_600_000;
-            const showContinue = idx === 0 && page === 1 && !hasActiveEvent;
+            const showContinue = idx === 0 && page === 1 && !hasActiveEvent && session.type !== 'diaper';
+            const hasNotes = !!session.notes;
+            const noteExpanded = expandedNotes.has(session.id);
+            const subTypeLabel = session.subType
+              ? t(`${prefix}.${session.subType}`, session.subType)
+              : null;
+            const mlLabel = session.ml != null ? `${session.ml} ml` : null;
+
             return (
-              <div key={session.id} className="flex items-center justify-between py-2.5">
-                <div className="flex items-center gap-3">
-                  <Icon size={15} style={{ color }} strokeWidth={2} className="shrink-0" />
-                  <p className="text-sm text-blue-grey-700">
-                    {formatTime(session.startedAt)}–{session.endedAt ? formatTime(session.endedAt) : t('tracking.now')}
-                    <span className="text-blue-grey-300 mx-1">·</span>
-                    <span className="text-blue-grey-400 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                    <span className="text-blue-grey-300 mx-1">·</span>
-                    <span className="text-blue-grey-400 text-xs">{formatHours(duration)}</span>
-                  </p>
-                </div>
-                <div className="flex gap-1 shrink-0">
-                  {showContinue && (
-                    <IconButton icon={CirclePlay} label={t('tracking.continue')} className="hover:text-twilight-indigo-600" onClick={() => onContinue(session.id)} />
-                  )}
-                  <IconButton icon={Pencil} label={t(`${prefix}.editSession`)} onClick={() => setEditingSession(session)} />
-                  <IconButton icon={Trash2} label={t(`${prefix}.delete`)} className="hover:text-red-500" onClick={() => setPendingDelete({ id: session.id, type: session.type })} />
+              <div key={session.id} className="flex flex-col py-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon size={15} style={{ color }} strokeWidth={2} className="shrink-0" />
+                    <div className="flex flex-col min-w-0">
+                      <p className="text-sm text-blue-grey-700">
+                        {formatTime(session.startedAt)}
+                        {/* Diaper is point-in-time, skip range */}
+                        {session.type !== 'diaper' && (
+                          <>–{session.endedAt ? formatTime(session.endedAt) : t('tracking.now')}</>
+                        )}
+                        <span className="text-blue-grey-300 mx-1">·</span>
+                        <span className="text-blue-grey-400 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                        {session.type !== 'diaper' && (
+                          <>
+                            <span className="text-blue-grey-300 mx-1">·</span>
+                            <span className="text-blue-grey-400 text-xs">{formatHours(duration)}</span>
+                          </>
+                        )}
+                      </p>
+                      {/* SubType + ml badge */}
+                      {(subTypeLabel || mlLabel) && (
+                        <span className="text-xs text-blue-grey-400 mt-0.5">
+                          {[subTypeLabel, mlLabel].filter(Boolean).join(' · ')}
+                        </span>
+                      )}
+                      {/* Notes inline on sm+ screens */}
+                      {hasNotes && (
+                        <p className="hidden sm:block text-xs text-blue-grey-400 mt-0.5 truncate max-w-[220px]">{session.notes}</p>
+                      )}
+                      {/* Notes expanded on mobile */}
+                      {hasNotes && noteExpanded && (
+                        <p className="sm:hidden text-xs text-blue-grey-400 mt-1 break-words">{session.notes}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    {/* Notes toggle icon — mobile only */}
+                    {hasNotes && (
+                      <button
+                        onClick={() => toggleNote(session.id)}
+                        aria-label={t('common.notes')}
+                        className={`sm:hidden w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+                          noteExpanded ? 'text-twilight-indigo-600' : 'text-blue-grey-400 hover:text-blue-grey-600'
+                        }`}
+                      >
+                        <MessageCircle size={15} />
+                      </button>
+                    )}
+                    {showContinue && (
+                      <IconButton icon={CirclePlay} label={t('tracking.continue')} className="hover:text-twilight-indigo-600" onClick={() => onContinue(session.id)} />
+                    )}
+                    <IconButton icon={Pencil} label={t(`${prefix}.editSession`)} onClick={() => setEditingSession(session)} />
+                    <IconButton icon={Trash2} label={t(`${prefix}.delete`)} className="hover:text-red-500" onClick={() => setPendingDelete({ id: session.id, type: session.type })} />
+                  </div>
                 </div>
               </div>
             );
