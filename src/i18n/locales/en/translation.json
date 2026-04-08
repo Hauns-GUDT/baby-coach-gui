@@ -258,6 +258,9 @@
     "topicSubtitle": "Select a question or type your own",
     "moreQuestions": "More {{topic}} questions",
     "allTopics": "All topics",
+    "recentChats": "Recent chats",
+    "untitledChat": "Untitled chat",
+    "deleteChat": "Delete chat",
     "quickActions": {
       "sleep": {
         "label": "Sleep suggestion",
