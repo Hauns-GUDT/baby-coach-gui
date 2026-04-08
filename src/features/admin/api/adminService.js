@@ -16,3 +16,13 @@ export async function updateUser(id, payload) {
   const { data } = await axiosClient.patch(`/admin/users/${id}`, payload);
   return data;
 }
+
+export async function getUserBabies(userId) {
+  const { data } = await axiosClient.get(`/admin/users/${userId}/babies`);
+  return data;
+}
+
+export async function seedBabyEvents(babyId) {
+  const { data } = await axiosClient.post(`/admin/babies/${babyId}/seed-events`);
+  return data;
+}

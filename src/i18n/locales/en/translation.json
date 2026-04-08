@@ -391,6 +391,17 @@
       "saveFailed": "Could not save. Please try again.",
       "emailAlreadyInUse": "Email is already in use.",
       "usernameAlreadyInUse": "Username is already taken."
+    },
+    "seed": {
+      "button": "Seed Events",
+      "title": "Seed Test Events",
+      "message": "This will delete all existing events for {{username}}'s baby and generate 3 days of realistic test data.",
+      "selectBaby": "Select a baby...",
+      "noBabies": "This user has no babies.",
+      "confirm": "Seed",
+      "seeding": "Seeding...",
+      "failed": "Seeding failed. Please try again.",
+      "loadBabiesFailed": "Could not load babies for this user."
     }
   },
   "babies": {

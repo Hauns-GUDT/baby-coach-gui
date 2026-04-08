@@ -391,6 +391,17 @@
       "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
       "emailAlreadyInUse": "Diese E-Mail wird bereits verwendet.",
       "usernameAlreadyInUse": "Dieser Benutzername ist bereits vergeben."
+    },
+    "seed": {
+      "button": "Testdaten",
+      "title": "Testevents erstellen",
+      "message": "Alle vorhandenen Events für das Baby von {{username}} werden gelöscht und durch 3 Tage realistische Testdaten ersetzt.",
+      "selectBaby": "Baby auswählen...",
+      "noBabies": "Dieser Benutzer hat keine Babys.",
+      "confirm": "Erstellen",
+      "seeding": "Wird erstellt...",
+      "failed": "Erstellung fehlgeschlagen. Bitte erneut versuchen.",
+      "loadBabiesFailed": "Babys konnten nicht geladen werden."
     }
   },
   "babies": {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getUsers, createUser, updateUser } from '../api/adminService';
+import { getUsers, createUser, updateUser, getUserBabies, seedBabyEvents } from '../api/adminService';
 import Button from '../../../shared/components/Button';
 
 function UserFormModal({ user, onClose, onSaved, t }) {
@@ -115,6 +115,88 @@ function UserFormModal({ user, onClose, onSaved, t }) {
   );
 }
 
+function SeedEventsDialog({ user, onClose, t }) {
+  const [babies, setBabies] = useState(null); // null = loading
+  const [selectedBabyId, setSelectedBabyId] = useState('');
+  const [seeding, setSeeding] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    getUserBabies(user.id)
+      .then((list) => {
+        setBabies(list);
+        if (list.length === 1) setSelectedBabyId(list[0].id);
+      })
+      .catch(() => setError(t('admin.seed.loadBabiesFailed')));
+  }, [user.id, t]);
+
+  const handleConfirm = async () => {
+    if (!selectedBabyId) return;
+    setSeeding(true);
+    setError('');
+    try {
+      await seedBabyEvents(selectedBabyId);
+      onClose();
+    } catch {
+      setError(t('admin.seed.failed'));
+      setSeeding(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+        <div className="bg-twilight-indigo-700 px-6 py-4">
+          <h2 className="text-lg font-semibold text-white">{t('admin.seed.title')}</h2>
+        </div>
+        <div className="p-6 flex flex-col gap-4">
+          <p className="text-sm text-blue-grey-600">
+            {t('admin.seed.message', { username: user.username })}
+          </p>
+
+          {babies === null && !error && (
+            <p className="text-sm text-blue-grey-400">{t('admin.loading')}</p>
+          )}
+
+          {babies !== null && babies.length === 0 && (
+            <p className="text-sm text-rose-500">{t('admin.seed.noBabies')}</p>
+          )}
+
+          {babies !== null && babies.length > 1 && (
+            <select
+              value={selectedBabyId}
+              onChange={(e) => setSelectedBabyId(e.target.value)}
+              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+            >
+              <option value="">{t('admin.seed.selectBaby')}</option>
+              {babies.map((b) => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
+            </select>
+          )}
+
+          {error && <p className="text-sm text-rose-500">{error}</p>}
+
+          <div className="flex gap-3 justify-end">
+            <Button variant="secondary" className="py-2 text-sm" onClick={onClose} disabled={seeding}>
+              {t('admin.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              className="py-2 text-sm"
+              onClick={handleConfirm}
+              disabled={seeding || !selectedBabyId || (babies !== null && babies.length === 0)}
+            >
+              {seeding ? t('admin.seed.seeding') : t('admin.seed.confirm')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const { t } = useTranslation();
   const [users, setUsers] = useState([]);
@@ -126,6 +208,7 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [editUser, setEditUser] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [seedUser, setSeedUser] = useState(null);
 
   const limit = 20;
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -224,12 +307,20 @@ export default function AdminPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => setEditUser(u)}
-                        className="text-sm text-twilight-indigo-600 hover:text-twilight-indigo-800 font-medium cursor-pointer transition-colors"
-                      >
-                        {t('admin.edit')}
-                      </button>
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => setSeedUser(u)}
+                          className="text-sm text-amber-600 hover:text-amber-800 font-medium cursor-pointer transition-colors"
+                        >
+                          {t('admin.seed.button')}
+                        </button>
+                        <button
+                          onClick={() => setEditUser(u)}
+                          className="text-sm text-twilight-indigo-600 hover:text-twilight-indigo-800 font-medium cursor-pointer transition-colors"
+                        >
+                          {t('admin.edit')}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -270,6 +361,9 @@ export default function AdminPage() {
       )}
       {editUser && (
         <UserFormModal user={editUser} onClose={() => setEditUser(null)} onSaved={handleSaved} t={t} />
+      )}
+      {seedUser && (
+        <SeedEventsDialog user={seedUser} onClose={() => setSeedUser(null)} t={t} />
       )}
     </main>
   );

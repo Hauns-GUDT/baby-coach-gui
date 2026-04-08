@@ -30,9 +30,12 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
 
       <div className="flex flex-col">
         {dayEvents.map((e) => {
-          const durationH = e.endedAt
-            ? (new Date(e.endedAt) - new Date(e.startedAt)) / 3_600_000
+          // Clamp to day boundaries so events spanning midnight show only the portion for this day
+          const clampedFrom = Math.max(new Date(e.startedAt).getTime(), dayStart.getTime());
+          const clampedTo = e.endedAt
+            ? Math.min(new Date(e.endedAt).getTime(), dayEnd.getTime())
             : null;
+          const durationH = clampedTo !== null ? (clampedTo - clampedFrom) / 3_600_000 : null;
           return (
             <div key={e.id} className="flex items-center justify-between py-2 border-b border-blue-grey-50 last:border-0">
               <p className="text-sm text-blue-grey-700">
