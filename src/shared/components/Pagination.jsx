@@ -8,8 +8,9 @@ export default function Pagination({ page, totalPages, onPageChange, isLoading =
     'disabled:opacity-35 disabled:cursor-not-allowed';
   const btnActive =
     'border-twilight-indigo-200 text-twilight-indigo-600 bg-twilight-indigo-50 ' +
-    'hover:bg-twilight-indigo-100 hover:border-twilight-indigo-300 active:scale-95 shadow-sm';
-  const btnDisabled = 'border-transparent text-twilight-indigo-300 bg-transparent';
+    'hover:bg-twilight-indigo-100 hover:border-twilight-indigo-300 active:scale-95 shadow-sm ' +
+    'dark:border-navy-400 dark:text-navy-100 dark:bg-navy-600 dark:hover:bg-navy-500 dark:hover:border-navy-300';
+  const btnDisabled = 'border-transparent text-twilight-indigo-300 bg-transparent dark:text-navy-400';
 
   return (
     <div className="flex items-center justify-center gap-3 pt-2">
@@ -22,8 +23,8 @@ export default function Pagination({ page, totalPages, onPageChange, isLoading =
         <ChevronLeft size={16} strokeWidth={2.5} />
       </button>
 
-      <span className="min-w-16 text-center text-sm font-medium text-twilight-indigo-500 tabular-nums">
-        {page} <span className="text-twilight-indigo-300">/</span> {totalPages}
+      <span className="min-w-16 text-center text-sm font-medium text-twilight-indigo-500 dark:text-navy-100 tabular-nums">
+        {page} <span className="text-twilight-indigo-300 dark:text-navy-300">/</span> {totalPages}
       </span>
 
       <button

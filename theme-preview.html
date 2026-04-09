@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Theme Preview — Tracking</title>
+<style>
+  /* ── New Palette ──────────────────────────────────────── */
+  :root {
+    /* base */
+    --navy-900: #000e3d;   /* base-100 */
+    --navy-800: #0d1529;   /* base-300 */
+    --navy-700: #131d3a;   /* between 800 and 600 */
+    --navy-600: #1d265d;   /* base-200 */
+    --navy-500: #20255c;   /* neutral */
+    --navy-400: #2d3275;
+    --navy-300: #4a508f;
+    --navy-200: #8287b5;
+    --navy-100: #c9cbd0;   /* base-content */
+    --navy-50:  #eaecf4;
+
+    /* primary — sky blue */
+    --sky-500:  #6da8d4;
+    --sky-400:  #8bbde0;
+    --sky-300:  #a9d2eb;
+    --sky-200:  #c7e5f4;
+    --sky-100:  #e3f2fa;
+
+    /* secondary — indigo */
+    --violet-500: #818cf8;
+    --violet-400: #a5adfb;
+    --violet-200: #c7cafd;
+    --violet-100: #e0e2fe;
+
+    /* accent — hot pink */
+    --accent:     #f471b5;
+    --accent-100: #fce7f3;
+
+    /* warning — amber */
+    --amber-400: #f4bf51;
+    --amber-100: #fef3c7;
+
+    /* success — teal */
+    --teal-400:  #2fd4bf;
+    --teal-100:  #ccfbf1;
+
+    /* info — cyan */
+    --info:      #0ca5e9;
+
+    /* error — soft pink-red */
+    --error:     #fb7085;
+    --error-100: #ffe4e6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    background: var(--navy-600);
+    color: var(--navy-100);
+    min-height: 100vh;
+  }
+
+  /* ── Nav ─────────────────────────────────────────────── */
+  nav {
+    background: var(--navy-600);
+    border-bottom: 1px solid var(--navy-500);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--navy-50);
+  }
+
+  .nav-logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--sky-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    outline: 2px solid var(--sky-300);
+    outline-offset: 2px;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: var(--navy-200);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-icon-btn:hover {
+    background: var(--navy-500);
+    color: var(--navy-50);
+  }
+  .nav-icon-btn.active {
+    background: var(--navy-500);
+    color: var(--sky-400);
+  }
+
+  /* ── Layout ──────────────────────────────────────────── */
+  .page {
+    padding: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── Card ────────────────────────────────────────────── */
+  .card {
+    background: var(--navy-800);
+    border: 1px solid var(--navy-700);
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy-200);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  /* ── Event Type Filter ───────────────────────────────── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+  }
+
+  .filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-chip.sleep {
+    background: rgba(109,168,212,0.15);
+    color: var(--sky-400);
+    border-color: rgba(109,168,212,0.3);
+  }
+  .filter-chip.sleep.active {
+    background: rgba(109,168,212,0.25);
+    border-color: var(--sky-500);
+  }
+
+  .filter-chip.feeding {
+    background: rgba(244,191,81,0.15);
+    color: var(--amber-400);
+    border-color: rgba(251,191,36,0.3);
+  }
+  .filter-chip.feeding.active {
+    background: rgba(244,191,81,0.25);
+    border-color: var(--amber-400);
+  }
+
+  .filter-chip.diaper {
+    background: rgba(129,140,248,0.15);
+    color: var(--violet-400);
+    border-color: rgba(139,92,246,0.3);
+  }
+  .filter-chip.diaper.active {
+    background: rgba(129,140,248,0.25);
+    border-color: var(--violet-500);
+  }
+
+  /* ── Session List ────────────────────────────────────── */
+  .session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .session-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .session-item:hover { background: var(--navy-700); }
+
+  .session-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .session-info { flex: 1; min-width: 0; }
+
+  .session-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy-50);
+  }
+
+  .session-sub {
+    font-size: 12px;
+    color: var(--navy-200);
+    margin-top: 1px;
+  }
+
+  .session-duration {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy-100);
+    white-space: nowrap;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .badge-sky   { background: rgba(109,168,212,0.2); color: var(--sky-400); }
+  .badge-amber { background: rgba(244,191,81,0.2);  color: var(--amber-400); }
+  .badge-violet{ background: rgba(129,140,248,0.2);  color: var(--violet-400); }
+
+  /* ── Divider / Section label ─────────────────────────── */
+  .section-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy-300);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 4px 12px;
+  }
+
+  /* ── FAB ─────────────────────────────────────────────── */
+  .fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--sky-500);
+    color: var(--navy-900);
+    font-size: 26px;
+    font-weight: 300;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(109,168,212,0.35);
+    transition: background 0.15s, transform 0.1s;
+  }
+  .fab:hover { background: var(--sky-400); transform: scale(1.05); }
+
+  /* ── Dialog Overlay ──────────────────────────────────── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,14,61,0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    z-index: 100;
+  }
+
+  .dialog {
+    background: var(--navy-800);
+    border: 1px solid var(--navy-700);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 32px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .dialog-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--navy-400);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .dialog-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy-50);
+    margin-bottom: 20px;
+  }
+
+  /* ── Type Selector in Dialog ─────────────────────────── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .type-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 8px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .type-card.sleep {
+    background: rgba(109,168,212,0.12);
+    border-color: rgba(109,168,212,0.25);
+  }
+  .type-card.sleep.selected {
+    background: rgba(109,168,212,0.22);
+    border-color: var(--sky-500);
+  }
+
+  .type-card.feeding {
+    background: rgba(244,191,81,0.12);
+    border-color: rgba(244,191,81,0.25);
+  }
+  .type-card.feeding.selected {
+    background: rgba(244,191,81,0.22);
+    border-color: var(--amber-400);
+  }
+
+  .type-card.diaper {
+    background: rgba(129,140,248,0.12);
+    border-color: rgba(129,140,248,0.25);
+  }
+  .type-card.diaper.selected {
+    background: rgba(129,140,248,0.22);
+    border-color: var(--violet-500);
+  }
+
+  .type-icon {
+    font-size: 22px;
+  }
+
+  .type-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy-100);
+  }
+
+  /* ── Form ────────────────────────────────────────────── */
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy-200);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  input[type="text"],
+  input[type="datetime-local"],
+  select {
+    width: 100%;
+    background: var(--navy-700);
+    border: 1px solid var(--navy-500);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--navy-50);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    -webkit-appearance: none;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: var(--sky-500);
+    box-shadow: 0 0 0 3px rgba(109,168,212,0.2);
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────── */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--sky-500);
+    color: var(--navy-900);
+  }
+  .btn-primary:hover { background: var(--sky-400); }
+
+  .btn-ghost {
+    background: var(--navy-500);
+    color: var(--navy-100);
+  }
+  .btn-ghost:hover { background: var(--navy-400); }
+
+  .btn-danger {
+    background: var(--error);
+    color: #fff;
+  }
+  .btn-danger:hover { filter: brightness(1.1); }
+
+  /* ── Toggle preview ──────────────────────────────────── */
+  .preview-label {
+    font-size: 11px;
+    color: var(--navy-300);
+    text-align: center;
+    padding: 8px 0 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── Confirm Dialog ──────────────────────────────────── */
+  .dialog-sm {
+    background: var(--navy-800);
+    border: 1px solid var(--navy-700);
+    border-radius: 20px;
+    padding: 24px 20px;
+    width: calc(100% - 40px);
+    max-width: 340px;
+    margin: auto;
+  }
+
+  .overlay-center {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,14,61,0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .confirm-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(251,112,133,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 14px;
+  }
+
+  .confirm-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy-50);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .confirm-body {
+    font-size: 13px;
+    color: var(--navy-200);
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ───────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🍼</div>
+    Baby Coach
+  </div>
+  <div class="nav-actions">
+    <button class="nav-icon-btn" title="AI Assistant">✨</button>
+    <button class="nav-icon-btn active" title="Tracking">📋</button>
+    <button class="nav-icon-btn" title="Dashboard">📊</button>
+    <button class="nav-icon-btn" title="Light/Dark">☀️</button>
+  </div>
+</nav>
+
+<!-- ── PAGE CONTENT ─────────────────────────────────────── -->
+<div class="page">
+
+  <!-- Event type filter -->
+  <div class="card">
+    <div class="card-title">Filter</div>
+    <div class="filter-bar">
+      <div class="filter-chip sleep active">🌙 Sleep</div>
+      <div class="filter-chip feeding active">🍼 Feeding</div>
+      <div class="filter-chip diaper">💧 Diaper</div>
+    </div>
+  </div>
+
+  <!-- Sessions -->
+  <div class="card">
+    <div class="section-date">Today — Apr 9</div>
+    <div class="session-list">
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--sky-500)"></div>
+        <div class="session-info">
+          <div class="session-label">Sleep</div>
+          <div class="session-sub">10:30 PM – 6:45 AM</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="session-duration">8h 15m</div>
+          <div class="badge badge-sky">night</div>
+        </div>
+      </div>
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--amber-400)"></div>
+        <div class="session-info">
+          <div class="session-label">Feeding</div>
+          <div class="session-sub">7:15 AM · breast</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="session-duration">18 min</div>
+          <div class="badge badge-amber">breast</div>
+        </div>
+      </div>
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--violet-500)"></div>
+        <div class="session-info">
+          <div class="session-label">Diaper</div>
+          <div class="session-sub">8:00 AM</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="badge badge-violet">pee + poo</div>
+        </div>
+      </div>
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--sky-500)"></div>
+        <div class="session-info">
+          <div class="session-label">Nap</div>
+          <div class="session-sub">9:30 AM – 11:00 AM</div>
+        </div>
+        <div>
+          <div class="session-duration">1h 30m</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-date" style="margin-top:12px">Yesterday — Apr 8</div>
+    <div class="session-list">
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--amber-400)"></div>
+        <div class="session-info">
+          <div class="session-label">Feeding</div>
+          <div class="session-sub">8:50 PM · bottle</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="session-duration">120 ml</div>
+          <div class="badge badge-amber">bottle</div>
+        </div>
+      </div>
+
+      <div class="session-item">
+        <div class="session-dot" style="background:var(--sky-500)"></div>
+        <div class="session-info">
+          <div class="session-label">Sleep</div>
+          <div class="session-sub">9:15 PM – 5:30 AM</div>
+        </div>
+        <div>
+          <div class="session-duration">8h 15m</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FAB ──────────────────────────────────────────────── -->
+<button class="fab">+</button>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="preview-label">▼ Add Event Dialog (bottom sheet) ▼</div>
+
+<!-- ── ADD EVENT DIALOG ─────────────────────────────────── -->
+<div class="overlay" style="position:relative;display:block;background:rgba(0,14,61,0.5);border-top:1px solid var(--navy-500);padding: 8px 0 0">
+  <div class="dialog" style="border-radius:24px 24px 0 0;max-width:480px;margin:0 auto;">
+    <div class="dialog-handle"></div>
+    <div class="dialog-title">Log event</div>
+
+    <!-- Type picker -->
+    <div class="type-grid">
+      <div class="type-card sleep selected">
+        <div class="type-icon">🌙</div>
+        <div class="type-label">Sleep</div>
+      </div>
+      <div class="type-card feeding">
+        <div class="type-icon">🍼</div>
+        <div class="type-label">Feeding</div>
+      </div>
+      <div class="type-card diaper">
+        <div class="type-icon">💧</div>
+        <div class="type-label">Diaper</div>
+      </div>
+    </div>
+
+    <!-- Fields -->
+    <div class="row-2">
+      <div class="form-group">
+        <label>Start</label>
+        <input type="datetime-local" value="2026-04-09T22:30" />
+      </div>
+      <div class="form-group">
+        <label>End</label>
+        <input type="datetime-local" value="2026-04-10T06:45" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" placeholder="Optional note…" />
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="preview-label">▼ Confirm / Delete Dialog ▼</div>
+
+<!-- ── CONFIRM DIALOG ───────────────────────────────────── -->
+<div style="background:rgba(0,14,61,0.7);backdrop-filter:blur(4px);padding:40px 20px;display:flex;align-items:center;justify-content:center;">
+  <div class="dialog-sm">
+    <div class="confirm-icon">🗑</div>
+    <div class="confirm-title">Delete session?</div>
+    <div class="confirm-body">This sleep session will be permanently removed. This action cannot be undone.</div>
+    <div class="btn-row">
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-danger">Delete</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

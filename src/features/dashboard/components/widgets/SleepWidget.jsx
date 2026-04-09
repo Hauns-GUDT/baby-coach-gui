@@ -6,13 +6,14 @@ const SLEEP_CONFIG = {
   i18nPrefix: 'history.sleep',
   showGapPeriods: true,
   icon: Moon,
-  svgPrimaryColor: '#425bbd', // twilight-indigo-500
-  svgSecondaryColor: '#8e9cd7', // twilight-indigo-300
-  accentBg: 'bg-twilight-indigo-50',
-  accentDot: 'bg-twilight-indigo-500',
-  accentText: 'text-twilight-indigo-700',
-  accentSubText: 'text-twilight-indigo-500',
-  totalText: 'text-twilight-indigo-600',
+  primaryVar: '--chart-sleep',         // CSS variable — resolves to correct hex per theme
+  svgPrimaryColor: 'var(--chart-sleep)',
+  svgSecondaryColor: null,
+  accentBg: 'bg-twilight-indigo-50 dark:bg-sky-500/10',
+  accentDot: 'bg-twilight-indigo-500 dark:bg-sky-500',
+  accentText: 'text-twilight-indigo-700 dark:text-sky-300',
+  accentSubText: 'text-twilight-indigo-500 dark:text-sky-400',
+  totalText: 'text-twilight-indigo-600 dark:text-sky-400',
 };
 
 export default function SleepWidget() {

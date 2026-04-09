@@ -16,14 +16,14 @@ function BabyEditDialog({ baby, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+      <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">{t('babies.editBaby')}</h2>
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t('babies.editBaby')}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-twilight-indigo-200 hover:text-white transition-colors cursor-pointer"
+            className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 transition-colors cursor-pointer"
             aria-label={t('babies.cancel')}
           >
             ✕
@@ -85,7 +85,7 @@ export default function Navigation({ onOpenAi }) {
   const babySelector = currentBaby && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
-      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-800 hover:bg-twilight-indigo-700 px-3 py-1 rounded-full cursor-pointer transition-colors"
+      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-800 hover:bg-twilight-indigo-700 dark:text-navy-50 dark:bg-navy-600 dark:hover:bg-navy-400 px-3 py-1 rounded-full cursor-pointer transition-colors"
     >
       {currentBaby.name}
     </button>
@@ -101,12 +101,12 @@ export default function Navigation({ onOpenAi }) {
   const navLinkClass = ({ isActive }) =>
     `px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
       isActive
-        ? 'bg-twilight-indigo-800 text-white'
-        : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white'
+        ? 'bg-twilight-indigo-800 text-white dark:bg-navy-600 dark:text-navy-50'
+        : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white dark:text-navy-100 dark:hover:bg-navy-600 dark:hover:text-navy-50'
     }`;
 
   return (
-    <nav className="bg-linear-to-b from-twilight-indigo-700 to-twilight-indigo-600 border-b border-white/10 relative z-40">
+    <nav className="bg-linear-to-b from-twilight-indigo-700 to-twilight-indigo-600 border-b border-white/10 dark:from-navy-800 dark:to-navy-700 dark:border-navy-600 relative z-40">
       {/* Click-outside overlay for mobile dropdown */}
       {isOpen && (
         <div className="fixed inset-0 z-30 sm:hidden" onClick={() => setIsOpen(false)} />
@@ -133,23 +133,24 @@ export default function Navigation({ onOpenAi }) {
             {/* Mobile: page title + burger */}
             <button
               onClick={() => setIsOpen((o) => !o)}
-              className="flex sm:hidden items-center gap-1 text-lg font-bold text-white cursor-pointer select-none"
+              className="flex sm:hidden items-center gap-1 text-lg font-bold text-white dark:text-navy-50 cursor-pointer select-none"
             >
               {getPageTitle()}
               {isOpen
-                ? <ChevronUp size={18} className="text-twilight-indigo-300" />
-                : <ChevronDown size={18} className="text-twilight-indigo-300" />}
+                ? <ChevronUp size={18} className="text-twilight-indigo-300 dark:text-navy-200" />
+                : <ChevronDown size={18} className="text-twilight-indigo-300 dark:text-navy-200" />}
             </button>
           </div>
 
           {/* Right: baby selector + AI button */}
           <div className="flex items-center gap-3">
             {babySelector}
+
             {onOpenAi && (
               <button
                 onClick={onOpenAi}
                 aria-label={t('aiAssistant.title')}
-                className="w-9 h-9 rounded-full bg-light-apricot-400 text-twilight-indigo-900 flex items-center justify-center hover:bg-light-apricot-300 active:scale-95 transition-all"
+                className="w-9 h-9 rounded-full bg-light-apricot-400 text-twilight-indigo-900 hover:bg-light-apricot-300 dark:bg-sky-500 dark:text-navy-900 dark:hover:bg-sky-400 flex items-center justify-center active:scale-95 transition-all"
               >
                 <BotMessageSquare size={17} />
               </button>
@@ -159,7 +160,7 @@ export default function Navigation({ onOpenAi }) {
 
         {/* Mobile dropdown */}
         {isOpen && (
-          <div className="sm:hidden border-t border-twilight-indigo-800 py-3 flex flex-col gap-1">
+          <div className="sm:hidden border-t border-twilight-indigo-800 dark:border-navy-600 py-3 flex flex-col gap-1">
             {links.map(({ to, label, end }) => (
               <NavLink
                 key={to}
@@ -169,8 +170,8 @@ export default function Navigation({ onOpenAi }) {
                 className={({ isActive }) =>
                   `px-3 py-2 rounded-lg font-medium transition-colors ${
                     isActive
-                      ? 'bg-twilight-indigo-700 text-white'
-                      : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white'
+                      ? 'bg-twilight-indigo-700 text-white dark:bg-navy-600 dark:text-navy-50'
+                      : 'text-twilight-indigo-200 hover:bg-twilight-indigo-800 hover:text-white dark:text-navy-100 dark:hover:bg-navy-600 dark:hover:text-navy-50'
                   }`
                 }
               >

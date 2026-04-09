@@ -164,7 +164,11 @@
     "loggedInAs": "Angemeldet als",
     "logout": "Abmelden",
     "manageBabies": "Babys verwalten",
-    "language": "Sprache"
+    "language": "Sprache",
+    "theme": "Design",
+    "themeDark": "Dunkel",
+    "themeLight": "Hell",
+    "themeAuto": "Auto"
   },
   "validation": {
     "minLength": "Wert ist zu kurz.",

@@ -54,8 +54,8 @@ export default function DayTimeline({ rows, isToday = false }) {
             style={{ left: `${(h / 24) * 100}%` }}
           >
             {Icon
-              ? <Icon size={11} className="text-blue-grey-400" />
-              : <span className="text-[10px] leading-none text-blue-grey-400 font-medium">{label}</span>
+              ? <Icon size={11} className="text-blue-grey-400 dark:text-navy-200" />
+              : <span className="text-[10px] leading-none text-blue-grey-400 dark:text-navy-200 font-medium">{label}</span>
             }
           </div>
         ))}
@@ -63,7 +63,7 @@ export default function DayTimeline({ rows, isToday = false }) {
 
       {/* Single unified track — rounded ends, straight internal segments */}
       <div className="relative h-6" style={{ overflow: 'visible' }}>
-        <div className="absolute inset-0 bg-blue-grey-100 rounded-full overflow-hidden">
+        <div className="absolute inset-0 bg-blue-grey-100 dark:bg-navy-500 rounded-full overflow-hidden">
           {allPeriods.map((p, i) => (
             <div
               key={i}
@@ -90,7 +90,7 @@ export default function DayTimeline({ rows, isToday = false }) {
               left: `${(nowH / 24) * 100}%`,
               transform: 'translateX(-50%)',
               width: '1px',
-              background: 'repeating-linear-gradient(to bottom, #6e9dc4 0px, #6e9dc4 2px, transparent 2px, transparent 5px)',
+              background: 'repeating-linear-gradient(to bottom, var(--now-line) 0px, var(--now-line) 2px, transparent 2px, transparent 5px)',
             }}
           />
         )}
@@ -105,7 +105,7 @@ export default function DayTimeline({ rows, isToday = false }) {
               transform: 'translateX(-50%)',
             }}
           >
-            <div className="bg-blue-grey-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
+            <div className="bg-blue-grey-800 text-white dark:bg-navy-400 dark:text-navy-50 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
               {openPeriod.tooltip}
             </div>
             <div
@@ -116,7 +116,7 @@ export default function DayTimeline({ rows, isToday = false }) {
                 height: 0,
                 borderLeft: '5px solid transparent',
                 borderRight: '5px solid transparent',
-                borderTop: '5px solid #1e3548',
+                borderTop: '5px solid var(--tooltip-arrow)',
               }}
             />
           </div>
@@ -128,7 +128,7 @@ export default function DayTimeline({ rows, isToday = false }) {
         {rows.map((row) => (
           <div key={row.label} className="flex items-center gap-1.5">
             <row.icon size={12} style={{ color: row.color }} strokeWidth={2} />
-            <span className="text-[10px] text-blue-grey-400 font-medium">{row.label}</span>
+            <span className="text-[10px] text-blue-grey-400 dark:text-white font-medium">{row.label}</span>
           </div>
         ))}
       </div>

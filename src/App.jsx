@@ -40,15 +40,15 @@ export default function App() {
 
   if (isInitializing) {
     return (
-      <div className="min-h-screen bg-zinc-50 grid place-items-center">
-        <span className="text-zinc-400 text-sm">Loading...</span>
+      <div className="min-h-screen bg-blue-grey-50 dark:bg-navy-800 grid place-items-center">
+        <span className="text-blue-grey-400 dark:text-navy-200 text-sm">Loading...</span>
       </div>
     );
   }
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-blue-grey-50">
+      <div className="min-h-screen bg-blue-grey-50 dark:bg-navy-800">
         <Navigation onOpenAi={() => setIsAiOpen(true)} />
         <NoBabyGuard>
           <Routes>

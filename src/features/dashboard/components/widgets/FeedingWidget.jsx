@@ -6,13 +6,14 @@ const FEEDING_CONFIG = {
   i18nPrefix: 'history.feeding',
   showGapPeriods: false,
   icon: Milk,
-  svgPrimaryColor: '#f5b20a', // light-apricot-500
+  primaryVar: '--chart-feed',          // CSS variable — resolves to correct hex per theme
+  svgPrimaryColor: 'var(--chart-feed)',
   svgSecondaryColor: null,
-  accentBg: 'bg-light-apricot-50',
-  accentDot: 'bg-light-apricot-500',
-  accentText: 'text-light-apricot-700',
-  accentSubText: 'text-light-apricot-500',
-  totalText: 'text-light-apricot-500',
+  accentBg: 'bg-light-apricot-50 dark:bg-light-apricot-500/10',
+  accentDot: 'bg-light-apricot-500 dark:bg-light-apricot-400',
+  accentText: 'text-light-apricot-700 dark:text-light-apricot-300',
+  accentSubText: 'text-light-apricot-500 dark:text-light-apricot-400',
+  totalText: 'text-light-apricot-500 dark:text-light-apricot-400',
 };
 
 export default function FeedingWidget() {

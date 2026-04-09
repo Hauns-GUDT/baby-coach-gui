@@ -164,7 +164,11 @@
     "loggedInAs": "Logged in as",
     "logout": "Logout",
     "manageBabies": "Manage Babies",
-    "language": "Language"
+    "language": "Language",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeAuto": "Auto"
   },
   "validation": {
     "minLength": "Value is too short.",

@@ -28,6 +28,11 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
 // ─── Weekly bar chart ─────────────────────────────────────────────────────────
 
+// Reads a CSS variable from :root (resolves per theme at render time)
+function getCssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 const valueLabelsPlugin = {
   id: 'valueLabels',
   afterDatasetsDraw(chart) {
@@ -36,7 +41,7 @@ const valueLabelsPlugin = {
       const value = data.datasets[0].data[i];
       if (value > 0) {
         ctx.save();
-        ctx.fillStyle = '#6e9dc4'; // blue-grey-400
+        ctx.fillStyle = getCssVar('--chart-axis');
         ctx.font = '10px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
@@ -66,6 +71,7 @@ function WeeklyBars({ history, primaryColor }) {
     datasets: [{ data: history, backgroundColor: bgColors, borderRadius: 4, borderWidth: 0 }],
   };
 
+  const axisColor = getCssVar('--chart-axis');
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -77,7 +83,7 @@ function WeeklyBars({ history, primaryColor }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 10 }, color: '#6e9dc4' }, // blue-grey-400
+        ticks: { font: { size: 10 }, color: axisColor },
         border: { display: false },
       },
       y: { display: false, beginAtZero: true, max: maxVal * 1.5 },
@@ -129,19 +135,19 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
     }
   };
 
-  const inputClass = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300';
+  const inputClass = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-500 dark:border-navy-400 dark:text-navy-50 dark:focus:ring-sky-500';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
+      <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 px-6 py-4">
-          <h2 className="text-lg font-semibold text-white">{t(`${i18nPrefix}.editSession`)}</h2>
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4">
+          <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t(`${i18nPrefix}.editSession`)}</h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700">Start</label>
+            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">Start</label>
             <input
               type="datetime-local"
               required
@@ -150,11 +156,11 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
               className={inputClass}
             />
             {fieldErrors.startedAt && (
-              <p className="text-sm text-rose-600" role="alert">{fieldErrors.startedAt}</p>
+              <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{fieldErrors.startedAt}</p>
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700">{t(`${i18nPrefix}.end`)}</label>
+            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">{t(`${i18nPrefix}.end`)}</label>
             <input
               type="datetime-local"
               value={endedAt}
@@ -162,10 +168,10 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
               className={inputClass}
             />
             {fieldErrors.endedAt && (
-              <p className="text-sm text-rose-600" role="alert">{fieldErrors.endedAt}</p>
+              <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{fieldErrors.endedAt}</p>
             )}
           </div>
-          {error && <p className="text-sm text-rose-600" role="alert">{error}</p>}
+          {error && <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{error}</p>}
           <div className="flex gap-3 justify-end mt-1">
             <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
               {t(`${i18nPrefix}.cancel`)}
@@ -197,6 +203,7 @@ export default function EventWidget({
   const {
     i18nPrefix,
     icon: Icon,
+    primaryVar,
     svgPrimaryColor,
     accentBg,
     accentDot,
@@ -221,6 +228,11 @@ export default function EventWidget({
   const recentSessions = events.filter((e) => e.endedAt).slice(0, 7);
   const activeElapsed = activeEvent ? formatElapsed(now - new Date(activeEvent.startedAt), t, i18nPrefix) : null;
 
+  // Resolve CSS variable to an actual hex value for Chart.js (canvas doesn't support CSS vars)
+  const resolvedPrimaryColor = primaryVar
+    ? getCssVar(primaryVar)
+    : svgPrimaryColor;
+
   const handleEdit = async (payload) => {
     await onEdit(editingEvent.id, payload);
     setEditingEvent(null);
@@ -232,8 +244,8 @@ export default function EventWidget({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-5">
-      <h2 className="font-semibold text-blue-grey-900 text-lg flex items-center gap-2">
+    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-5">
+      <h2 className="font-semibold text-blue-grey-900 dark:text-navy-50 text-lg flex items-center gap-2">
         {Icon && <Icon size={20} className={totalText} strokeWidth={2} />}
         {t(`${i18nPrefix}.title`)}
       </h2>
@@ -257,11 +269,11 @@ export default function EventWidget({
       )}
 
       {/* Loading / error */}
-      {isLoading && <p className="text-sm text-blue-grey-400">{t(`${i18nPrefix}.loading`)}</p>}
+      {isLoading && <p className="text-sm text-blue-grey-400 dark:text-navy-200">{t(`${i18nPrefix}.loading`)}</p>}
       {error && !isLoading && (
         <div className="flex items-center gap-3">
           <p className="text-sm text-rose-500">{error}</p>
-          <button onClick={onRefetch} className="text-xs text-twilight-indigo-600 hover:underline cursor-pointer">
+          <button onClick={onRefetch} className="text-xs text-twilight-indigo-600 dark:text-sky-400 hover:underline cursor-pointer">
             {t(`${i18nPrefix}.retry`)}
           </button>
         </div>
@@ -272,7 +284,7 @@ export default function EventWidget({
         <DayTimeline
           rows={[{
             label: t(`${i18nPrefix}.title`),
-            color: svgPrimaryColor,
+            color: resolvedPrimaryColor,
             icon: Icon,
             periods: todayPeriods,
           }]}
@@ -280,7 +292,7 @@ export default function EventWidget({
         />
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-1">
+            <p className="text-xs text-blue-grey-400 dark:text-navy-200 uppercase tracking-wide mb-1">
               {t(`${i18nPrefix}.todayTotal`)}
             </p>
             <p className={`text-3xl font-bold ${totalText} leading-none`}>
@@ -298,29 +310,29 @@ export default function EventWidget({
       {/* Weekly bar chart */}
       {weeklyHistory.some((h) => h > 0) && (
         <div>
-          <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-3 border-t-2 border-dashed border-blue-grey-100 pt-4">
+          <p className="text-xs text-blue-grey-400 dark:text-navy-200 uppercase tracking-wide mb-3 border-t-2 border-dashed border-blue-grey-100 dark:border-navy-600 pt-4">
             {t(`${i18nPrefix}.thisWeek`)}
           </p>
-          <WeeklyBars history={weeklyHistory} primaryColor={svgPrimaryColor} />
+          <WeeklyBars history={weeklyHistory} primaryColor={resolvedPrimaryColor} />
         </div>
       )}
 
       {/* Recent sessions */}
       {recentSessions.length > 0 && (
         <div>
-          <p className="text-xs text-blue-grey-400 uppercase tracking-wide mb-2">{t(`${i18nPrefix}.recentSessions`)}</p>
+          <p className="text-xs text-blue-grey-400 dark:text-navy-200 uppercase tracking-wide mb-2">{t(`${i18nPrefix}.recentSessions`)}</p>
           <div className="flex flex-col gap-1">
             {recentSessions.map((e) => {
               const duration = (new Date(e.endedAt) - new Date(e.startedAt)) / 3_600_000;
               return (
-                <div key={e.id} className="flex items-center justify-between py-2 border-b border-blue-grey-50 last:border-0">
+                <div key={e.id} className="flex items-center justify-between py-2 border-b border-blue-grey-50 dark:border-navy-600 last:border-0">
                   <div className="flex items-center gap-2">
-                    {Icon && <Icon size={14} style={{ color: svgPrimaryColor }} strokeWidth={2} />}
+                    {Icon && <Icon size={14} style={{ color: resolvedPrimaryColor }} strokeWidth={2} />}
                     <div>
-                      <p className="text-sm text-blue-grey-700">
+                      <p className="text-sm text-blue-grey-700 dark:text-navy-100">
                         {formatSessionLabel(e.startedAt, t, i18nPrefix)} · {formatTime(e.startedAt)}–{formatTime(e.endedAt)}
                       </p>
-                      <p className="text-xs text-blue-grey-400">{formatHours(duration)}</p>
+                      <p className="text-xs text-blue-grey-400 dark:text-navy-200">{formatHours(duration)}</p>
                     </div>
                   </div>
                   <div className="flex gap-1">

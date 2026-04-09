@@ -11,24 +11,24 @@ const CONFIGS = [
   {
     key: 'sleep',
     icon: Moon,
-    color: '#425bbd', // twilight-indigo-500
+    colorVar: '--chart-sleep', // resolves per theme
     i18nPrefix: 'history.sleep',
-    accentBg: 'bg-twilight-indigo-50',
-    accentDot: 'bg-twilight-indigo-500',
-    accentText: 'text-twilight-indigo-700',
-    accentSubText: 'text-twilight-indigo-500',
-    totalText: 'text-twilight-indigo-600',
+    accentBg: 'bg-twilight-indigo-50 dark:bg-sky-500/10',
+    accentDot: 'bg-twilight-indigo-500 dark:bg-sky-500',
+    accentText: 'text-twilight-indigo-700 dark:text-sky-300',
+    accentSubText: 'text-twilight-indigo-500 dark:text-sky-400',
+    totalText: 'text-twilight-indigo-600 dark:text-sky-400',
   },
   {
     key: 'feeding',
     icon: Milk,
-    color: '#f5b20a', // light-apricot-500
+    colorVar: '--chart-feed', // resolves per theme
     i18nPrefix: 'history.feeding',
-    accentBg: 'bg-light-apricot-50',
-    accentDot: 'bg-light-apricot-500',
-    accentText: 'text-light-apricot-700',
-    accentSubText: 'text-light-apricot-500',
-    totalText: 'text-light-apricot-600',
+    accentBg: 'bg-light-apricot-50 dark:bg-light-apricot-500/10',
+    accentDot: 'bg-light-apricot-500 dark:bg-light-apricot-400',
+    accentText: 'text-light-apricot-700 dark:text-light-apricot-300',
+    accentSubText: 'text-light-apricot-500 dark:text-light-apricot-400',
+    totalText: 'text-light-apricot-500 dark:text-light-apricot-400',
   },
 ];
 
@@ -44,7 +44,7 @@ function ActiveBanner({ config, activeEvent, now, onStop, t }) {
   const { accentBg, accentDot, accentText, accentSubText, i18nPrefix } = config;
   const elapsed = formatElapsed(now - new Date(activeEvent.startedAt), t, i18nPrefix);
   return (
-    <div className={`flex items-center justify-between ${accentBg} rounded-xl px-4 py-3`}>
+    <div className={`flex items-center justify-between ${accentBg} border border-black/5 dark:border-white/5 rounded-xl px-4 py-3`}>
       <div className="flex items-center gap-2">
         <span className={`w-2.5 h-2.5 rounded-full ${accentDot} animate-pulse`} />
         <div>
@@ -75,6 +75,10 @@ export default function DayWidget() {
 
   const anyActive = !!(sleep.activeSleep || feeding.activeFeeding);
 
+  // Resolve CSS variable hex at render time (updates when theme class changes)
+  const getColor = (varName) =>
+    getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+
   const data = [
     {
       config: CONFIGS[0],
@@ -98,13 +102,13 @@ export default function DayWidget() {
 
   const timelineRows = data.map(({ config, periods }) => ({
     label: t(`${config.i18nPrefix}.title`),
-    color: config.color,
+    color: getColor(config.colorVar),
     icon: config.icon,
     periods,
   }));
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 p-5 flex flex-col gap-4">
+    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-4">
       {/* Active banners */}
       {data.map(({ config, active, onStop }) =>
         active ? (
@@ -118,13 +122,14 @@ export default function DayWidget() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3">
         {data.map(({ config, events, periods, active, onStart, statusLabel }) => {
-          const { icon: Icon, color, totalText, i18nPrefix } = config;
+          const { icon: Icon, colorVar, totalText, i18nPrefix } = config;
+          const color = getColor(colorVar);
           const total = periods.reduce((sum, p) => sum + Math.max(0, p.toH - p.fromH), 0);
           const count = periods.length;
           const timeSince = !active ? getTimeSinceLastEnded(events, now) : null;
 
           return (
-            <div key={config.key} className="bg-blue-grey-50 rounded-xl p-3 flex flex-col gap-0.5 relative">
+            <div key={config.key} className="bg-blue-grey-50 dark:bg-navy-600 dark:border-transparent rounded-xl p-3 flex flex-col gap-0.5 relative">
               {!anyActive && (
                 <button
                   onClick={onStart}
@@ -136,14 +141,14 @@ export default function DayWidget() {
               )}
               <div className="flex items-center gap-1.5">
                 <Icon size={13} style={{ color }} strokeWidth={2} />
-                <span className="text-xs font-medium text-blue-grey-400">{t(`${i18nPrefix}.title`)}</span>
+                <span className="text-xs font-medium text-blue-grey-400 dark:text-white">{t(`${i18nPrefix}.title`)}</span>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className={`text-2xl font-bold leading-tight ${totalText}`}>{formatHours(total)}</span>
-                <span className="text-xs font-medium text-blue-grey-400">×{count}</span>
+                <span className="text-xs font-medium text-blue-grey-400 dark:text-navy-200">×{count}</span>
               </div>
               {timeSince !== null && (
-                <span className="text-xs text-blue-grey-400">{statusLabel} · {formatHours(timeSince)}</span>
+                <span className="text-xs text-blue-grey-400 dark:text-navy-200">{statusLabel} · {formatHours(timeSince)}</span>
               )}
             </div>
           );
