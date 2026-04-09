@@ -1,4 +1,4 @@
-import { computePeriodsForDate, formatTime, formatHours } from '../../utils/eventWidgetHelpers';
+import { computePeriodsForDate, computeDayDuration, formatTime, formatHours } from '../../utils/eventWidgetHelpers';
 
 export default function DayEventSummary({ events, date, color, icon: Icon, label }) {
   const dayStart = new Date(date);
@@ -13,7 +13,7 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
   });
 
   const periods = computePeriodsForDate(events, date);
-  const totalH = periods.reduce((sum, p) => sum + (p.toH - p.fromH), 0);
+  const totalH = computeDayDuration(events, date); // ms-precise, matches chart bar calculation
 
   if (dayEvents.length === 0) return null;
 
@@ -30,20 +30,16 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
 
       <div className="flex flex-col">
         {dayEvents.map((e) => {
-          // Clamp to day boundaries so events spanning midnight show only the portion for this day
-          const clampedFrom = Math.max(new Date(e.startedAt).getTime(), dayStart.getTime());
-          const clampedTo = e.endedAt
-            ? Math.min(new Date(e.endedAt).getTime(), dayEnd.getTime())
-            : null;
-          const durationH = clampedTo !== null ? (clampedTo - clampedFrom) / 3_600_000 : null;
+          // Full event duration, not clamped to day boundaries
+          const from = new Date(e.startedAt).getTime();
+          const to = e.endedAt ? new Date(e.endedAt).getTime() : Date.now();
+          const durationH = (to - from) / 3_600_000;
           return (
             <div key={e.id} className="flex items-center justify-between py-2 border-b border-blue-grey-50 last:border-0">
               <p className="text-sm text-blue-grey-700">
                 {formatTime(e.startedAt)} – {e.endedAt ? formatTime(e.endedAt) : '…'}
               </p>
-              {durationH !== null && (
-                <p className="text-xs text-blue-grey-400">{formatHours(durationH)}</p>
-              )}
+              <p className="text-xs text-blue-grey-400">{formatHours(durationH)}</p>
             </div>
           );
         })}

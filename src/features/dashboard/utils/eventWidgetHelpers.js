@@ -99,21 +99,48 @@ export function computeGapPeriods(primaryPeriods, now) {
  * Compute event periods for an arbitrary calendar date (0–24h range).
  * Active events (no endedAt) are capped at midnight of that day.
  */
-export function computePeriodsForDate(events, date) {
+/**
+ * Total hours of matching events on a given calendar date.
+ * Active events (no endedAt) are capped at `now`, not at midnight,
+ * so an in-progress session contributes its elapsed portion to the total.
+ */
+export function computeDayDuration(events, date, now = new Date()) {
   const dayStart = new Date(date);
   dayStart.setHours(0, 0, 0, 0);
   const dayEnd = new Date(dayStart);
   dayEnd.setDate(dayEnd.getDate() + 1);
 
+  return events.reduce((total, e) => {
+    const from = new Date(e.startedAt).getTime();
+    const to = e.endedAt
+      ? new Date(e.endedAt).getTime()
+      : Math.min(now.getTime(), dayEnd.getTime()); // cap active events at now (or midnight for past days)
+    const clampedFrom = Math.max(from, dayStart.getTime());
+    const clampedTo = Math.min(to, dayEnd.getTime());
+    return clampedTo > clampedFrom ? total + (clampedTo - clampedFrom) / 3_600_000 : total;
+  }, 0);
+}
+
+export function computePeriodsForDate(events, date, now = new Date()) {
+  const dayStart = new Date(date);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(dayStart);
+  dayEnd.setDate(dayEnd.getDate() + 1);
+
+  // Cap active events at now (or midnight for past days) — same logic as computeDayDuration
+  const cap = (e) =>
+    e.endedAt
+      ? new Date(e.endedAt)
+      : new Date(Math.min(now.getTime(), dayEnd.getTime()));
+
   return events
     .filter((e) => {
-      const from = new Date(e.startedAt);
-      const to = e.endedAt ? new Date(e.endedAt) : dayEnd;
-      return to > dayStart && from < dayEnd;
+      const to = cap(e);
+      return to > dayStart && new Date(e.startedAt) < dayEnd;
     })
     .map((e) => {
       const fromDate = new Date(e.startedAt);
-      const toDate = e.endedAt ? new Date(e.endedAt) : dayEnd;
+      const toDate = cap(e);
       const fromH = fromDate < dayStart ? 0 : fromDate.getHours() + fromDate.getMinutes() / 60;
       const toH = toDate >= dayEnd ? 24 : toDate.getHours() + toDate.getMinutes() / 60;
       const durationH = toH - fromH;
@@ -123,21 +150,10 @@ export function computePeriodsForDate(events, date) {
 }
 
 export function computeWeeklyHistory(events, days = 7) {
+  const now = new Date();
   return Array.from({ length: days }, (_, i) => {
-    const dayStart = new Date();
-    dayStart.setDate(dayStart.getDate() - (days - 1 - i));
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(dayStart);
-    dayEnd.setDate(dayEnd.getDate() + 1);
-
-    return events
-      .filter((e) => e.endedAt)
-      .reduce((total, e) => {
-        const from = new Date(e.startedAt).getTime();
-        const to = new Date(e.endedAt).getTime();
-        const clampedFrom = Math.max(from, dayStart.getTime());
-        const clampedTo = Math.min(to, dayEnd.getTime());
-        return clampedTo > clampedFrom ? total + (clampedTo - clampedFrom) / 3_600_000 : total;
-      }, 0);
+    const day = new Date(now);
+    day.setDate(day.getDate() - (days - 1 - i));
+    return computeDayDuration(events, day, now);
   });
 }
