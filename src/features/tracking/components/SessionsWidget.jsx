@@ -6,7 +6,7 @@ import Button from '../../../shared/components/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 import Pagination from '../../../shared/components/Pagination';
 import { parseApiError } from '../../../shared/utils/parseApiError';
-import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
+import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/utils/eventWidgetHelpers';
 
 export const TYPE_META = {
   sleep:   { icon: Moon,     color: '#425bbd', i18nPrefix: 'history.sleep' },

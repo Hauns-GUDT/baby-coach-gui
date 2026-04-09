@@ -5,7 +5,7 @@ import Button from '../../../../shared/components/Button';
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
-import { computeTodayPeriods, formatHours, formatTime, formatElapsed } from './shared/eventWidgetHelpers';
+import { computeTodayPeriods, formatHours, formatTime, formatElapsed } from '../../utils/eventWidgetHelpers';
 
 const CONFIGS = [
   {

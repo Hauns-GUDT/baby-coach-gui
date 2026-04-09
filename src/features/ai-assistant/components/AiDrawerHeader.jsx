@@ -1,6 +1,6 @@
 import { BotMessageSquare, X, ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { SCREEN_HOME } from './constants';
+import { SCREEN_HOME } from '../constants';
 
 export default function AiDrawerHeader({ screen, backLabel, onBack, onClose }) {
   const { t } = useTranslation();

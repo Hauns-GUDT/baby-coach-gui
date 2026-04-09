@@ -1,6 +1,6 @@
 import { Milk } from 'lucide-react';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
-import EventWidget from './shared/EventWidget';
+import EventWidget from './EventWidget';
 
 const FEEDING_CONFIG = {
   i18nPrefix: 'history.feeding',
