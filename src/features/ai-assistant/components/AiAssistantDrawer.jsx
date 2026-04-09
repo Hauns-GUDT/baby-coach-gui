@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { askChat, listConversations, getConversationMessages, deleteConversation } from '../../../shared/api/chatService';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepPrediction } from '../hooks/useSleepPrediction';
-import { TOPICS, SCREEN_HOME, SCREEN_TOPIC, SCREEN_ANSWER } from './AiAssistant/constants';
-import AiDrawerHeader from './AiAssistant/AiDrawerHeader';
-import AiHomeScreen from './AiAssistant/AiHomeScreen';
-import AiTopicScreen from './AiAssistant/AiTopicScreen';
-import AiAnswerScreen from './AiAssistant/AiAnswerScreen';
-import AiInputBar from './AiAssistant/AiInputBar';
+import { TOPICS, SCREEN_HOME, SCREEN_TOPIC, SCREEN_ANSWER } from '../constants';
+import AiDrawerHeader from './AiDrawerHeader';
+import AiHomeScreen from './AiHomeScreen';
+import AiTopicScreen from './AiTopicScreen';
+import AiAnswerScreen from './AiAnswerScreen';
+import AiInputBar from './AiInputBar';
 
 export default function AiAssistantDrawer({ isOpen, onClose }) {
   const { t } = useTranslation();

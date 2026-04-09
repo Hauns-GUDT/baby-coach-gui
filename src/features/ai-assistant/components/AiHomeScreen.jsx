@@ -1,6 +1,6 @@
 import { Moon, Milk, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { TOPICS } from './constants';
+import { TOPICS } from '../constants';
 
 export default function AiHomeScreen({
   conversations,

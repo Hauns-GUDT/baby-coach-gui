@@ -1,6 +1,6 @@
 import { Moon } from 'lucide-react';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
-import EventWidget from './shared/EventWidget';
+import EventWidget from './EventWidget';
 
 const SLEEP_CONFIG = {
   i18nPrefix: 'history.sleep',

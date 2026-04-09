@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Navigation from './shared/components/Navigation';
-import AiAssistantDrawer from './features/tracking/components/AiAssistantDrawer';
+import AiAssistantDrawer from './features/ai-assistant/components/AiAssistantDrawer';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 import AdminRoute from './shared/components/AdminRoute';
 import GuestRoute from './shared/components/GuestRoute';

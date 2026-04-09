@@ -1,4 +1,4 @@
-import { computePeriodsForDate, formatTime, formatHours } from '../../dashboard/components/widgets/shared/eventWidgetHelpers';
+import { computePeriodsForDate, formatTime, formatHours } from '../../utils/eventWidgetHelpers';
 
 export default function DayEventSummary({ events, date, color, icon: Icon, label }) {
   const dayStart = new Date(date);

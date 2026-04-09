@@ -5,9 +5,9 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
-import { computeWeeklyHistory, computePeriodsForDate, formatHours } from './shared/eventWidgetHelpers';
+import { computeWeeklyHistory, computePeriodsForDate, formatHours } from '../../utils/eventWidgetHelpers';
 import DayTimeline from '../../../../shared/components/DayTimeline';
-import DayEventSummary from '../../../history/components/DayEventSummary';
+import DayEventSummary from './DayEventSummary';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 

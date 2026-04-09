@@ -9,11 +9,11 @@ import {
   BarElement,
   Tooltip,
 } from 'chart.js';
-import Button from '../../../../../shared/components/Button';
-import IconButton from '../../../../../shared/components/IconButton';
-import ConfirmDialog from '../../../../../shared/components/ConfirmDialog';
-import DayTimeline from '../../../../../shared/components/DayTimeline';
-import { parseApiError } from '../../../../../shared/utils/parseApiError';
+import Button from '../../../../shared/components/Button';
+import IconButton from '../../../../shared/components/IconButton';
+import ConfirmDialog from '../../../../shared/components/ConfirmDialog';
+import DayTimeline from '../../../../shared/components/DayTimeline';
+import { parseApiError } from '../../../../shared/utils/parseApiError';
 import {
   formatHours,
   formatElapsed,
@@ -22,7 +22,7 @@ import {
   toDatetimeLocal,
   computeTodayPeriods,
   computeWeeklyHistory,
-} from './eventWidgetHelpers';
+} from '../../utils/eventWidgetHelpers';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
