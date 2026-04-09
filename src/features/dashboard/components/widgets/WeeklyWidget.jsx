@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Milk } from 'lucide-react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
 import { computeWeeklyHistory, computePeriodsForDate, formatHours } from '../../utils/eventWidgetHelpers';
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import DayEventSummary from './DayEventSummary';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-// Draws formatted hours above each bar
-const hoursAboveBarsPlugin = {
-  id: 'hoursAboveBars',
+// Draws formatted hours above each data point
+const hoursAbovePointsPlugin = {
+  id: 'hoursAbovePoints',
   afterDatasetsDraw(chart) {
     const { ctx } = chart;
     chart.data.datasets.forEach((dataset, di) => {
-      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+      chart.getDatasetMeta(di).data.forEach((point, i) => {
         const value = dataset.data[i];
         if (!value) return;
         ctx.save();
@@ -25,7 +25,7 @@ const hoursAboveBarsPlugin = {
         ctx.fillStyle = '#6e9dc4'; // blue-grey-400
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
-        ctx.fillText(formatHours(value), bar.x, bar.y - 2);
+        ctx.fillText(formatHours(value), point.x, point.y - 6);
         ctx.restore();
       });
     });
@@ -83,9 +83,13 @@ export default function WeeklyWidget() {
       {
         label: t('history.sleep.title'),
         data: sleepHistory,
-        backgroundColor: '#425bbdcc', // twilight-indigo-500
-        borderRadius: 4,
-        borderWidth: 0,
+        borderColor: '#425bbd',        // twilight-indigo-500
+        backgroundColor: '#425bbd22',  // twilight-indigo-500 faded fill
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: '#425bbd',
+        tension: 0.35,
+        fill: true,
       },
     ],
   };
@@ -150,7 +154,7 @@ export default function WeeklyWidget() {
         </div>
 
         <div className="h-40 w-full">
-          <Bar data={chartData} options={options} plugins={[hoursAboveBarsPlugin]} />
+          <Line data={chartData} options={options} plugins={[hoursAbovePointsPlugin]} />
         </div>
 
         {/* Day selector buttons — columns match the chart bars */}
