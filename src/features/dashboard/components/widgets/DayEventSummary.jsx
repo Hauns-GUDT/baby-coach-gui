@@ -1,6 +1,7 @@
 import { computeDayDuration, formatTime, formatHours } from '../../utils/eventWidgetHelpers';
 
-export default function DayEventSummary({ events, date, color, icon: Icon, label }) {
+// bare=true: renders without its own card wrapper (for embedding inside a parent card)
+export default function DayEventSummary({ events, date, color, icon: Icon, label, bare = false }) {
   const dayStart = new Date(date);
   dayStart.setHours(0, 0, 0, 0);
   const dayEnd = new Date(dayStart);
@@ -16,8 +17,8 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
 
   if (dayEvents.length === 0) return null;
 
-  return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
+  const inner = (
+    <>
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-blue-grey-900 dark:text-navy-50 flex items-center gap-2">
           {Icon && <Icon size={18} style={{ color }} strokeWidth={2} />}
@@ -42,6 +43,14 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
           );
         })}
       </div>
+    </>
+  );
+
+  if (bare) return inner;
+
+  return (
+    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
+      {inner}
     </div>
   );
 }

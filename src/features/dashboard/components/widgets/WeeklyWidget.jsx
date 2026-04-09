@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk } from 'lucide-react';
+import { Moon, Milk, Droplets } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
-import { computeWeeklyHistory, computePeriodsForDate, formatHours } from '../../utils/eventWidgetHelpers';
+import { useDiaperEvents } from '../../hooks/useDiaperEvents';
+import { computeWeeklyHistory, computePeriodsForDate, formatHours, formatTime, computeDayDuration } from '../../utils/eventWidgetHelpers';
 import DayTimeline from '../../../../shared/components/DayTimeline';
-import DayEventSummary from './DayEventSummary';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -38,8 +38,9 @@ const hoursAbovePointsPlugin = {
 };
 
 const EVENT_SETS = [
-  { key: 'sleep',   colorVar: '--chart-sleep', icon: Moon,  i18nKey: 'history.sleep.title' },
-  { key: 'feeding', colorVar: '--chart-feed',  icon: Milk,  i18nKey: 'history.feeding.title' },
+  { key: 'sleep',   colorVar: '--chart-sleep',  icon: Moon,     i18nKey: 'history.sleep.title',   showDuration: true },
+  { key: 'feeding', colorVar: '--chart-feed',   icon: Milk,     i18nKey: 'history.feeding.title', showDuration: true },
+  { key: 'diaper',  colorVar: '--chart-diaper', icon: Droplets, i18nKey: 'history.diaper.title',  showDuration: false },
 ];
 
 const RANGES = [
@@ -70,6 +71,7 @@ export default function WeeklyWidget() {
   const { t, i18n } = useTranslation();
   const { sleepEvents } = useSleepEvents();
   const { feedingEvents } = useFeedingEvents();
+  const { diaperEvents } = useDiaperEvents();
 
   const [range, setRange] = useState(7);
   const [selectedDate, setSelectedDate] = useState(todayMidnight);
@@ -205,24 +207,77 @@ export default function WeeklyWidget() {
         </>
       )}
 
-      {selectedDate && (
-        <>
-          <DayEventSummary
-            events={sleepEvents}
-            date={selectedDate}
-            color={getCssVar(EVENT_SETS[0].colorVar)}
-            icon={EVENT_SETS[0].icon}
-            label={t(EVENT_SETS[0].i18nKey)}
-          />
-          <DayEventSummary
-            events={feedingEvents}
-            date={selectedDate}
-            color={getCssVar(EVENT_SETS[1].colorVar)}
-            icon={EVENT_SETS[1].icon}
-            label={t(EVENT_SETS[1].i18nKey)}
-          />
-        </>
-      )}
+      {selectedDate && (() => {
+        const dayStart = new Date(selectedDate);
+        dayStart.setHours(0, 0, 0, 0);
+        const dayEnd = new Date(dayStart);
+        dayEnd.setDate(dayEnd.getDate() + 1);
+
+        const sets = [
+          { events: sleepEvents,   ...EVENT_SETS[0] },
+          { events: feedingEvents, ...EVENT_SETS[1] },
+          { events: diaperEvents,  ...EVENT_SETS[2] },
+        ].map((s) => ({
+          ...s,
+          color: getCssVar(s.colorVar),
+          dayEvents: s.events.filter((e) => {
+            const from = new Date(e.startedAt);
+            const to = e.endedAt ? new Date(e.endedAt) : dayEnd;
+            return to > dayStart && from < dayEnd;
+          }),
+          totalH: computeDayDuration(s.events, selectedDate),
+          showDuration: s.showDuration,
+        })).filter((s) => s.dayEvents.length > 0);
+
+        if (sets.length === 0) return null;
+
+        // Merge all events into one list sorted by startedAt ascending
+        const allDayEvents = sets
+          .flatMap((s) => s.dayEvents.map((e) => ({ ...e, color: s.color, Icon: s.icon, showDuration: s.showDuration })))
+          .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
+
+        return (
+          <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
+            {/* Type summary rows — icon bubble + label + count, duration on right (not for diaper) */}
+            {sets.map(({ key, icon: Icon, color, i18nKey, dayEvents, totalH, showDuration }) => (
+              <div key={key} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg" style={{ backgroundColor: color + '28' }}>
+                    <Icon size={15} style={{ color }} strokeWidth={2} />
+                  </span>
+                  <span className="text-sm font-medium text-blue-grey-800 dark:text-navy-100">{t(i18nKey)}</span>
+                  <span className="text-xs text-blue-grey-400 dark:text-navy-300">{dayEvents.length}×</span>
+                </div>
+                {showDuration && (
+                  <span className="text-sm font-semibold" style={{ color }}>{formatHours(totalH)}</span>
+                )}
+              </div>
+            ))}
+
+            <div className="border-t border-blue-grey-100 dark:border-navy-600" />
+
+            {/* Merged event list sorted by start time */}
+            <div className="flex flex-col">
+              {allDayEvents.map((e) => {
+                const from = new Date(e.startedAt).getTime();
+                const to = e.endedAt ? new Date(e.endedAt).getTime() : Date.now();
+                const durationH = (to - from) / 3_600_000;
+                return (
+                  <div key={e.id} className="flex items-center gap-3 py-2 border-b border-blue-grey-50 dark:border-navy-600 last:border-0">
+                    <e.Icon size={14} style={{ color: e.color }} strokeWidth={2} className="shrink-0" />
+                    <span className="text-sm text-blue-grey-700 dark:text-navy-100 flex-1">
+                      {formatTime(e.startedAt)} – {e.endedAt ? formatTime(e.endedAt) : '…'}
+                    </span>
+                    {e.showDuration && (
+                      <span className="text-xs text-blue-grey-400 dark:text-navy-200 shrink-0">{formatHours(durationH)}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
