@@ -1,4 +1,4 @@
-import { axiosClient } from '../../api/axiosClient';
+import { axiosClient } from "../../../shared/api/axiosClient";
 
 const SLEEP_API_URL = '/api/sleep';
 

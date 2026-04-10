@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepEventStore } from '../store/useSleepEventStore';
-import { getAllEvents, startEvent, updateEvent, stopEvent, deleteEvent } from '../../../shared/api/eventService';
+import { getAllEvents, startEvent, updateEvent, stopEvent, deleteEvent } from '../../events/api/eventService';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { useEventVersion } from '../../events/store/useEventVersion';
 

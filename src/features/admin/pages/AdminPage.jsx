@@ -164,16 +164,19 @@ function SeedEventsDialog({ user, onClose, t }) {
           )}
 
           {babies !== null && babies.length > 1 && (
-            <select
-              value={selectedBabyId}
-              onChange={(e) => setSelectedBabyId(e.target.value)}
-              className={inputClass}
-            >
-              <option value="">{t('admin.seed.selectBaby')}</option>
-              {babies.map((b) => (
-                <option key={b.id} value={b.id}>{b.name}</option>
-              ))}
-            </select>
+            <FormField label={t('admin.seed.babyLabel')} htmlFor="seed-baby">
+              <select
+                id="seed-baby"
+                value={selectedBabyId}
+                onChange={(e) => setSelectedBabyId(e.target.value)}
+                className={inputClass}
+              >
+                <option value="">{t('admin.seed.selectBaby')}</option>
+                {babies.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
+              </select>
+            </FormField>
           )}
 
           {error && <p className="text-sm text-rose-500">{error}</p>}

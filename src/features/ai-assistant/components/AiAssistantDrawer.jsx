@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { askChat, listConversations, getConversationMessages, deleteConversation } from '../../../shared/api/chatService';
+import { askChat, listConversations, getConversationMessages, deleteConversation } from '../api/chatService';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepPrediction } from '../hooks/useSleepPrediction';
 import { TOPICS, SCREEN_HOME, SCREEN_TOPIC, SCREEN_ANSWER } from '../constants';

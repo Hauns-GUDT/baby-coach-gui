@@ -39,7 +39,7 @@ export default function Dialog({ isOpen, onClose, title, children, footer, maxWi
       >
         {/* Header */}
         {title && (
-          <div className="bg-twilight-indigo-700 dark:bg-navy-800 dark:border-b dark:border-navy-500 px-6 py-4">
+          <div className="px-6 py-4">
             <h2 className="text-lg font-semibold text-white dark:text-navy-50">{title}</h2>
           </div>
         )}

@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useFeedingEventStore } from '../store/useFeedingEventStore';
-import { getAllEvents, createEvent, updateEvent, deleteEvent } from '../../../shared/api/eventService';
+import { getAllEvents, createEvent, updateEvent, deleteEvent } from '../../events/api/eventService';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { useEventVersion } from '../../events/store/useEventVersion';
-
+ 
 export function useFeedingEvents() {
   const { t } = useTranslation();
   const selectedBabyId = useBabyStore((s) => s.selectedBabyId);

@@ -92,6 +92,7 @@ function SubTypeToggle({ type, value, onChange }) {
 }
 
 import { inputClass as inputCls, panelClass } from '../../../shared/utils/inputClass';
+import FormField from '../../../shared/components/design/FormField';
 
 function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
@@ -154,7 +155,7 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-700 dark:border-b dark:border-navy-500 px-6 py-4 flex items-center gap-2">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4 flex items-center gap-2">
           {onBack && (
             <button onClick={onBack} className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 -ml-1 p-1 rounded-lg transition-colors">
               <ChevronLeft size={20} />
@@ -165,32 +166,28 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">
-              {isDiaper ? t('common.time') : 'Start'}
-            </label>
+          <FormField label={isDiaper ? t('common.time') : 'Start'} htmlFor="ef-start" error={fieldErrors.startedAt}>
             <input
+              id="ef-start"
               type="datetime-local"
               required
               value={startedAt}
               onChange={(e) => setStartedAt(e.target.value)}
               className={inputCls}
             />
-            {fieldErrors.startedAt && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.startedAt}</p>}
-          </div>
+          </FormField>
 
           {/* End time — hidden for diaper (point-in-time events) */}
           {!isDiaper && (
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">{t(`${i18nPrefix}.end`)}</label>
+            <FormField label={t(`${i18nPrefix}.end`)} htmlFor="ef-end" error={fieldErrors.endedAt}>
               <input
+                id="ef-end"
                 type="datetime-local"
                 value={endedAt}
                 onChange={(e) => setEndedAt(e.target.value)}
                 className={inputCls}
               />
-              {fieldErrors.endedAt && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.endedAt}</p>}
-            </div>
+            </FormField>
           )}
 
           {/* SubType toggle for diaper and feeding */}
@@ -198,9 +195,9 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
 
           {/* ml input — only for bottle/pre feeding */}
           {showMl && (
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">{t('common.ml')}</label>
+            <FormField label={t('common.ml')} htmlFor="ef-ml">
               <input
+                id="ef-ml"
                 type="number"
                 min="0"
                 step="1"
@@ -209,20 +206,20 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
                 placeholder={t('common.mlPlaceholder')}
                 className={inputCls}
               />
-            </div>
+            </FormField>
           )}
 
           {/* Notes — available for all event types */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">{t('common.notes')}</label>
+          <FormField label={t('common.notes')} htmlFor="ef-notes">
             <textarea
+              id="ef-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('common.notesPlaceholder')}
               rows={2}
               className={`${inputCls} resize-none`}
             />
-          </div>
+          </FormField>
 
           {error && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
           <div className="flex gap-3 justify-end mt-1">
@@ -260,7 +257,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-700 dark:border-b dark:border-navy-500 px-6 py-4">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4">
           <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t('tracking.selectEventType')}</h2>
         </div>
         <div className="p-6 flex flex-col gap-4">

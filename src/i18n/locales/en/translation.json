@@ -405,6 +405,7 @@
       "confirm": "Seed",
       "seeding": "Seeding...",
       "failed": "Seeding failed. Please try again.",
+      "babyLabel": "Baby",
       "loadBabiesFailed": "Could not load babies for this user."
     }
   },

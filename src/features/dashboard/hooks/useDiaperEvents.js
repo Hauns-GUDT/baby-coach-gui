@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useDiaperEventStore } from '../store/useDiaperEventStore';
-import { getAllEvents } from '../../../shared/api/eventService';
+import { getAllEvents } from '../../events/api/eventService';
 import { useEventVersion } from '../../events/store/useEventVersion';
 
 export function useDiaperEvents() {

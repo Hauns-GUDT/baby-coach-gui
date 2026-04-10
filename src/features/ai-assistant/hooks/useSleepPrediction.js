@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useBabyStore } from '../../babies/store/useBabyStore';
-import { getPrediction } from '../../../shared/domain/sleep/sleepService';
+import { getPrediction } from '../api/sleepService';
 
 // Maps backend error codes to i18n keys
 const ERROR_CODE_MAP = {

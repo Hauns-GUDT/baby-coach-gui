@@ -1,4 +1,4 @@
-import { axiosClient } from './axiosClient';
+import { axiosClient } from "../../../shared/api/axiosClient";
 
 export async function askChat(prompt, babyId, conversationId) {
   const { data } = await axiosClient.post('/chat/ask', { prompt, babyId, conversationId });

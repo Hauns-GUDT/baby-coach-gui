@@ -1,4 +1,4 @@
-import { axiosClient } from './axiosClient';
+import { axiosClient } from "../../../shared/api/axiosClient";
 
 export async function getEvents(babyId, { types, ...rest } = {}) {
   const searchParams = new URLSearchParams();

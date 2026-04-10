@@ -405,6 +405,7 @@
       "confirm": "Erstellen",
       "seeding": "Wird erstellt...",
       "failed": "Erstellung fehlgeschlagen. Bitte erneut versuchen.",
+      "babyLabel": "Baby",
       "loadBabiesFailed": "Babys konnten nicht geladen werden."
     }
   },
