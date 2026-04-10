@@ -9,11 +9,14 @@ import {
   BarElement,
   Tooltip,
 } from 'chart.js';
-import Button from '../../../../shared/components/Button';
-import IconButton from '../../../../shared/components/IconButton';
+import Button from '../../../../shared/components/design/Button';
+import FormField from '../../../../shared/components/design/FormField';
+import IconButton from '../../../../shared/components/design/IconButton';
 import ConfirmDialog from '../../../../shared/components/ConfirmDialog';
+import Dialog from '../../../../shared/components/design/Dialog';
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import { parseApiError } from '../../../../shared/utils/parseApiError';
+import { inputClass, panelBase, panelClass } from '../../../../shared/utils/inputClass';
 import {
   formatHours,
   formatElapsed,
@@ -135,54 +138,39 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
     }
   };
 
-  const inputClass = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-500 dark:border-navy-400 dark:text-navy-50 dark:focus:ring-sky-500';
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
-        {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-600 dark:border-b dark:border-navy-400 px-6 py-4">
-          <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t(`${i18nPrefix}.editSession`)}</h2>
+    <Dialog isOpen onClose={onCancel} title={t(`${i18nPrefix}.editSession`)}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <FormField label="Start" htmlFor="edit-startedAt" error={fieldErrors.startedAt}>
+          <input
+            id="edit-startedAt"
+            type="datetime-local"
+            required
+            value={startedAt}
+            onChange={(e) => setStartedAt(e.target.value)}
+            className={inputClass}
+          />
+        </FormField>
+        <FormField label={t(`${i18nPrefix}.end`)} htmlFor="edit-endedAt" error={fieldErrors.endedAt}>
+          <input
+            id="edit-endedAt"
+            type="datetime-local"
+            value={endedAt}
+            onChange={(e) => setEndedAt(e.target.value)}
+            className={inputClass}
+          />
+        </FormField>
+        {error && <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{error}</p>}
+        <div className="flex gap-3 justify-end mt-1">
+          <Button variant="secondary" size="sm" type="button" onClick={onCancel}>
+            {t(`${i18nPrefix}.cancel`)}
+          </Button>
+          <Button variant="primary" size="sm" type="submit" disabled={isSaving}>
+            {isSaving ? t(`${i18nPrefix}.saving`) : t(`${i18nPrefix}.save`)}
+          </Button>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">Start</label>
-            <input
-              type="datetime-local"
-              required
-              value={startedAt}
-              onChange={(e) => setStartedAt(e.target.value)}
-              className={inputClass}
-            />
-            {fieldErrors.startedAt && (
-              <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{fieldErrors.startedAt}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-blue-grey-700 dark:text-navy-100">{t(`${i18nPrefix}.end`)}</label>
-            <input
-              type="datetime-local"
-              value={endedAt}
-              onChange={(e) => setEndedAt(e.target.value)}
-              className={inputClass}
-            />
-            {fieldErrors.endedAt && (
-              <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{fieldErrors.endedAt}</p>
-            )}
-          </div>
-          {error && <p className="text-sm text-rose-600 dark:text-rose-400" role="alert">{error}</p>}
-          <div className="flex gap-3 justify-end mt-1">
-            <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
-              {t(`${i18nPrefix}.cancel`)}
-            </Button>
-            <Button variant="primary" className="py-2 text-sm" type="submit" disabled={isSaving}>
-              {isSaving ? t(`${i18nPrefix}.saving`) : t(`${i18nPrefix}.save`)}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+      </form>
+    </Dialog>
   );
 }
 
@@ -244,7 +232,7 @@ export default function EventWidget({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-5">
+    <div className={`${panelBase} p-5 flex flex-col gap-5`}>
       <h2 className="font-semibold text-blue-grey-900 dark:text-navy-50 text-lg flex items-center gap-2">
         {Icon && <Icon size={20} className={totalText} strokeWidth={2} />}
         {t(`${i18nPrefix}.title`)}

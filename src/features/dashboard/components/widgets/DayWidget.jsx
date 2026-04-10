@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { panelBase } from '../../../../shared/utils/inputClass';
 import { useTranslation } from 'react-i18next';
 import { Moon, Milk, CirclePlay } from 'lucide-react';
-import Button from '../../../../shared/components/Button';
+import Button from '../../../../shared/components/design/Button';
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
@@ -108,7 +109,7 @@ export default function DayWidget() {
   }));
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-4">
+    <div className={`${panelBase} p-5 flex flex-col gap-4`}>
       {/* Active banners */}
       {data.map(({ config, active, onStop }) =>
         active ? (

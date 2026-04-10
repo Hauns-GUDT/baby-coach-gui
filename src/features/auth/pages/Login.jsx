@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLogin } from '../hooks/useLogin';
-import Button from '../../../shared/components/Button';
+import Button from '../../../shared/components/design/Button';
+import FormField from '../../../shared/components/design/FormField';
+import { inputClass } from '../../../shared/utils/inputClass';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
@@ -40,10 +42,7 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold text-blue-grey-700 dark:text-navy-100 text-sm" htmlFor="login">
-              {t('auth.loginLabel')}
-            </label>
+          <FormField label={t('auth.loginLabel')} htmlFor="login">
             <input
               id="login"
               type="text"
@@ -51,14 +50,11 @@ export default function Login() {
               required
               value={login}
               onChange={(e) => setLogin(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             />
-          </div>
+          </FormField>
 
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold text-blue-grey-700 dark:text-navy-100 text-sm" htmlFor="password">
-              {t('auth.passwordLabel')}
-            </label>
+          <FormField label={t('auth.passwordLabel')} htmlFor="password">
             <input
               id="password"
               type="password"
@@ -66,9 +62,9 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             />
-          </div>
+          </FormField>
 
           {error && (
             <p role="alert" className="text-sm text-rose-600">{error}</p>

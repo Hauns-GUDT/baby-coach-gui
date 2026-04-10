@@ -8,6 +8,7 @@ import { useFeedingEvents } from '../../hooks/useFeedingEvents';
 import { useDiaperEvents } from '../../hooks/useDiaperEvents';
 import { computeWeeklyHistory, computePeriodsForDate, formatHours, formatTime, computeDayDuration } from '../../utils/eventWidgetHelpers';
 import DayTimeline from '../../../../shared/components/DayTimeline';
+import { panelBase, panelClass } from '../../../../shared/utils/inputClass';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -142,7 +143,7 @@ export default function WeeklyWidget() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-3">
+      <div className={panelClass}>
 
         {/* Header row: title + range buttons */}
         <div className="flex items-center justify-between">
@@ -201,7 +202,7 @@ export default function WeeklyWidget() {
           {dateLabel && (
             <p className="text-sm font-medium text-blue-grey-500 dark:text-navy-200 px-1 capitalize">{dateLabel}</p>
           )}
-          <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4">
+          <div className={`${panelBase} p-4`}>
             <DayTimeline rows={timelineRows} isToday={selectedDate?.toDateString() === new Date().toDateString()} />
           </div>
         </>
@@ -237,7 +238,7 @@ export default function WeeklyWidget() {
           .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
 
         return (
-          <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
+          <div className={`${panelBase} p-4 flex flex-col gap-3`}>
             {/* Type summary rows — icon bubble + label + count, duration on right (not for diaper) */}
             {sets.map(({ key, icon: Icon, color, i18nKey, dayEvents, totalH, showDuration }) => (
               <div key={key} className="flex items-center justify-between">

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useRegister } from '../hooks/useRegister';
+import FormField from '../../../shared/components/design/FormField';
+import { inputClass } from '../../../shared/utils/inputClass';
 
 export default function Register() {
   const { t, i18n } = useTranslation();
@@ -32,10 +34,7 @@ export default function Register() {
         <h1 className="text-2xl font-bold text-blue-grey-900 mb-6">{t('registration.title')}</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="email">
-              {t('registration.emailLabel')} <span className="text-rose-500">*</span>
-            </label>
+          <FormField label={<>{t('registration.emailLabel')} <span className="text-rose-500">*</span></>} htmlFor="email" error={fieldErrors?.email}>
             <input
               id="email"
               type="email"
@@ -43,17 +42,11 @@ export default function Register() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+              className={inputClass}
             />
-            {fieldErrors?.email && (
-              <p role="alert" className="text-sm text-rose-600">{fieldErrors.email}</p>
-            )}
-          </div>
+          </FormField>
 
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="username">
-              {t('registration.usernameLabel')} <span className="text-rose-500">*</span>
-            </label>
+          <FormField label={<>{t('registration.usernameLabel')} <span className="text-rose-500">*</span></>} htmlFor="username" error={fieldErrors?.username}>
             <input
               id="username"
               type="text"
@@ -61,17 +54,11 @@ export default function Register() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+              className={inputClass}
             />
-            {fieldErrors?.username && (
-              <p role="alert" className="text-sm text-rose-600">{fieldErrors.username}</p>
-            )}
-          </div>
+          </FormField>
 
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold text-blue-grey-700 text-sm" htmlFor="password">
-              {t('registration.passwordLabel')} <span className="text-rose-500">*</span>
-            </label>
+          <FormField label={<>{t('registration.passwordLabel')} <span className="text-rose-500">*</span></>} htmlFor="password" error={fieldErrors?.password}>
             <input
               id="password"
               type="password"
@@ -79,12 +66,9 @@ export default function Register() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300"
+              className={inputClass}
             />
-            {fieldErrors?.password && (
-              <p role="alert" className="text-sm text-rose-600">{fieldErrors.password}</p>
-            )}
-          </div>
+          </FormField>
 
           {error && (
             <p role="alert" className="text-sm text-rose-600">{error}</p>

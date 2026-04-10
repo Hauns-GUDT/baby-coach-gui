@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Pencil, Trash2 } from 'lucide-react';
-import IconButton from '../../../shared/components/IconButton';
+import IconButton from '../../../shared/components/design/IconButton';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
 export default function BabyList({ babies, onDelete }) {

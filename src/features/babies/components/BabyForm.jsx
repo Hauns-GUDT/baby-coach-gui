@@ -1,18 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import Button from '../../../shared/components/Button';
-
-const inputClass = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-500 dark:border-navy-400 dark:text-navy-50 dark:focus:ring-sky-500';
-const labelClass = 'font-semibold text-blue-grey-700 dark:text-navy-100 text-sm';
+import Button from '../../../shared/components/design/Button';
+import FormField from '../../../shared/components/design/FormField';
+import { inputClass } from '../../../shared/utils/inputClass';
 
 export default function BabyForm({ name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isSubmitting, error, fieldErrors = {}, onSubmit, onCancel }) {
   const { t } = useTranslation();
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label className={labelClass} htmlFor="name">
-          {t('babies.name')}
-        </label>
+      <FormField label={t('babies.name')} htmlFor="name" error={fieldErrors.name}>
         <input
           id="name"
           type="text"
@@ -21,15 +17,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           onChange={(e) => setName(e.target.value)}
           className={inputClass}
         />
-        {fieldErrors.name && (
-          <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.name}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1">
-        <label className={labelClass} htmlFor="birthday">
-          {t('babies.birthday')}
-        </label>
+      <FormField label={t('babies.birthday')} htmlFor="birthday" error={fieldErrors.birthday}>
         <input
           id="birthday"
           type="date"
@@ -38,15 +28,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           onChange={(e) => setBirthday(e.target.value)}
           className={inputClass}
         />
-        {fieldErrors.birthday && (
-          <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.birthday}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1">
-        <label className={labelClass} htmlFor="gender">
-          {t('babies.gender')}
-        </label>
+      <FormField label={t('babies.gender')} htmlFor="gender" error={fieldErrors.gender}>
         <select
           id="gender"
           required
@@ -58,15 +42,9 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           <option value="male">{t('babies.male')}</option>
           <option value="female">{t('babies.female')}</option>
         </select>
-        {fieldErrors.gender && (
-          <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.gender}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1">
-        <label className={labelClass} htmlFor="weightGrams">
-          {t('babies.weight')}
-        </label>
+      <FormField label={t('babies.weight')} htmlFor="weightGrams" error={fieldErrors.weightGrams}>
         <input
           id="weightGrams"
           type="number"
@@ -77,10 +55,7 @@ export default function BabyForm({ name, setName, birthday, setBirthday, gender,
           placeholder={t('babies.weightPlaceholder')}
           className={inputClass}
         />
-        {fieldErrors.weightGrams && (
-          <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{fieldErrors.weightGrams}</p>
-        )}
-      </div>
+      </FormField>
 
       {error && (
         <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{error}</p>

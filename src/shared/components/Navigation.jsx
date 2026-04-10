@@ -7,7 +7,8 @@ import { useBabyStore } from '../../features/babies/store/useBabyStore';
 import { getBabies } from '../../features/babies/api/babyService';
 import { useBabyForm } from '../../features/babies/hooks/useBabyForm';
 import BabyForm from '../../features/babies/components/BabyForm';
-import Button from './Button';
+import Button from './design/Button';
+import Dialog from './design/Dialog';
 
 function BabyEditDialog({ baby, onClose }) {
   const { t } = useTranslation();
@@ -15,36 +16,19 @@ function BabyEditDialog({ baby, onClose }) {
     useBabyForm(baby.id, { onSuccess: onClose });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
-        {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-600 dark:border-b dark:border-navy-400 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t('babies.editBaby')}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 transition-colors cursor-pointer"
-            aria-label={t('babies.cancel')}
-          >
-            ✕
-          </button>
-        </div>
-        <div className="p-6">
-          <BabyForm
-            name={name} setName={setName}
-            birthday={birthday} setBirthday={setBirthday}
-            gender={gender} setGender={setGender}
-            weightGrams={weightGrams} setWeightGrams={setWeightGrams}
-            isSubmitting={isSubmitting}
-            error={error}
-            fieldErrors={fieldErrors}
-            onSubmit={submit}
-            onCancel={onClose}
-          />
-        </div>
-      </div>
-    </div>
+    <Dialog isOpen onClose={onClose} title={t('babies.editBaby')}>
+      <BabyForm
+        name={name} setName={setName}
+        birthday={birthday} setBirthday={setBirthday}
+        gender={gender} setGender={setGender}
+        weightGrams={weightGrams} setWeightGrams={setWeightGrams}
+        isSubmitting={isSubmitting}
+        error={error}
+        fieldErrors={fieldErrors}
+        onSubmit={submit}
+        onCancel={onClose}
+      />
+    </Dialog>
   );
 }
 

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useBabies } from '../hooks/useBabies';
 import BabyList from '../components/BabyList';
-import Button from '../../../shared/components/Button';
+import Button from '../../../shared/components/design/Button';
 
 export default function BabiesPage() {
   const { t } = useTranslation();

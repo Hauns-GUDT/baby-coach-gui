@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBabyForm } from '../hooks/useBabyForm';
 import BabyForm from '../components/BabyForm';
+import Dialog from '../../../shared/components/design/Dialog';
 
 export default function BabyFormPage() {
   const { t } = useTranslation();
@@ -10,11 +11,12 @@ export default function BabyFormPage() {
   const { name, setName, birthday, setBirthday, gender, setGender, weightGrams, setWeightGrams, isLoading, isSubmitting, error, fieldErrors, submit } =
     useBabyForm(id);
 
+  const back = () => navigate('/app/profile/babies');
+
   return (
-    <main className="min-h-[calc(100vh-65px)] p-6">
-      <div className="w-full max-w-sm mx-auto flex flex-col gap-6">
+      <Dialog isOpen onClose={back} title={t(id ? 'babies.editBaby' : 'babies.addBaby')}>
         {isLoading ? (
-          <p className="text-sm text-blue-grey-400">{t('babies.loading')}</p>
+          <p className="text-sm text-blue-grey-400 dark:text-navy-200">{t('babies.loading')}</p>
         ) : (
           <BabyForm
             name={name}
@@ -29,10 +31,9 @@ export default function BabyFormPage() {
             error={error}
             fieldErrors={fieldErrors}
             onSubmit={submit}
-            onCancel={() => navigate('/app/profile/babies')}
+            onCancel={back}
           />
         )}
-      </div>
-    </main>
+      </Dialog>
   );
 }

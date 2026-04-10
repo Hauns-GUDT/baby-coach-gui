@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Baby } from 'lucide-react';
-import Button from '../../../shared/components/Button';
+import Button from '../../../shared/components/design/Button';
 
 export default function NoBabyPage() {
   const { t } = useTranslation();

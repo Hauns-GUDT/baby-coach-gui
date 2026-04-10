@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../../features/auth/store/useAuthStore';
-import { useEventPolling } from '../../features/events/hooks/useEventPolling';
+import { useAuthStore } from '../../../features/auth/store/useAuthStore';
+import { useEventPolling } from '../../../features/events/hooks/useEventPolling';
 
 function AuthenticatedShell({ children }) {
   useEventPolling();

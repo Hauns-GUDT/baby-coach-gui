@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Milk, Droplets, Pencil, Trash2, ChevronLeft, CirclePlay, Plus, MessageCircle } from 'lucide-react';
-import IconButton from '../../../shared/components/IconButton';
-import Button from '../../../shared/components/Button';
+import IconButton from '../../../shared/components/design/IconButton';
+import Button from '../../../shared/components/design/Button';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
-import Pagination from '../../../shared/components/Pagination';
+import Pagination from '../../../shared/components/design/Pagination';
 import { parseApiError } from '../../../shared/utils/parseApiError';
 import { formatHours, formatTime, toDatetimeLocal } from '../../dashboard/utils/eventWidgetHelpers';
 
@@ -91,8 +91,7 @@ function SubTypeToggle({ type, value, onChange }) {
   );
 }
 
-// Shared input class for all form fields — light + dark
-const inputCls = 'border border-blue-grey-200 rounded-xl px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:placeholder:text-navy-200 dark:focus:ring-sky-500';
+import { inputClass as inputCls, panelClass } from '../../../shared/utils/inputClass';
 
 function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
@@ -327,7 +326,7 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const i18nPrefix = pendingDelete ? TYPE_META[pendingDelete.type].i18nPrefix : 'history.sleep';
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-5 flex flex-col gap-3">
+    <div className={panelClass}>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-blue-grey-900 dark:text-navy-50 text-lg">{t('tracking.recentSessions')}</h2>
         {onAdd && (

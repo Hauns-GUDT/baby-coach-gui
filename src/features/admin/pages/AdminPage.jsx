@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getUsers, createUser, updateUser, getUserBabies, seedBabyEvents } from '../api/adminService';
-import Button from '../../../shared/components/Button';
+import Button from '../../../shared/components/design/Button';
+import FormField from '../../../shared/components/design/FormField';
+import { inputClass } from '../../../shared/utils/inputClass';
 
 function UserFormModal({ user, onClose, onSaved, t }) {
   const isEdit = Boolean(user);
@@ -54,40 +56,38 @@ function UserFormModal({ user, onClose, onSaved, t }) {
           </h2>
         </div>
         <form onSubmit={submit} className="flex flex-col gap-3 p-6">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-blue-grey-700 dark:text-navy-100">{t('admin.email')}</label>
+          <FormField label={t('admin.email')} htmlFor="admin-email">
             <input
+              id="admin-email"
               type="email"
               required
               value={form.email}
               onChange={set('email')}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-blue-grey-700 dark:text-navy-100">{t('admin.username')}</label>
+          </FormField>
+          <FormField label={t('admin.username')} htmlFor="admin-username">
             <input
+              id="admin-username"
               type="text"
               required
               value={form.username}
               onChange={set('username')}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-blue-grey-700 dark:text-navy-100">
-              {isEdit ? t('admin.passwordOptional') : t('admin.password')}
-            </label>
+          </FormField>
+          <FormField label={isEdit ? t('admin.passwordOptional') : t('admin.password')} htmlFor="admin-password">
             <input
+              id="admin-password"
               type="password"
               required={!isEdit}
               minLength={8}
               value={form.password}
               onChange={set('password')}
               placeholder={isEdit ? t('admin.passwordPlaceholder') : ''}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             />
-          </div>
+          </FormField>
           <div className="flex items-center gap-3">
             <label className="flex items-center gap-2 text-sm font-medium text-blue-grey-700 dark:text-navy-100 cursor-pointer">
               <input type="checkbox" checked={form.isAdmin} onChange={set('isAdmin')} className="w-4 h-4 accent-twilight-indigo-600" />
@@ -167,7 +167,7 @@ function SeedEventsDialog({ user, onClose, t }) {
             <select
               value={selectedBabyId}
               onChange={(e) => setSelectedBabyId(e.target.value)}
-              className="border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:focus:ring-sky-500"
+              className={inputClass}
             >
               <option value="">{t('admin.seed.selectBaby')}</option>
               {babies.map((b) => (
@@ -258,7 +258,7 @@ export default function AdminPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={t('admin.searchPlaceholder')}
-            className="flex-1 border border-blue-grey-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-twilight-indigo-300 dark:bg-navy-600 dark:border-navy-500 dark:text-navy-50 dark:placeholder-navy-300 dark:focus:ring-sky-500"
+            className={`flex-1 ${inputClass}`}
           />
           <Button type="submit" variant="secondary" className="py-2 text-sm">
             {t('admin.search')}
