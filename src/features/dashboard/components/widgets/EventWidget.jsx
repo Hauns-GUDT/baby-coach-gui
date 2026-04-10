@@ -142,7 +142,7 @@ function EditEventDialog({ event, onSave, onCancel, i18nPrefix }) {
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-600 dark:border-b dark:border-navy-400 px-6 py-4">
           <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t(`${i18nPrefix}.editSession`)}</h2>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
@@ -254,7 +254,7 @@ export default function EventWidget({
       {activeEvent && (
         <div className={`flex items-center justify-between ${accentBg} rounded-xl px-4 py-3`}>
           <div className="flex items-center gap-2">
-            <span className={`w-2.5 h-2.5 rounded-full ${accentDot} animate-pulse`} />
+            <span className={`w-2.5 h-2.5 rounded-xl ${accentDot} animate-pulse`} />
             <div>
               <p className={`text-sm font-medium ${accentText}`}>{t(`${i18nPrefix}.active`)}</p>
               <p className={`text-xs ${accentSubText}`}>

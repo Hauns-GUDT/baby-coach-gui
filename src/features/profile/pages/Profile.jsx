@@ -28,7 +28,7 @@ export default function Profile() {
           <span className="text-sm text-blue-grey-700 dark:text-navy-100">{t('profile.language')}</span>
           <button
             onClick={toggleLanguage}
-            className="text-xs font-semibold bg-blue-grey-100 hover:bg-blue-grey-200 text-blue-grey-700 dark:bg-navy-500 dark:hover:bg-navy-400 dark:text-navy-100 px-3 py-1 rounded-full cursor-pointer transition-colors"
+            className="text-xs font-semibold bg-blue-grey-100 hover:bg-blue-grey-200 text-blue-grey-700 dark:bg-navy-500 dark:hover:bg-navy-400 dark:text-navy-100 px-3 py-1 rounded-xl cursor-pointer transition-colors"
           >
             {i18n.language.startsWith('de') ? 'EN' : 'DE'}
           </button>
@@ -36,12 +36,12 @@ export default function Profile() {
 
         <div className="flex items-center justify-between px-4 py-3">
           <span className="text-sm text-blue-grey-700 dark:text-navy-100">{t('profile.theme')}</span>
-          <div className="flex gap-1 bg-blue-grey-100 dark:bg-navy-600 rounded-full p-1">
+          <div className="flex gap-1 bg-blue-grey-100 dark:bg-navy-600 rounded-xl p-1">
             {THEME_MODES.map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className={`text-xs font-semibold px-3 py-1 rounded-full cursor-pointer transition-colors ${
+                className={`text-xs font-semibold px-3 py-1 rounded-xl cursor-pointer transition-colors ${
                   mode === m
                     ? 'bg-white text-blue-grey-800 shadow-sm dark:bg-navy-400 dark:text-navy-50'
                     : 'text-blue-grey-500 hover:text-blue-grey-700 dark:text-navy-200 dark:hover:text-navy-50'

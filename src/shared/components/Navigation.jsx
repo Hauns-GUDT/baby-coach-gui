@@ -7,6 +7,7 @@ import { useBabyStore } from '../../features/babies/store/useBabyStore';
 import { getBabies } from '../../features/babies/api/babyService';
 import { useBabyForm } from '../../features/babies/hooks/useBabyForm';
 import BabyForm from '../../features/babies/components/BabyForm';
+import Button from './Button';
 
 function BabyEditDialog({ baby, onClose }) {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ function BabyEditDialog({ baby, onClose }) {
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white dark:bg-navy-600 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4 flex items-center justify-between">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-600 dark:border-b dark:border-navy-400 px-6 py-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t('babies.editBaby')}</h2>
           <button
             type="button"
@@ -85,7 +86,7 @@ export default function Navigation({ onOpenAi }) {
   const babySelector = currentBaby && (
     <button
       onClick={() => setIsBabyDialogOpen(true)}
-      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-800 hover:bg-twilight-indigo-700 dark:text-navy-50 dark:bg-navy-600 dark:hover:bg-navy-400 px-3 py-1 rounded-full cursor-pointer transition-colors"
+      className="text-sm font-medium text-twilight-indigo-100 bg-twilight-indigo-800 hover:bg-twilight-indigo-700 dark:text-navy-50 dark:bg-navy-600 dark:hover:bg-navy-400 px-3 py-1 rounded-xl cursor-pointer transition-colors"
     >
       {currentBaby.name}
     </button>
@@ -147,13 +148,13 @@ export default function Navigation({ onOpenAi }) {
             {babySelector}
 
             {onOpenAi && (
-              <button
+              <Button
+                variant="primary"
                 onClick={onOpenAi}
                 aria-label={t('aiAssistant.title')}
-                className="w-9 h-9 rounded-full bg-light-apricot-400 text-twilight-indigo-900 hover:bg-light-apricot-300 dark:bg-sky-500 dark:text-navy-900 dark:hover:bg-sky-400 flex items-center justify-center active:scale-95 transition-all"
               >
                 <BotMessageSquare size={17} />
-              </button>
+              </Button>
             )}
           </div>
         </div>

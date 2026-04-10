@@ -63,7 +63,7 @@ export default function DayTimeline({ rows, isToday = false }) {
 
       {/* Single unified track — rounded ends, straight internal segments */}
       <div className="relative h-6" style={{ overflow: 'visible' }}>
-        <div className="absolute inset-0 bg-blue-grey-100 dark:bg-navy-500 rounded-full overflow-hidden">
+        <div className="absolute inset-0 bg-blue-grey-100 dark:bg-navy-500 rounded-xl overflow-hidden">
           {allPeriods.map((p, i) => (
             <div
               key={i}

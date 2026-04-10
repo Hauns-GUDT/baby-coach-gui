@@ -4,7 +4,7 @@ export default function Pagination({ page, totalPages, onPageChange, isLoading =
   if (totalPages <= 1) return null;
 
   const btnBase =
-    'flex items-center justify-center w-9 h-9 rounded-full border transition-all duration-150 ' +
+    'flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-150 ' +
     'disabled:opacity-35 disabled:cursor-not-allowed';
   const btnActive =
     'border-twilight-indigo-200 text-twilight-indigo-600 bg-twilight-indigo-50 ' +

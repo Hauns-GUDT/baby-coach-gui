@@ -20,7 +20,7 @@ export default function PredictionResult({ prediction }) {
   return (
     <div className="flex flex-col gap-2 bg-blue-grey-50 rounded-xl p-3">
       <div className="flex items-center gap-3">
-        <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${isBedtime ? 'bg-twilight-indigo-100' : 'bg-light-apricot-100'}`}>
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isBedtime ? 'bg-twilight-indigo-100' : 'bg-light-apricot-100'}`}>
           <Moon size={16} className={isBedtime ? 'text-twilight-indigo-600' : 'text-light-apricot-600'} />
         </div>
         <div>

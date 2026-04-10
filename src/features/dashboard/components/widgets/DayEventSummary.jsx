@@ -49,7 +49,7 @@ export default function DayEventSummary({ events, date, color, icon: Icon, label
   if (bare) return inner;
 
   return (
-    <div className="bg-white rounded-2xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
+    <div className="bg-white rounded-xl border border-blue-grey-100 dark:bg-navy-700 dark:border-navy-600 p-4 flex flex-col gap-3">
       {inner}
     </div>
   );

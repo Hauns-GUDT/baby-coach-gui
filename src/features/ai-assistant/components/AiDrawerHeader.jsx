@@ -23,7 +23,7 @@ export default function AiDrawerHeader({ screen, backLabel, onBack, onClose }) {
         <button
           onClick={onClose}
           aria-label={t('aiAssistant.close')}
-          className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+          className="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
         >
           <X size={15} />
         </button>

@@ -59,7 +59,7 @@ function PricingCard({ name, description, price, yearlyMonthly, yearlyTotal, fea
       }`}
     >
       {isHighlighted && (
-        <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-light-apricot-400 text-blue-grey-900 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wide">
+        <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-light-apricot-400 text-blue-grey-900 text-xs font-bold px-4 py-1 rounded-xl uppercase tracking-wide">
           Most Popular
         </span>
       )}
@@ -207,7 +207,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => i18n.changeLanguage(i18n.language.startsWith('de') ? 'en' : 'de')}
-              className="text-sm font-medium text-blue-grey-500 hover:text-blue-grey-900 bg-blue-grey-100 hover:bg-blue-grey-200 px-3 py-1 rounded-full transition-colors cursor-pointer"
+              className="text-sm font-medium text-blue-grey-500 hover:text-blue-grey-900 bg-blue-grey-100 hover:bg-blue-grey-200 px-3 py-1 rounded-xl transition-colors cursor-pointer"
             >
               {i18n.language.startsWith('de') ? 'EN' : 'DE'}
             </button>
@@ -232,7 +232,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-twilight-indigo-100/40 via-transparent to-transparent" />
 
         <div className="max-w-3xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold text-twilight-indigo-600 bg-twilight-indigo-50 border border-twilight-indigo-100 rounded-full px-4 py-1.5 mb-6">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold text-twilight-indigo-600 bg-twilight-indigo-50 border border-twilight-indigo-100 rounded-xl px-4 py-1.5 mb-6">
             <Sparkles className="w-3.5 h-3.5" />
             {t('landing.hero.badge')}
           </span>
@@ -262,8 +262,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-twilight-indigo-100 rounded-full blur-3xl opacity-40 -z-10" />
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-twilight-indigo-100 rounded-full blur-3xl opacity-50 -z-10" />
+        <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-twilight-indigo-100 rounded-xl blur-3xl opacity-40 -z-10" />
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-twilight-indigo-100 rounded-xl blur-3xl opacity-50 -z-10" />
       </section>
 
       {/* ── Features ────────────────────────────────────────────────────────── */}
@@ -314,7 +314,7 @@ export default function LandingPage() {
                 }`}
               >
                 {t('landing.pricing.yearly')}
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-xl">
                   {t('landing.pricing.yearlyBadge')}
                 </span>
               </button>

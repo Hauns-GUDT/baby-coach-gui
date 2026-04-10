@@ -22,7 +22,7 @@ export default function AiAnswerScreen({
     <div className="h-full overflow-y-auto p-4 flex flex-col gap-3">
       {isHistoryLoading && (
         <div className="flex items-center gap-2 text-xs text-blue-grey-400 px-1">
-          <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-full animate-spin shrink-0" />
+          <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-xl animate-spin shrink-0" />
           {t('aiAssistant.loading')}
         </div>
       )}
@@ -31,7 +31,7 @@ export default function AiAnswerScreen({
         <div>
           {isSleepLoading && (
             <div className="flex items-center gap-2 text-xs text-blue-grey-400 px-1">
-              <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-full animate-spin shrink-0" />
+              <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-xl animate-spin shrink-0" />
               {t('sleepAssistant.loading')}
             </div>
           )}
@@ -49,7 +49,7 @@ export default function AiAnswerScreen({
           </div>
         ) : (
           <div key={msg.id} className="flex gap-2 items-start">
-            <div className="w-7 h-7 rounded-full bg-twilight-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+            <div className="w-7 h-7 rounded-xl bg-twilight-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
               <Bot size={14} className="text-white" />
             </div>
             <div className="flex-1 bg-blue-grey-50 border border-blue-grey-100 rounded-sm rounded-r-2xl rounded-bl-2xl px-4 py-3">
@@ -61,12 +61,12 @@ export default function AiAnswerScreen({
 
       {answerMode === 'chat' && isChatLoading && (
         <div className="flex gap-2 items-start">
-          <div className="w-7 h-7 rounded-full bg-twilight-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+          <div className="w-7 h-7 rounded-xl bg-twilight-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
             <Bot size={14} className="text-white" />
           </div>
           <div className="flex-1 bg-blue-grey-50 border border-blue-grey-100 rounded-sm rounded-r-2xl rounded-bl-2xl px-4 py-3 min-h-10">
             <div className="flex items-center gap-2 text-xs text-blue-grey-400">
-              <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-full animate-spin" />
+              <span className="w-3.5 h-3.5 border-2 border-twilight-indigo-200 border-t-twilight-indigo-500 rounded-xl animate-spin" />
               {t('aiAssistant.loading')}
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function AiAnswerScreen({
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={onMoreQuestions}
-            className="px-3.5 py-2 rounded-full border border-blue-grey-200 bg-white text-xs font-semibold text-blue-grey-700 hover:border-twilight-indigo-400 hover:text-twilight-indigo-600 transition-all"
+            className="px-3.5 py-2 rounded-xl border border-blue-grey-200 bg-white text-xs font-semibold text-blue-grey-700 hover:border-twilight-indigo-400 hover:text-twilight-indigo-600 transition-all"
           >
             {t('aiAssistant.moreQuestions', { topic: t(`aiAssistant.topics.${activeTopic}.label`) })}
           </button>

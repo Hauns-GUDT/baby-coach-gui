@@ -50,7 +50,7 @@ function TypeFilterBar({ selectedTypes, onToggle }) {
           <button
             key={type}
             onClick={() => onToggle(type)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
               active ? FILTER_ACTIVE_CLS : FILTER_INACTIVE_CLS
             }`}
           >
@@ -79,7 +79,7 @@ function SubTypeToggle({ type, value, onChange }) {
             key={opt}
             type="button"
             onClick={() => onChange(value === opt ? null : opt)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
               value === opt ? TYPE_ACTIVE_CLS[type] : INACTIVE_CLS
             }`}
           >
@@ -155,7 +155,7 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-800 px-6 py-4 flex items-center gap-2">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 dark:border-b dark:border-navy-500 px-6 py-4 flex items-center gap-2">
           {onBack && (
             <button onClick={onBack} className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 -ml-1 p-1 rounded-lg transition-colors">
               <ChevronLeft size={20} />
@@ -261,7 +261,7 @@ export function AddEventDialog({ onCreate, onCancel }) {
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
         {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-800 px-6 py-4">
+        <div className="bg-twilight-indigo-700 dark:bg-navy-700 dark:border-b dark:border-navy-500 px-6 py-4">
           <h2 className="text-lg font-semibold text-white dark:text-navy-50">{t('tracking.selectEventType')}</h2>
         </div>
         <div className="p-6 flex flex-col gap-4">
@@ -331,13 +331,14 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-blue-grey-900 dark:text-navy-50 text-lg">{t('tracking.recentSessions')}</h2>
         {onAdd && (
-          <button
+          <Button
             onClick={onAdd}
+            variant="primary"
+            size='sm'
             aria-label={t('tracking.addEvent')}
-            className="w-8 h-8 rounded-full bg-twilight-indigo-600 text-white hover:bg-twilight-indigo-700 dark:bg-sky-500 dark:hover:bg-sky-400 flex items-center justify-center active:scale-95 transition-all"
           >
             <Plus size={16} strokeWidth={2.5} />
-          </button>
+          </Button>
         )}
       </div>
       <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />

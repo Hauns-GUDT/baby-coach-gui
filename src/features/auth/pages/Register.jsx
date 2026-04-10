@@ -24,7 +24,7 @@ export default function Register() {
     <div className="min-h-screen bg-blue-grey-50 grid place-items-center p-6">
       <button
         onClick={toggleLanguage}
-        className="absolute top-4 right-6 text-sm bg-blue-grey-100 hover:bg-blue-grey-200 px-3 py-1 rounded-full font-medium cursor-pointer transition-colors"
+        className="absolute top-4 right-6 text-sm bg-blue-grey-100 hover:bg-blue-grey-200 px-3 py-1 rounded-xl font-medium cursor-pointer transition-colors"
       >
         {i18n.language.startsWith('de') ? 'EN' : 'DE'}
       </button>

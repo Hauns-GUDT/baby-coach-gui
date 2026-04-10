@@ -46,7 +46,7 @@ function ActiveBanner({ config, activeEvent, now, onStop, t }) {
   return (
     <div className={`flex items-center justify-between ${accentBg} border border-black/5 dark:border-white/5 rounded-xl px-4 py-3`}>
       <div className="flex items-center gap-2">
-        <span className={`w-2.5 h-2.5 rounded-full ${accentDot} animate-pulse`} />
+        <span className={`w-2.5 h-2.5 rounded-xl ${accentDot} animate-pulse`} />
         <div>
           <p className={`text-sm font-medium ${accentText}`}>{t(`${i18nPrefix}.active`)}</p>
           <p className={`text-xs ${accentSubText}`}>
@@ -134,7 +134,7 @@ export default function DayWidget() {
                 <button
                   onClick={onStart}
                   aria-label={t(`${i18nPrefix}.start`)}
-                  className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                  className="absolute top-2 right-2 w-8 h-8 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <CirclePlay size={26} style={{ color }} strokeWidth={1.5} />
                 </button>
