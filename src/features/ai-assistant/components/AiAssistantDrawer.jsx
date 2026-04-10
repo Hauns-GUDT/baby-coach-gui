@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { askChat, listConversations, getConversationMessages, deleteConversation } from '../api/chatService';
 import { useBabyStore } from '../../babies/store/useBabyStore';
 import { useSleepPrediction } from '../hooks/useSleepPrediction';
-import { TOPICS, SCREEN_HOME, SCREEN_TOPIC, SCREEN_ANSWER } from '../constants';
+import { SCREEN_HOME, SCREEN_ANSWER } from '../constants';
 import AiDrawerHeader from './AiDrawerHeader';
 import AiHomeScreen from './AiHomeScreen';
-import AiTopicScreen from './AiTopicScreen';
 import AiAnswerScreen from './AiAnswerScreen';
 import AiInputBar from './AiInputBar';
 
@@ -16,7 +15,6 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
   const { prediction, isLoading: isSleepLoading, errorKey, fetchPrediction, reset: resetPrediction } = useSleepPrediction();
 
   const [screen, setScreen]                             = useState(SCREEN_HOME);
-  const [activeTopic, setActiveTopic]                   = useState(null);
   const [isChatLoading, setIsChatLoading]               = useState(false);
   const [chatError, setChatError]                       = useState(null);
   const [inputValue, setInputValue]                     = useState('');
@@ -52,27 +50,13 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
     resetAnswerState();
     setInputValue('');
     setScreen(SCREEN_HOME);
-    setActiveTopic(null);
     onClose();
-  };
-
-  const goHome = () => {
-    resetAnswerState();
-    setActiveTopic(null);
-    setScreen(SCREEN_HOME);
-  };
-
-  const goToTopic = (key) => {
-    resetAnswerState();
-    setActiveTopic(key);
-    setScreen(SCREEN_TOPIC);
   };
 
   const continueConversation = async (conversationId) => {
     setActiveConversationId(conversationId);
     setIsHistoryLoading(true);
     setAnswerMode('chat');
-    setActiveTopic(null);
     setScreen(SCREEN_ANSWER);
     try {
       const history = await getConversationMessages(conversationId);
@@ -99,7 +83,6 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
     }
   };
 
-  // Used for topic questions and free-text input
   const sendChatPrompt = async (prompt, displayQuestion) => {
     setChatError(null);
     setAnswerMode('chat');
@@ -134,17 +117,8 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
   const handleSleepQuickAction = () => {
     resetAnswerState();
     setAnswerMode('prediction');
-    setActiveTopic(null);
     setScreen(SCREEN_ANSWER);
     fetchPrediction();
-  };
-
-  // Feeding quick action — uses chat (no dedicated algorithm yet)
-  const handleFeedingQuickAction = () => {
-    sendChatPrompt(
-      t('aiAssistant.quickActions.feeding.prompt'),
-      t('aiAssistant.quickActions.feeding.question'),
-    );
   };
 
   const handleSend = () => {
@@ -162,27 +136,15 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
   };
 
   const handleBack = () => {
-    if (screen === SCREEN_TOPIC) { goHome(); return; }
     if (screen === SCREEN_ANSWER) {
       resetAnswerState();
-      setScreen(activeTopic ? SCREEN_TOPIC : SCREEN_HOME);
+      setScreen(SCREEN_HOME);
     }
   };
 
-  const backLabel = screen === SCREEN_ANSWER && activeTopic
-    ? t(`aiAssistant.topics.${activeTopic}.label`)
-    : t('aiAssistant.back');
-
   const placeholder = screen === SCREEN_ANSWER
     ? t('aiAssistant.placeholderFollowUp')
-    : screen === SCREEN_TOPIC && activeTopic
-      ? t('aiAssistant.placeholderTopic', { topic: t(`aiAssistant.topics.${activeTopic}.label`).toLowerCase() })
-      : t('aiAssistant.placeholder');
-
-  const topicData = TOPICS.find((tp) => tp.key === activeTopic);
-  const topicQuestions = activeTopic
-    ? t(`aiAssistant.topics.${activeTopic}.questions`, { returnObjects: true })
-    : [];
+    : t('aiAssistant.placeholder');
 
   const isAnswerLoading = answerMode === 'prediction' ? isSleepLoading : isChatLoading;
   const answerError     = answerMode === 'prediction' && errorKey ? t(errorKey) : chatError;
@@ -197,7 +159,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
       >
         <AiDrawerHeader
           screen={screen}
-          backLabel={backLabel}
+          backLabel={t('aiAssistant.back')}
           onBack={handleBack}
           onClose={handleClose}
         />
@@ -208,18 +170,8 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
             <AiHomeScreen
               conversations={conversations}
               onSleepQuickAction={handleSleepQuickAction}
-              onFeedingQuickAction={handleFeedingQuickAction}
-              onGoToTopic={goToTopic}
               onContinueConversation={continueConversation}
               onDeleteConversation={handleDeleteConversation}
-            />
-          )}
-          {screen === SCREEN_TOPIC && (
-            <AiTopicScreen
-              activeTopic={activeTopic}
-              topicData={topicData}
-              topicQuestions={topicQuestions}
-              onSendQuestion={sendChatPrompt}
             />
           )}
           {screen === SCREEN_ANSWER && (
@@ -232,11 +184,9 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
               isHistoryLoading={isHistoryLoading}
               errorKey={errorKey}
               chatError={chatError}
-              activeTopic={activeTopic}
               messagesEndRef={messagesEndRef}
               isAnswerLoading={isAnswerLoading}
               answerError={answerError}
-              onMoreQuestions={() => { resetAnswerState(); setScreen(SCREEN_TOPIC); }}
             />
           )}
         </div>

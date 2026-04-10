@@ -7,11 +7,12 @@ import { useEffect } from 'react';
  *   isOpen    – controls visibility
  *   onClose   – called on backdrop click or Escape key
  *   title     – optional header title string
+ *   header    – optional JSX to replace the title (use when back button or custom header content is needed)
  *   children  – body content
  *   footer    – optional JSX for action buttons (rendered below body)
  *   maxWidth  – Tailwind max-w-* class (default 'max-w-sm')
  */
-export default function Dialog({ isOpen, onClose, title, children, footer, maxWidth = 'max-w-sm' }) {
+export default function Dialog({ isOpen, onClose, title, header, children, footer, maxWidth = 'max-w-sm' }) {
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;
@@ -35,12 +36,12 @@ export default function Dialog({ isOpen, onClose, title, children, footer, maxWi
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative bg-white dark:bg-navy-700 rounded-2xl border border-blue-grey-100 dark:border-navy-500 overflow-hidden w-full ${maxWidth} flex flex-col`}
+        className={`relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full ${maxWidth} flex flex-col`}
       >
         {/* Header */}
-        {title && (
-          <div className="px-6 py-4">
-            <h2 className="text-lg font-semibold text-white dark:text-navy-50">{title}</h2>
+        {(title || header) && (
+          <div className="px-6 py-4 bg-twilight-indigo-700 dark:bg-navy-700 flex items-center gap-2">
+            {header ?? <h2 className="text-lg font-semibold text-white dark:text-navy-50">{title}</h2>}
           </div>
         )}
 

@@ -11,11 +11,7 @@ export default function AiAnswerScreen({
   isHistoryLoading,
   errorKey,
   chatError,
-  activeTopic,
   messagesEndRef,
-  isAnswerLoading,
-  answerError,
-  onMoreQuestions,
 }) {
   const { t } = useTranslation();
   return (
@@ -74,17 +70,6 @@ export default function AiAnswerScreen({
       )}
 
       {chatError && <p className="text-xs text-rose-500 px-1">{chatError}</p>}
-
-      {!isAnswerLoading && activeTopic && (messages.length > 0 || prediction || answerError) && (
-        <div className="flex gap-2 flex-wrap">
-          <button
-            onClick={onMoreQuestions}
-            className="px-3.5 py-2 rounded-xl border border-blue-grey-200 bg-white text-xs font-semibold text-blue-grey-700 hover:border-twilight-indigo-400 hover:text-twilight-indigo-600 transition-all"
-          >
-            {t('aiAssistant.moreQuestions', { topic: t(`aiAssistant.topics.${activeTopic}.label`) })}
-          </button>
-        </div>
-      )}
 
       <div ref={messagesEndRef} />
     </div>

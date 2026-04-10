@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Droplets } from 'lucide-react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
+import { Moon, Milk, Droplets, ChevronDown } from 'lucide-react';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
 import { useFeedingEvents } from '../../hooks/useFeedingEvents';
 import { useDiaperEvents } from '../../hooks/useDiaperEvents';
@@ -10,38 +10,17 @@ import { computeWeeklyHistory, computePeriodsForDate, formatHours, formatTime, c
 import DayTimeline from '../../../../shared/components/DayTimeline';
 import { panelBase, panelClass } from '../../../../shared/utils/inputClass';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 // Reads a CSS variable from :root (resolves per theme at render time)
 function getCssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-// Draws formatted hours above each data point
-const hoursAbovePointsPlugin = {
-  id: 'hoursAbovePoints',
-  afterDatasetsDraw(chart) {
-    const { ctx } = chart;
-    chart.data.datasets.forEach((dataset, di) => {
-      chart.getDatasetMeta(di).data.forEach((point, i) => {
-        const value = dataset.data[i];
-        if (!value) return;
-        ctx.save();
-        ctx.font = '600 9px system-ui, sans-serif';
-        ctx.fillStyle = getCssVar('--chart-axis');
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(formatHours(value), point.x, point.y - 6);
-        ctx.restore();
-      });
-    });
-  },
-};
-
 const EVENT_SETS = [
-  { key: 'sleep',   colorVar: '--chart-sleep',  icon: Moon,     i18nKey: 'history.sleep.title',   showDuration: true },
-  { key: 'feeding', colorVar: '--chart-feed',   icon: Milk,     i18nKey: 'history.feeding.title', showDuration: true },
-  { key: 'diaper',  colorVar: '--chart-diaper', icon: Droplets, i18nKey: 'history.diaper.title',  showDuration: false },
+  { key: 'sleep',   colorVar: '--chart-sleep',  icon: Moon,     i18nKey: 'history.sleep.title',   showDuration: true,  i18nPrefix: 'history.sleep' },
+  { key: 'feeding', colorVar: '--chart-feed',   icon: Milk,     i18nKey: 'history.feeding.title', showDuration: true,  i18nPrefix: 'history.feeding' },
+  { key: 'diaper',  colorVar: '--chart-diaper', icon: Droplets, i18nKey: 'history.diaper.title',  showDuration: false, i18nPrefix: 'history.diaper' },
 ];
 
 const RANGES = [
@@ -76,6 +55,31 @@ export default function WeeklyWidget() {
 
   const [range, setRange] = useState(7);
   const [selectedDate, setSelectedDate] = useState(todayMidnight);
+  const [chartInset, setChartInset] = useState({ left: 0, right: 0 });
+  const [expandedNotes, setExpandedNotes] = useState(() => new Set());
+
+  const toggleNote = (id) => setExpandedNotes((prev) => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+  const chartRef = useRef(null);
+
+  const chartInsetRef = useRef({ left: 0, right: 0 });
+
+  // Plugin that reads chart area bounds after layout so buttons align with bars
+  // Uses ref comparison to avoid triggering re-render on every chart layout cycle
+  const alignPlugin = useMemo(() => ({
+    id: 'alignButtons',
+    afterLayout(chart) {
+      const { left, right } = chart.chartArea;
+      const newRight = chart.width - right;
+      if (chartInsetRef.current.left !== left || chartInsetRef.current.right !== newRight) {
+        chartInsetRef.current = { left, right: newRight };
+        setChartInset({ left, right: newRight });
+      }
+    },
+  }), []);
 
   const days = buildDays(range);
   const sleepHistory = computeWeeklyHistory(sleepEvents, range);
@@ -94,13 +98,11 @@ export default function WeeklyWidget() {
       {
         label: t('history.sleep.title'),
         data: sleepHistory,
+        backgroundColor: sleepColor + '99',
         borderColor: sleepColor,
-        backgroundColor: sleepColor + '22',
-        borderWidth: 2,
-        pointRadius: 4,
-        pointBackgroundColor: sleepColor,
-        tension: 0.35,
-        fill: true,
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false,
       },
     ],
   };
@@ -123,7 +125,24 @@ export default function WeeklyWidget() {
         ticks: { display: false },
         border: { display: false },
       },
-      y: { display: false, beginAtZero: true, max: maxVal * 1.6 },
+      y: {
+        display: true,
+        beginAtZero: true,
+        max: Math.ceil(maxVal), // round up to nearest full hour so top label is clean
+        border: { display: false, dash: [4, 4] },
+        grid: {
+          color: getCssVar('--chart-axis') + '30',
+          lineWidth: 1,
+        },
+        ticks: {
+          stepSize: 1, // every full hour
+          maxTicksLimit: 8,
+          callback: (v) => Number.isInteger(v) ? `${v}h` : null, // full hours only, no minutes
+          font: { size: 9, family: 'system-ui, sans-serif' },
+          color: getCssVar('--chart-axis'),
+          padding: 4,
+        },
+      },
     },
   };
 
@@ -165,11 +184,14 @@ export default function WeeklyWidget() {
         </div>
 
         <div className="h-40 w-full">
-          <Line data={chartData} options={options} plugins={[hoursAbovePointsPlugin]} />
+          <Bar ref={chartRef} data={chartData} options={options} plugins={[alignPlugin]} />
         </div>
 
-        {/* Day selector buttons — columns match the chart bars */}
-        <div className={`grid gap-1 ${range === 7 ? 'grid-cols-7' : 'grid-cols-14'}`}>
+        {/* Day selector buttons — offset to align with chart bars */}
+        <div
+          className={`grid gap-1 ${range === 7 ? 'grid-cols-7' : 'grid-cols-14'}`}
+          style={{ paddingLeft: chartInset.left, paddingRight: chartInset.right }}
+        >
           {days.map((day, i) => {
             const isSelected = selectedDate && isSameDay(day, selectedDate);
             const dayLabel = new Intl.DateTimeFormat(i18n.language, { weekday: range === 14 ? 'narrow' : 'short' }).format(day);
@@ -234,7 +256,7 @@ export default function WeeklyWidget() {
 
         // Merge all events into one list sorted by startedAt ascending
         const allDayEvents = sets
-          .flatMap((s) => s.dayEvents.map((e) => ({ ...e, color: s.color, Icon: s.icon, showDuration: s.showDuration })))
+          .flatMap((s) => s.dayEvents.map((e) => ({ ...e, color: s.color, Icon: s.icon, showDuration: s.showDuration, i18nPrefix: s.i18nPrefix })))
           .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
 
         return (
@@ -268,8 +290,8 @@ export default function WeeklyWidget() {
                     <e.Icon size={14} style={{ color: e.color }} strokeWidth={2} className="shrink-0" />
                     <span className="text-sm text-blue-grey-700 dark:text-navy-100 flex-1">
                       {formatTime(e.startedAt)} – {e.endedAt ? formatTime(e.endedAt) : '…'}
-                    </span>
-                    {e.showDuration && (
+                      </span>
+                        {e.showDuration && (
                       <span className="text-xs text-blue-grey-400 dark:text-navy-200 shrink-0">{formatHours(durationH)}</span>
                     )}
                   </div>

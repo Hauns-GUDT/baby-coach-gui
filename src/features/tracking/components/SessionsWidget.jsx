@@ -93,6 +93,7 @@ function SubTypeToggle({ type, value, onChange }) {
 
 import { inputClass as inputCls, panelClass } from '../../../shared/utils/inputClass';
 import FormField from '../../../shared/components/design/FormField';
+import Dialog from '../../../shared/components/design/Dialog';
 
 function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) {
   const { t } = useTranslation();
@@ -150,89 +151,88 @@ function EventFormDialog({ type, session, onSave, onCreate, onCancel, onBack }) 
     }
   };
 
+  const dialogHeader = (
+    <>
+      {onBack && (
+        <button onClick={onBack} className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 -ml-1 p-1 rounded-lg transition-colors">
+          <ChevronLeft size={20} />
+        </button>
+      )}
+      <h2 className="text-lg font-semibold text-white dark:text-navy-50">
+        {isEdit ? t(`${i18nPrefix}.editSession`) : t(`${i18nPrefix}.newSession`)}
+      </h2>
+    </>
+  );
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white dark:bg-navy-700 rounded-2xl overflow-hidden w-full max-w-sm flex flex-col">
-        {/* Nav-style header */}
-        <div className="bg-twilight-indigo-700 dark:bg-navy-700 px-6 py-4 flex items-center gap-2">
-          {onBack && (
-            <button onClick={onBack} className="text-twilight-indigo-200 hover:text-white dark:text-navy-200 dark:hover:text-navy-50 -ml-1 p-1 rounded-lg transition-colors">
-              <ChevronLeft size={20} />
-            </button>
-          )}
-          <h2 className="text-lg font-semibold text-white dark:text-navy-50">
-            {isEdit ? t(`${i18nPrefix}.editSession`) : t(`${i18nPrefix}.newSession`)}
-          </h2>
-        </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
-          <FormField label={isDiaper ? t('common.time') : 'Start'} htmlFor="ef-start" error={fieldErrors.startedAt}>
+    <Dialog isOpen onClose={onCancel} header={dialogHeader}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <FormField label={isDiaper ? t('common.time') : 'Start'} htmlFor="ef-start" error={fieldErrors.startedAt}>
+          <input
+            id="ef-start"
+            type="datetime-local"
+            required
+            value={startedAt}
+            onChange={(e) => setStartedAt(e.target.value)}
+            className={inputCls}
+          />
+        </FormField>
+
+        {/* End time — hidden for diaper (point-in-time events) */}
+        {!isDiaper && (
+          <FormField label={t(`${i18nPrefix}.end`)} htmlFor="ef-end" error={fieldErrors.endedAt}>
             <input
-              id="ef-start"
+              id="ef-end"
               type="datetime-local"
-              required
-              value={startedAt}
-              onChange={(e) => setStartedAt(e.target.value)}
+              value={endedAt}
+              onChange={(e) => setEndedAt(e.target.value)}
               className={inputCls}
             />
           </FormField>
+        )}
 
-          {/* End time — hidden for diaper (point-in-time events) */}
-          {!isDiaper && (
-            <FormField label={t(`${i18nPrefix}.end`)} htmlFor="ef-end" error={fieldErrors.endedAt}>
-              <input
-                id="ef-end"
-                type="datetime-local"
-                value={endedAt}
-                onChange={(e) => setEndedAt(e.target.value)}
-                className={inputCls}
-              />
-            </FormField>
-          )}
+        {/* SubType toggle for diaper and feeding */}
+        <SubTypeToggle type={type} value={subType} onChange={(v) => { setSubType(v); if (v !== 'bottle' && v !== 'pre') setMl(''); }} />
 
-          {/* SubType toggle for diaper and feeding */}
-          <SubTypeToggle type={type} value={subType} onChange={(v) => { setSubType(v); if (v !== 'bottle' && v !== 'pre') setMl(''); }} />
-
-          {/* ml input — only for bottle/pre feeding */}
-          {showMl && (
-            <FormField label={t('common.ml')} htmlFor="ef-ml">
-              <input
-                id="ef-ml"
-                type="number"
-                min="0"
-                step="1"
-                value={ml}
-                onChange={(e) => setMl(e.target.value)}
-                placeholder={t('common.mlPlaceholder')}
-                className={inputCls}
-              />
-            </FormField>
-          )}
-
-          {/* Notes — available for all event types */}
-          <FormField label={t('common.notes')} htmlFor="ef-notes">
-            <textarea
-              id="ef-notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder={t('common.notesPlaceholder')}
-              rows={2}
-              className={`${inputCls} resize-none`}
+        {/* ml input — only for bottle/pre feeding */}
+        {showMl && (
+          <FormField label={t('common.ml')} htmlFor="ef-ml">
+            <input
+              id="ef-ml"
+              type="number"
+              min="0"
+              step="1"
+              value={ml}
+              onChange={(e) => setMl(e.target.value)}
+              placeholder={t('common.mlPlaceholder')}
+              className={inputCls}
             />
           </FormField>
+        )}
 
-          {error && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
-          <div className="flex gap-3 justify-end mt-1">
-            <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
-              {t(`${i18nPrefix}.cancel`)}
-            </Button>
-            <Button variant="primary" className="py-2 text-sm" type="submit" disabled={isSaving}>
-              {isSaving ? t(`${i18nPrefix}.saving`) : t(`${i18nPrefix}.save`)}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Notes — available for all event types */}
+        <FormField label={t('common.notes')} htmlFor="ef-notes">
+          <textarea
+            id="ef-notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder={t('common.notesPlaceholder')}
+            rows={2}
+            className={`${inputCls} resize-none`}
+          />
+        </FormField>
+
+        {error && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
+        <div className="flex gap-3 justify-end mt-1">
+          <Button variant="secondary" className="py-2 text-sm" type="button" onClick={onCancel}>
+            {t(`${i18nPrefix}.cancel`)}
+          </Button>
+          <Button variant="primary" className="py-2 text-sm" type="submit" disabled={isSaving}>
+            {isSaving ? t(`${i18nPrefix}.saving`) : t(`${i18nPrefix}.save`)}
+          </Button>
+        </div>
+      </form>
+    </Dialog>
   );
 }
 
