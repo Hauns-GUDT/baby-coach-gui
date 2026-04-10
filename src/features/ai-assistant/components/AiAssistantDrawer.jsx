@@ -155,7 +155,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }) {
 
       {/* h-[72vh] (not just max-h) so flex-1 on the viewport has a defined parent height to fill */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 flex flex-col bg-blue-grey-50 rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out h-[72vh] ${isOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed inset-x-0 bottom-0 z-50 flex flex-col bg-blue-grey-50 dark:bg-navy-800 rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out h-[72vh] ${isOpen ? 'translate-y-0' : 'translate-y-full'}`}
       >
         <AiDrawerHeader
           screen={screen}

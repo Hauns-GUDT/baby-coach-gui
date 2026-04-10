@@ -30,7 +30,7 @@
 ## Dark Mode
 - Every component must support dark mode via Tailwind `dark:` variants
 - Dark neutrals: `dark:bg-navy-*`, `dark:border-navy-*`, `dark:text-navy-*`
-- Text on dark: `dark:text-navy-50` (primary), `dark:text-navy-200` (secondary/muted)
+- Text on dark: `dark:text-navy-50` (primary/headings), `dark:text-navy-200` (default for all other text — labels, descriptions, muted text, secondary info)
 - Never hardcode light-only styles without a `dark:` counterpart
 
 ## State
