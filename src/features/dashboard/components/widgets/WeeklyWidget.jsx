@@ -276,11 +276,11 @@ export default function WeeklyWidget() {
         return (
           <div className={`${panelBase} p-4 flex flex-col gap-3`}>
             {/* Filter buttons — count inside, duration below in event color */}
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap flex-col">
               {allSets.map(({ key, icon: Icon, color, i18nKey, dayEvents, totalH, showDuration }) => {
                 const active = selectedTypes.includes(key);
                 return (
-                  <div key={key} className="flex flex-col items-center gap-0.5">
+                  <div key={key} className="flex items-center gap-0.5">
                     <button
                       onClick={() => toggleType(key)}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors cursor-pointer active:scale-95 ${
@@ -292,7 +292,7 @@ export default function WeeklyWidget() {
                       <span className="opacity-70">{dayEvents.length}×</span>
                     </button>
                     {showDuration && (
-                      <span className="text-xs font-medium" style={{ color }}>{formatHours(totalH)}</span>
+                      <span className="text-xs font-medium ml-auto" style={{ color }}>{formatHours(totalH)}</span>
                     )}
                   </div>
                 );
