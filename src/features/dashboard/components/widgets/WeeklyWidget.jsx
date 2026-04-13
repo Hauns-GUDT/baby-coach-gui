@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Milk, Droplets, ChevronDown } from 'lucide-react';
+import { Moon, Milk, Droplets, ChevronDown, MessageCircle } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { useSleepEvents } from '../../hooks/useSleepEvents';
@@ -47,6 +47,10 @@ function todayMidnight() {
   return d;
 }
 
+// Filter chip active/inactive classes (mirrors tracking page)
+const FILTER_ACTIVE_CLS   = 'bg-twilight-indigo-600 border-twilight-indigo-600 text-white dark:bg-sky-500/20 dark:border-sky-500 dark:text-sky-100';
+const FILTER_INACTIVE_CLS = 'bg-white border-blue-grey-200 text-blue-grey-500 hover:border-blue-grey-400 dark:bg-navy-600 dark:border-navy-400 dark:text-navy-100 dark:hover:border-navy-300';
+
 export default function WeeklyWidget() {
   const { t, i18n } = useTranslation();
   const { sleepEvents } = useSleepEvents();
@@ -57,6 +61,11 @@ export default function WeeklyWidget() {
   const [selectedDate, setSelectedDate] = useState(todayMidnight);
   const [chartInset, setChartInset] = useState({ left: 0, right: 0 });
   const [expandedNotes, setExpandedNotes] = useState(() => new Set());
+  const [selectedTypes, setSelectedTypes] = useState([]);
+
+  const toggleType = (type) => setSelectedTypes((prev) =>
+    prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+  );
 
   const toggleNote = (id) => setExpandedNotes((prev) => {
     const next = new Set(prev);
@@ -150,10 +159,14 @@ export default function WeeklyWidget() {
   const feedingPeriods = selectedDate ? computePeriodsForDate(feedingEvents, selectedDate) : [];
 
   const timelineRows = selectedDate
-    ? [
-        { label: t(EVENT_SETS[0].i18nKey), color: getCssVar(EVENT_SETS[0].colorVar), icon: EVENT_SETS[0].icon, periods: sleepPeriods },
-        { label: t(EVENT_SETS[1].i18nKey), color: getCssVar(EVENT_SETS[1].colorVar), icon: EVENT_SETS[1].icon, periods: feedingPeriods },
-      ]
+    ? EVENT_SETS.slice(0, 2) // sleep + feeding only (diaper is point-in-time)
+        .filter(({ key }) => selectedTypes.length === 0 || selectedTypes.includes(key))
+        .map(({ i18nKey, colorVar, icon }, idx) => ({
+          label: t(i18nKey),
+          color: getCssVar(colorVar),
+          icon,
+          periods: idx === 0 ? sleepPeriods : feedingPeriods,
+        }))
     : [];
 
   const dateLabel = selectedDate
@@ -236,7 +249,8 @@ export default function WeeklyWidget() {
         const dayEnd = new Date(dayStart);
         dayEnd.setDate(dayEnd.getDate() + 1);
 
-        const sets = [
+        // All types with events on this day — drives filter buttons
+        const allSets = [
           { events: sleepEvents,   ...EVENT_SETS[0] },
           { events: feedingEvents, ...EVENT_SETS[1] },
           { events: diaperEvents,  ...EVENT_SETS[2] },
@@ -249,35 +263,43 @@ export default function WeeklyWidget() {
             return to > dayStart && from < dayEnd;
           }),
           totalH: computeDayDuration(s.events, selectedDate),
-          showDuration: s.showDuration,
         })).filter((s) => s.dayEvents.length > 0);
 
-        if (sets.length === 0) return null;
+        if (allSets.length === 0) return null;
 
-        // Merge all events into one list sorted by startedAt ascending
-        const allDayEvents = sets
+        // Only selected types feed the event list (empty = show all)
+        const allDayEvents = allSets
+          .filter((s) => selectedTypes.length === 0 || selectedTypes.includes(s.key))
           .flatMap((s) => s.dayEvents.map((e) => ({ ...e, color: s.color, Icon: s.icon, showDuration: s.showDuration, i18nPrefix: s.i18nPrefix })))
           .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
 
         return (
           <div className={`${panelBase} p-4 flex flex-col gap-3`}>
-            {/* Type summary rows — icon bubble + label + count, duration on right (not for diaper) */}
-            {sets.map(({ key, icon: Icon, color, i18nKey, dayEvents, totalH, showDuration }) => (
-              <div key={key} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="p-1.5 rounded-lg" style={{ backgroundColor: color + '28' }}>
-                    <Icon size={15} style={{ color }} strokeWidth={2} />
-                  </span>
-                  <span className="text-sm font-medium text-blue-grey-800 dark:text-navy-100">{t(i18nKey)}</span>
-                  <span className="text-xs text-blue-grey-400 dark:text-navy-300">{dayEvents.length}×</span>
-                </div>
-                {showDuration && (
-                  <span className="text-sm font-semibold" style={{ color }}>{formatHours(totalH)}</span>
-                )}
-              </div>
-            ))}
+            {/* Filter buttons — count inside, duration below in event color */}
+            <div className="flex gap-2 flex-wrap">
+              {allSets.map(({ key, icon: Icon, color, i18nKey, dayEvents, totalH, showDuration }) => {
+                const active = selectedTypes.includes(key);
+                return (
+                  <div key={key} className="flex flex-col items-center gap-0.5">
+                    <button
+                      onClick={() => toggleType(key)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors cursor-pointer active:scale-95 ${
+                        active ? FILTER_ACTIVE_CLS : FILTER_INACTIVE_CLS
+                      }`}
+                    >
+                      <Icon size={13} strokeWidth={2} />
+                      <span>{t(i18nKey)}</span>
+                      <span className="opacity-70">{dayEvents.length}×</span>
+                    </button>
+                    {showDuration && (
+                      <span className="text-xs font-medium" style={{ color }}>{formatHours(totalH)}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-            <div className="border-t border-blue-grey-100 dark:border-navy-600" />
+            {allDayEvents.length > 0 && <div className="border-t border-blue-grey-100 dark:border-navy-600" />}
 
             {/* Merged event list sorted by start time */}
             <div className="flex flex-col">
@@ -285,15 +307,45 @@ export default function WeeklyWidget() {
                 const from = new Date(e.startedAt).getTime();
                 const to = e.endedAt ? new Date(e.endedAt).getTime() : Date.now();
                 const durationH = (to - from) / 3_600_000;
+                const hasNotes = !!e.notes;
+                const noteExpanded = expandedNotes.has(e.id);
                 return (
                   <div key={e.id} className="flex items-center gap-3 py-2 border-b border-blue-grey-50 dark:border-navy-600 last:border-0">
                     <e.Icon size={14} style={{ color: e.color }} strokeWidth={2} className="shrink-0" />
-                    <span className="text-sm text-blue-grey-700 dark:text-navy-100 flex-1">
-                      {formatTime(e.startedAt)} – {e.endedAt ? formatTime(e.endedAt) : '…'}
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <span className="text-sm text-blue-grey-700 dark:text-navy-100">
+                        {formatTime(e.startedAt)} – {e.endedAt ? formatTime(e.endedAt) : '…'}
                       </span>
-                        {e.showDuration && (
-                      <span className="text-xs text-blue-grey-400 dark:text-navy-200 shrink-0">{formatHours(durationH)}</span>
-                    )}
+                      {/* SubType + ml */}
+                      {(e.subType || e.ml != null) && (
+                        <span className="text-xs text-blue-grey-400 dark:text-navy-200 mt-0.5">
+                          {[e.subType ? t(`${e.i18nPrefix}.${e.subType}`, e.subType) : null, e.ml != null ? `${e.ml} ml` : null].filter(Boolean).join(' · ')}
+                        </span>
+                      )}
+                      {/* Notes inline on sm+ */}
+                      {hasNotes && (
+                        <p className="hidden sm:block text-xs text-blue-grey-400 dark:text-navy-200 mt-0.5 truncate">{e.notes}</p>
+                      )}
+                      {/* Notes expanded on mobile */}
+                      {hasNotes && noteExpanded && (
+                        <p className="sm:hidden text-xs text-blue-grey-400 dark:text-navy-200 mt-0.5 wrap-break-word">{e.notes}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {hasNotes && (
+                        <button
+                          onClick={() => toggleNote(e.id)}
+                          className={`sm:hidden w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+                            noteExpanded ? 'text-twilight-indigo-600 dark:text-sky-400' : 'text-blue-grey-400 hover:text-blue-grey-600 dark:text-navy-300 dark:hover:text-navy-100'
+                          }`}
+                        >
+                          <MessageCircle size={15} />
+                        </button>
+                      )}
+                      {e.showDuration && (
+                        <span className="text-xs text-blue-grey-400 dark:text-navy-200">{formatHours(durationH)}</span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

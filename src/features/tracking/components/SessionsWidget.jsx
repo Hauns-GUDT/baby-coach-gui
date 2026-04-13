@@ -294,11 +294,19 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
   const [pendingDelete, setPendingDelete]   = useState(null);
   const [expandedNotes, setExpandedNotes]   = useState(new Set()); // IDs with notes expanded on mobile
   const [now, setNow] = useState(() => new Date());
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(id);
   }, []);
+
+  // Only show skeleton if loading takes longer than 50ms to avoid flicker on fast responses
+  useEffect(() => {
+    if (!isLoading) { setShowSkeleton(false); return; }
+    const id = setTimeout(() => setShowSkeleton(true), 50);
+    return () => clearTimeout(id);
+  }, [isLoading]);
 
   const sessions = events;
 
@@ -339,25 +347,62 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
       </div>
       <TypeFilterBar selectedTypes={selectedTypes} onToggle={onTypeToggle} />
 
-      {isLoading && sessions.length === 0 ? (
-        <p className="text-sm text-blue-grey-400 dark:text-navy-200">{t('common.loading', 'Loading…')}</p>
+      {showSkeleton ? (
+        // Skeleton — shown on first load and during pagination
+        <div className="flex flex-col animate-pulse">
+          {[3, 2].map((rowCount, gi) => (
+            <div key={gi}>
+              <div className="h-3 w-20 rounded bg-blue-grey-100 dark:bg-navy-600 mt-3 mb-2" />
+              <div className="flex flex-col divide-y divide-blue-grey-50 dark:divide-navy-600">
+                {Array.from({ length: rowCount }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between py-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-blue-grey-100 dark:bg-navy-600 shrink-0" />
+                      <div className="flex flex-col gap-1.5">
+                        <div className="h-3 rounded bg-blue-grey-100 dark:bg-navy-600" style={{ width: `${90 + (i * 24) % 60}px` }} />
+                        {i % 2 === 0 && <div className="h-2.5 w-14 rounded bg-blue-grey-100 dark:bg-navy-600" />}
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="w-7 h-7 rounded-lg bg-blue-grey-100 dark:bg-navy-600" />
+                      <div className="w-7 h-7 rounded-lg bg-blue-grey-100 dark:bg-navy-600" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : sessions.length === 0 ? (
         <p className="text-sm text-blue-grey-400 dark:text-navy-200">{t('tracking.noSessions')}</p>
       ) : (
-        <div className="flex flex-col divide-y divide-blue-grey-50 dark:divide-navy-600">
-          {sessions.map((session, idx) => {
-            const { icon: Icon, colorVar, i18nPrefix: prefix } = TYPE_META[session.type] ?? TYPE_META.sleep;
-            const color = getCssVar(colorVar);
-            const duration = session.endedAt
-              ? (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000
-              : (now - new Date(session.startedAt)) / 3_600_000;
-            const showContinue = idx === 0 && page === 1 && !hasActiveEvent && session.type !== 'diaper';
-            const hasNotes = !!session.notes;
-            const noteExpanded = expandedNotes.has(session.id);
-            const subTypeLabel = session.subType
-              ? t(`${prefix}.${session.subType}`, session.subType)
-              : null;
-            const mlLabel = session.ml != null ? `${session.ml} ml` : null;
+        <div className="flex flex-col">
+          {/* Group sessions by calendar day */}
+          {Object.entries(
+            sessions.reduce((groups, session) => {
+              const day = new Date(session.startedAt).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+              (groups[day] ??= []).push(session);
+              return groups;
+            }, {})
+          ).map(([day, daySessions]) => (
+            <div key={day}>
+              <p className="text-xs font-semibold text-blue-grey-400 dark:text-navy-300 pt-3 pb-1 uppercase tracking-wide">{day}</p>
+              <div className="flex flex-col divide-y divide-blue-grey-50 dark:divide-navy-600">
+                {daySessions.map((session) => {
+                  const globalIdx = sessions.indexOf(session);
+                  const idx = globalIdx;
+                  const { icon: Icon, colorVar, i18nPrefix: prefix } = TYPE_META[session.type] ?? TYPE_META.sleep;
+                  const color = getCssVar(colorVar);
+                  const duration = session.endedAt
+                    ? (new Date(session.endedAt) - new Date(session.startedAt)) / 3_600_000
+                    : (now - new Date(session.startedAt)) / 3_600_000;
+                  const showContinue = idx === 0 && page === 1 && !hasActiveEvent && session.type !== 'diaper';
+                  const hasNotes = !!session.notes;
+                  const noteExpanded = expandedNotes.has(session.id);
+                  const subTypeLabel = session.subType
+                    ? t(`${prefix}.${session.subType}`, session.subType)
+                    : null;
+                  const mlLabel = session.ml != null ? `${session.ml} ml` : null;
 
             return (
               <div key={session.id} className="flex flex-col py-2.5">
@@ -371,8 +416,6 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
                         {session.type !== 'diaper' && (
                           <>–{session.endedAt ? formatTime(session.endedAt) : t('tracking.now')}</>
                         )}
-                        <span className="text-blue-grey-300 dark:text-navy-300 mx-1">·</span>
-                        <span className="text-blue-grey-400 dark:text-navy-200 text-xs">{new Date(session.startedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
                         {session.type !== 'diaper' && (
                           <>
                             <span className="text-blue-grey-300 dark:text-navy-300 mx-1">·</span>
@@ -418,7 +461,10 @@ export default function SessionsWidget({ events, page, totalPages, onPageChange,
                 </div>
               </div>
             );
-          })}
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
