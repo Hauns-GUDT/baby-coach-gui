@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { login } from '../api/authService';
 import { useAuthStore } from '../store/useAuthStore';
+import { initPushNotifications } from '../../../shared/notifications/pushNotifications';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -18,6 +19,7 @@ export function useLogin() {
     try {
       const { accessToken, username, isAdmin } = await login(credentials);
       setAuth(accessToken, username, isAdmin);
+      initPushNotifications(); // register device token in native app (no-op in browser)
       navigate('/app', { replace: true });
     } catch (err) {
       setError(err.response?.status === 401 ? t('auth.error.invalid') : t('auth.error.generic'));

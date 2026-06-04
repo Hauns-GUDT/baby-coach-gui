@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Navigation from './shared/components/Navigation';
 import AiAssistantDrawer from './features/ai-assistant/components/AiAssistantDrawer';
@@ -36,6 +36,7 @@ function NoBabyGuard({ children }) {
 
 export default function App() {
   const { isInitializing } = useSilentRefresh();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [isAiOpen, setIsAiOpen] = useState(false);
 
   if (isInitializing) {
@@ -52,7 +53,7 @@ export default function App() {
         <Navigation onOpenAi={() => setIsAiOpen(true)} />
         <NoBabyGuard>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={isAuthenticated ? <Navigate to="/app" replace /> : <LandingPage />} />
             <Route path="/app/login" element={<GuestRoute><Login /></GuestRoute>} />
             {/* <Route path="/app/register" element={<GuestRoute><Register /></GuestRoute>} /> */}
             <Route
